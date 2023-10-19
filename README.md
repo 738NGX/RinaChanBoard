@@ -30,7 +30,7 @@
 
 - 使用外壳模型:扎蹄佬的现成模型(已经更新到仓库)
 
-    
+  ![image-20231019163331549](D:\Develop\rinachan_board\RinaChanBoard\assets\2.png)
 
 - 未完待续
 
