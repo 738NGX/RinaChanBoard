@@ -3,6 +3,24 @@
     "pages/index/index",
     "pages/logs/logs"
   ],
+  "tabBar": {
+    "selectedColor": "#31869B",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/images/icon1.png",
+        "selectedIconPath": "/images/icon1.png"
+      },
+      {
+        "pagePath": "pages/logs/logs",
+        "text": "日志",
+        "iconPath": "/images/icon2.png",
+        "selectedIconPath": "/images/icon2.png"
+      }
+    ]
+  },
+  
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
