@@ -1,0 +1,14 @@
+.expander{
+    margin: 10px;
+}
+
+.expander .header{
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+
+.expander .content{
+    padding: 10px;
+    background-color: #fff;
+}

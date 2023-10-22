@@ -1,7 +1,11 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/custom/custom",
+    "pages/voice/voice",
+    "pages/music/music",
+    "pages/logs/logs",
+    "pages/about/about"
   ],
   "tabBar": {
     "selectedColor": "#31869B",
@@ -13,18 +17,39 @@
         "selectedIconPath": "/images/icon1.png"
       },
       {
-        "pagePath": "pages/logs/logs",
-        "text": "日志",
+        "pagePath": "pages/custom/custom",
+        "text": "自定义表情",
         "iconPath": "/images/icon2.png",
         "selectedIconPath": "/images/icon2.png"
+      },
+      {
+        "pagePath": "pages/voice/voice",
+        "text": "预设语音",
+        "iconPath": "/images/icon3.png",
+        "selectedIconPath": "/images/icon3.png"
+      },
+      {
+        "pagePath": "pages/music/music",
+        "text": "预设歌曲",
+        "iconPath": "/images/icon4.png",
+        "selectedIconPath": "/images/icon4.png"
+      },
+      {
+        "pagePath": "pages/about/about",
+        "text": "关于",
+        "iconPath": "/images/icon5.png",
+        "selectedIconPath": "/images/icon5.png"
       }
     ]
   },
-  
+  "useExtendedLib": {
+    "kbone": true,
+    "weui": true
+  },
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Weixin",
+    "navigationBarTitleText": "璃奈板OC",
     "navigationBarTextStyle":"black"
   },
   "style": "v2",

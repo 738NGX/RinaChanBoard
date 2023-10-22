@@ -1,0 +1,18 @@
+page {
+    background-color: #f1f1f1;
+}
+
+.logo{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.title{
+    text-align: center;
+    font-weight: bold;
+}
+
+.subtitle{
+    text-align: center;
+}

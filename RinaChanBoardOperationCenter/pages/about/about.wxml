@@ -1,0 +1,14 @@
+<view class="page" >
+    <view class="page-body">
+        <view class="logo"><image src="/images/logo0.png" mode="aspectFit"></image></view>
+        <expander header="程序信息">
+            <view>RinaChan Board Operation Center</view>
+            <view>璃奈板操作中心</view>
+            <view>ver. alpha 0.0.1</view>
+        </expander>
+        <expander header="作者信息">
+            <view>Developed by 738NGX.</view>
+            <view>by一位来自上财的摆烂计科人</view>
+        </expander>
+    </view>
+</view>

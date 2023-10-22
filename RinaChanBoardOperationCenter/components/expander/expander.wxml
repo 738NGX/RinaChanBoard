@@ -1,0 +1,8 @@
+<view class='expander'>
+  <view class='header' bindtap='toggle'>
+    {{header}}
+  </view>
+  <view class='content' wx:if="{{expanded}}">
+    <slot></slot>
+  </view>
+</view>
