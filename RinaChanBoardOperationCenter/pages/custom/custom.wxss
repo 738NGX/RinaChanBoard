@@ -1,0 +1,32 @@
+.page{
+    margin: 10px;
+}
+
+.grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%; /* 设置为100%，以便网格填充整个容器 */
+}
+  
+.cell {
+    flex: 1 0 auto;
+    width: 5%; /* (100% / 18) */
+    aspect-ratio: 1; /* 保持宽高比为1:1 */
+    border: 1rpx solid #000;
+}
+
+.scroll-view {
+    white-space: nowrap;
+}
+
+.btn {
+    display: inline-block;
+    height: 75px;
+}
+
+.btn image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

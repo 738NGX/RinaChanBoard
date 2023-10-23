@@ -4,11 +4,14 @@
 
 .expander .header{
     padding: 10px;
-    background-color: #f8f8f8;
+    background-color: #fff;
     border-bottom: 1px solid #ddd;
 }
 
 .expander .content{
     padding: 10px;
     background-color: #fff;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }

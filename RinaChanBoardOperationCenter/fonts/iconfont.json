@@ -1,0 +1,16 @@
+{
+  "id": "4298239",
+  "name": "璃奈板OC",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11981726",
+      "name": "github",
+      "font_class": "github",
+      "unicode": "e972",
+      "unicode_decimal": 59762
+    }
+  ]
+}
