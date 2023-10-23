@@ -5,6 +5,8 @@ const {
     mouth09,mouth10,mouth11,mouth12,mouth13,mouth14,mouth15,mouth16,
     leye01,leye02,leye03,leye04,leye05,leye06,leye07,leye08,
     leye09,leye10,leye11,leye12,leye13,leye14,leye15,leye16,
+    reye01,reye02,reye03,reye04,reye05,reye06,reye07,reye08,
+    reye09,reye10,reye11,reye12,reye13,reye14,reye15,reye16,
 }=require('../../utils/faces.js');
 
 Page({
@@ -72,8 +74,8 @@ Page({
         {
             for (let col = 0; col < 8; col++) 
             {
-                const globalRow = row + 8;
-                const globalCol = col + 5;
+                const globalRow = row + 0;
+                const globalCol = col + 0;
                 const index = globalRow * 18 + globalCol;
                 cells[index].color = colorArray[row][col];
             }
@@ -98,4 +100,38 @@ Page({
     setLeftEye14(){this.setLeftEyeByArray(leye14);},
     setLeftEye15(){this.setLeftEyeByArray(leye15);},
     setLeftEye16(){this.setLeftEyeByArray(leye16);},
+    // 设置右眼
+    setRightEyeByArray(colorArray) 
+    {
+        const cells = this.data.cells.slice();
+        for (let row = 0; row < 8; row++) 
+        {
+            for (let col = 0; col < 8; col++) 
+            {
+                const globalRow = row + 0;
+                const globalCol = col + 10;
+                const index = globalRow * 18 + globalCol;
+                cells[index].color = colorArray[row][col];
+            }
+        }
+        this.setData({ cells });
+        getApp().globalData.cells = cells;
+    },
+    resetRightEye(){this.setRightEyeByArray(none);},
+    setRightEye01(){this.setRightEyeByArray(reye01);},
+    setRightEye02(){this.setRightEyeByArray(reye02);},
+    setRightEye03(){this.setRightEyeByArray(reye03);},
+    setRightEye04(){this.setRightEyeByArray(reye04);},
+    setRightEye05(){this.setRightEyeByArray(reye05);},
+    setRightEye06(){this.setRightEyeByArray(reye06);},
+    setRightEye07(){this.setRightEyeByArray(reye07);},
+    setRightEye08(){this.setRightEyeByArray(reye08);},
+    setRightEye09(){this.setRightEyeByArray(reye09);},
+    setRightEye10(){this.setRightEyeByArray(reye10);},
+    setRightEye11(){this.setRightEyeByArray(reye11);},
+    setRightEye12(){this.setRightEyeByArray(reye12);},
+    setRightEye13(){this.setRightEyeByArray(reye13);},
+    setRightEye14(){this.setRightEyeByArray(reye14);},
+    setRightEye15(){this.setRightEyeByArray(reye15);},
+    setRightEye16(){this.setRightEyeByArray(reye16);},
 });

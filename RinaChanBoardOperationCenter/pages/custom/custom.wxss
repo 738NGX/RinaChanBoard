@@ -23,6 +23,7 @@
 .btn {
     display: inline-block;
     height: 75px;
+    background-color: #fff;
 }
 
 .btn image {
