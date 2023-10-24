@@ -1,7 +1,3 @@
-page {
-    background-color: #fafafa;
-}
-
 .logo{
     align-items: center;
     display: flex;

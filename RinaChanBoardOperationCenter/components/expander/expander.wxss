@@ -4,8 +4,9 @@
 
 .expander .header{
     padding: 10px;
-    background-color: #fff;
+    background-color: #fbfbfb;
     border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
 }
 
 .expander .content{
