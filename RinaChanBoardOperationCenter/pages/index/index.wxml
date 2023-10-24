@@ -1,5 +1,11 @@
 <!--index.wxml-->
 <view class="page">
     <cover-image src="https://www.738ngx.site/api/rinachanboard/images/title.png"></cover-image>
-    <view class="infocard">璃奈板状态: 未连接</view>
+    <view class="infocard">
+        <view>连接状态：{{device_status}}</view>
+    </view>
+    <view class="infocard">
+        <view>LED灯光：{{powerstatus}}</view>
+        <switch bindchange="switchLED" checked="{{power_status}}"></switch>
+    </view>
 </view>
