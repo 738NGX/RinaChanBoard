@@ -1,4 +1,5 @@
 <!--index.wxml-->
 <view class="page">
     <cover-image src="https://www.738ngx.site/api/rinachanboard/images/title.png"></cover-image>
+    <view class="infocard">璃奈板状态: 未连接</view>
 </view>

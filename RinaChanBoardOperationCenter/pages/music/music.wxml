@@ -1,2 +1,10 @@
-<view class="container">
+<view class="page">
+    <view class="grid">
+        <view class="cell" 
+            wx:for="{{cells}}" 
+            wx:key="index" 
+            data-index="{{index}}" 
+            style="background-color: {{item.color ? '#f971d4' : 'white'}}">
+        </view>
+    </view>
 </view>

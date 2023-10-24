@@ -12,7 +12,88 @@ const {
 Page({
     data: 
     {
-        cells: app.globalData.cells
+        cells: [],
+        features: 
+        [
+            {
+                name: '左眼',
+                items: [
+                    { src: '/images/00.png', label: '00', bindtap: 'resetLeftEye' },
+                    { src: '/images/leye/01.png', label: '01', bindtap: 'setLeftEye01' },
+                    { src: '/images/leye/02.png', label: '02', bindtap: 'setLeftEye02' },
+                    { src: '/images/leye/03.png', label: '03', bindtap: 'setLeftEye03' },
+                    { src: '/images/leye/04.png', label: '04', bindtap: 'setLeftEye04' },
+                    { src: '/images/leye/05.png', label: '05', bindtap: 'setLeftEye05' },
+                    { src: '/images/leye/06.png', label: '06', bindtap: 'setLeftEye06' },
+                    { src: '/images/leye/07.png', label: '07', bindtap: 'setLeftEye07' },
+                    { src: '/images/leye/08.png', label: '08', bindtap: 'setLeftEye08' },
+                    { src: '/images/leye/09.png', label: '09', bindtap: 'setLeftEye09' },
+                    { src: '/images/leye/10.png', label: '10', bindtap: 'setLeftEye10' },
+                    { src: '/images/leye/11.png', label: '11', bindtap: 'setLeftEye11' },
+                    { src: '/images/leye/12.png', label: '12', bindtap: 'setLeftEye12' },
+                    { src: '/images/leye/13.png', label: '13', bindtap: 'setLeftEye13' },
+                    { src: '/images/leye/14.png', label: '14', bindtap: 'setLeftEye14' },
+                    { src: '/images/leye/15.png', label: '15', bindtap: 'setLeftEye15' },
+                    { src: '/images/leye/16.png', label: '16', bindtap: 'setLeftEye16' },
+                ]
+            },
+            {
+                name: '右眼',
+                items: [
+                    { src: '/images/00.png', label: '00', bindtap: 'resetRightEye' },
+                    { src: '/images/reye/01.png', label: '01', bindtap: 'setRightEye01' },
+                    { src: '/images/reye/02.png', label: '02', bindtap: 'setRightEye02' },
+                    { src: '/images/reye/03.png', label: '03', bindtap: 'setRightEye03' },
+                    { src: '/images/reye/04.png', label: '04', bindtap: 'setRightEye04' },
+                    { src: '/images/reye/05.png', label: '05', bindtap: 'setRightEye05' },
+                    { src: '/images/reye/06.png', label: '06', bindtap: 'setRightEye06' },
+                    { src: '/images/reye/07.png', label: '07', bindtap: 'setRightEye07' },
+                    { src: '/images/reye/08.png', label: '08', bindtap: 'setRightEye08' },
+                    { src: '/images/reye/09.png', label: '09', bindtap: 'setRightEye09' },
+                    { src: '/images/reye/10.png', label: '10', bindtap: 'setRightEye10' },
+                    { src: '/images/reye/11.png', label: '11', bindtap: 'setRightEye11' },
+                    { src: '/images/reye/12.png', label: '12', bindtap: 'setRightEye12' },
+                    { src: '/images/reye/13.png', label: '13', bindtap: 'setRightEye13' },
+                    { src: '/images/reye/14.png', label: '14', bindtap: 'setRightEye14' },
+                    { src: '/images/reye/15.png', label: '15', bindtap: 'setRightEye15' },
+                    { src: '/images/reye/16.png', label: '16', bindtap: 'setRightEye16' },
+                ]
+            },
+            {
+                name: '嘴巴',
+                items: [
+                    { src: '/images/00.png', label: '00', bindtap: 'resetMouth' },
+                    { src: '/images/mouth/01.png', label: '01', bindtap: 'setMouth01' },
+                    { src: '/images/mouth/02.png', label: '02', bindtap: 'setMouth02' },
+                    { src: '/images/mouth/03.png', label: '03', bindtap: 'setMouth03' },
+                    { src: '/images/mouth/04.png', label: '04', bindtap: 'setMouth04' },
+                    { src: '/images/mouth/05.png', label: '05', bindtap: 'setMouth05' },
+                    { src: '/images/mouth/06.png', label: '06', bindtap: 'setMouth06' },
+                    { src: '/images/mouth/07.png', label: '07', bindtap: 'setMouth07' },
+                    { src: '/images/mouth/08.png', label: '08', bindtap: 'setMouth08' },
+                    { src: '/images/mouth/09.png', label: '09', bindtap: 'setMouth09' },
+                    { src: '/images/mouth/10.png', label: '10', bindtap: 'setMouth10' },
+                    { src: '/images/mouth/11.png', label: '11', bindtap: 'setMouth11' },
+                    { src: '/images/mouth/12.png', label: '12', bindtap: 'setMouth12' },
+                    { src: '/images/mouth/13.png', label: '13', bindtap: 'setMouth13' },
+                    { src: '/images/mouth/14.png', label: '14', bindtap: 'setMouth14' },
+                    { src: '/images/mouth/15.png', label: '15', bindtap: 'setMouth15' },
+                    { src: '/images/mouth/16.png', label: '16', bindtap: 'setMouth16' },
+                ]
+            },
+        ],
+    },
+    onLoad() 
+    { 
+        this.setData({ cells: app.getGlobalCells() });
+        // 添加监听回调
+        app.addCellsListener((newCells) => {
+            this.setData({ cells: newCells });
+        });
+    },
+    onUnload() {
+        // 移除监听器
+        app.removeCellsListener(this.cellsListenerCallback);
     },
     toggleColor(e) 
     {
@@ -20,7 +101,7 @@ Page({
         const cells = this.data.cells.slice();
         cells[index].color = cells[index].color === 0 ? 1 : 0;
         this.setData({ cells });
-        app.globalData.cells = cells;
+        app.setGlobalCells(cells);
     },
     resetColors() 
     {
@@ -29,7 +110,7 @@ Page({
             color: 0
         }));
         this.setData({ cells });
-        app.globalData.cells = cells;
+        app.setGlobalCells(cells);
     },
 
     // 设置嘴巴
@@ -47,7 +128,7 @@ Page({
             }
         }
         this.setData({ cells });
-        getApp().globalData.cells = cells;
+        app.setGlobalCells(cells);
     },
     resetMouth(){this.setMouthByArray(none);},
     setMouth01(){this.setMouthByArray(mouth01);},
@@ -81,7 +162,7 @@ Page({
             }
         }
         this.setData({ cells });
-        getApp().globalData.cells = cells;
+        app.setGlobalCells(cells);
     },
     resetLeftEye(){this.setLeftEyeByArray(none);},
     setLeftEye01(){this.setLeftEyeByArray(leye01);},
@@ -115,7 +196,7 @@ Page({
             }
         }
         this.setData({ cells });
-        getApp().globalData.cells = cells;
+        app.setGlobalCells(cells);
     },
     resetRightEye(){this.setRightEyeByArray(none);},
     setRightEye01(){this.setRightEyeByArray(reye01);},
