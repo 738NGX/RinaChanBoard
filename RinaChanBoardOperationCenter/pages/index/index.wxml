@@ -1,6 +1,11 @@
 <!--index.wxml-->
 <view class="page">
-    <cover-image src="https://www.738ngx.site/api/rinachanboard/images/title.png"></cover-image>
+    <block wx:if="{{device_status}}">
+        <cover-image src="https://www.738ngx.site/api/rinachanboard/images/connected.png"></cover-image>
+    </block>
+    <block wx:else>
+        <cover-image src="https://www.738ngx.site/api/rinachanboard/images/disconnected.png"></cover-image>
+    </block>
     <view class="infocard">
         <view>连接状态：{{device_status}}</view>
     </view>
