@@ -1,19 +1,18 @@
 #include <Arduino.h>
-#include "bemfa.h"
+#include <bemfa.h>
 #include <ESP8266WiFi.h>
+#include <FastLED.h>
 
-// tcp客户端相关初始化，默认即可
+// tcp客户端相关初始化
 WiFiClient TCPclient;
-String TcpClient_Buff = ""; // 初始化字符串，用于接收服务器发来的数据
+String TcpClient_Buff = "";                 // 初始化字符串，用于接收服务器发来的数据
 unsigned int TcpClient_BuffIndex = 0;
 unsigned long TcpClient_preTick = 0;
-unsigned long preHeartTick = 0;    // 心跳
-unsigned long preTCPStartTick = 0; // 连接
+unsigned long preHeartTick = 0;             // 心跳
+unsigned long preTCPStartTick = 0;          // 连接
 bool preTCPConnected = false;
 
-/*
- *发送数据到TCP服务器
- */
+
 void sendtoTCPServer(String p)
 {
     if (!TCPclient.connected())
@@ -59,7 +58,7 @@ void startTCPClient()
 /*
  *检查数据，发送心跳
  */
-void doTCPClientTick()
+void doTCPClientTick(CRGB leds[])
 {
     // 检查是否断开，断开后重连
     if (WiFi.status() != WL_CONNECTED)
@@ -127,6 +126,10 @@ void doTCPClientTick()
         { // 如果是消息==关闭
             turnOffLed();
         }
+        else if (getMsg.length()>5)
+        {
+            face_update(getMsg,leds);
+        }
 
         TcpClient_Buff = "";
         TcpClient_BuffIndex = 0;
@@ -183,15 +186,55 @@ void doWiFiTick()
         }
     }
 }
-// 打开灯泡
+
 void turnOnLed()
 {
     Serial.println("Turn ON");
     digitalWrite(LED_BUILTIN, LOW);
+    digitalWrite(D1, LOW);
 }
-// 关闭灯泡
+
 void turnOffLed()
 {
     Serial.println("Turn OFF");
     digitalWrite(LED_BUILTIN, HIGH);
+    digitalWrite(D1, HIGH);
+}
+
+void decodeHexString(const String hexString,int cells[16][18]) 
+{
+    String binaryString;
+    binaryString.reserve(hexString.length() * 4);
+
+    for (char hexDigit : hexString) 
+    {
+        int value = (std::isdigit(hexDigit)) ? hexDigit - '0' : std::toupper(hexDigit) - 'A' + 10;
+
+        for (int bit = 3; bit >= 0; --bit) 
+        {
+            binaryString += (value & (1 << bit)) ? '1' : '0';
+        }
+    }
+
+    for (size_t i = 0; i < binaryString.length(); ++i) 
+    {
+        int row = i / 18;
+        int col = i % 18;
+        cells[row][col] = binaryString[i] == '1' ? 1 : 0;
+    }
+}
+
+void face_update(const String hexString,CRGB leds[])
+{
+    int face[16][18];
+    decodeHexString(hexString,face);
+    for(int i=0;i<16;i++)
+    {
+        for(int j=0;j<16;j++)
+        {
+            if(i%2) leds[16*i+j]=face[15-i][16-j] ? CRGB::White : CRGB::Black;
+            else leds[16*i+j]= face[15-i][j+1] ? CRGB::White : CRGB::Black;
+        }
+    }
+    FastLED.show();
 }

@@ -1,14 +1,14 @@
-const app = getApp()
+const app=getApp();
 
 Page({
-    data: {
-        uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-        topic: "RinaChanBoard",
+    data:  
+    {
         device_status: false,       // 默认离线
         power_status: false         // 默认关闭
     },
     
-    switchLED: function (e) {
+    switchLED: function (e) 
+    {
         var that = this;
         var newStatus = e.detail.value; // 获取switch的状态
     
@@ -24,8 +24,8 @@ Page({
             method: "POST",
             data: 
             {
-                uid: that.data.uid,
-                topic: that.data.topic,
+                uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
+                topic: "RinaChanBoard",
                 msg: msgToSend
             },
             header: 
@@ -38,6 +38,7 @@ Page({
             }
         })
     },
+
     onLoad: function () {
         var that = this
 
@@ -46,14 +47,14 @@ Page({
         wx.request({
             url: 'https://api.bemfa.com/api/device/v1/status/', // 状态api接口，详见巴法云接入文档
             data: {
-                uid: that.data.uid,
-                topic: that.data.topic,
+                uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
+                topic: "RinaChanBoard",
             },
             header: {
                 'content-type': "application/x-www-form-urlencoded"
             },
             success(res) {
-                console.log(res.data)
+                //console.log(res.data)
                 if (res.data.status === "online") {
                     that.setData({
                         device_status: true
@@ -63,7 +64,7 @@ Page({
                         device_status: false
                     })
                 }
-                console.log(that.data.device_status)
+                //console.log(that.data.device_status)
             }
         })
 
@@ -71,20 +72,20 @@ Page({
         wx.request({
             url: 'https://api.bemfa.com/api/device/v1/data/1/', // get接口，详见巴法云接入文档
             data: {
-                uid: that.data.uid,
-                topic: that.data.topic,
+                uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
+                topic: "RinaChanBoard",
             },
             header: {
                 'content-type': "application/x-www-form-urlencoded"
             },
             success(res) {
-                console.log(res.data)
+                //console.log(res.data)
                 if (res.data.msg === "on") {
                     that.setData({
                         powerstatus: true
                     })
                 }
-                console.log(that.data.powerstatus)
+                //console.log(that.data.powerstatus)
             }
         })
 
@@ -95,14 +96,14 @@ Page({
             wx.request({
                 url: 'https://api.bemfa.com/api/device/v1/status/',  //get 设备状态接口，详见巴法云接入文档
                 data: {
-                    uid: that.data.uid,
-                    topic: that.data.topic,
+                    uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
+                    topic: "RinaChanBoard",
                 },
                 header: {
                     'content-type': "application/x-www-form-urlencoded"
                 },
                 success(res) {
-                    console.log(res.data)
+                    //console.log(res.data)
                     if (res.data.status === "online") {
                         that.setData({
                             device_status: true
@@ -120,20 +121,20 @@ Page({
             wx.request({
                 url: 'https://api.bemfa.com/api/device/v1/data/1/', // get接口，详见巴法云接入文档
                 data: {
-                    uid: that.data.uid,
-                    topic: that.data.topic,
+                    uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
+                    topic: "RinaChanBoard",
                 },
                 header: {
                     'content-type': "application/x-www-form-urlencoded"
                 },
                 success(res) {
-                    console.log(res.data)
+                    //console.log(res.data)
                     if (res.data.msg === "on") {
                         that.setData({
                             powerstatus: true
                         })
                     }
-                    console.log(that.data.powerstatus)
+                    //console.log(that.data.powerstatus)
                 }
             })
 

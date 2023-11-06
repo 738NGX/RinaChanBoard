@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include <FastLED.h>
 
 #define server_ip "bemfa.com" // 巴法云服务器地址默认即可
 #define server_port "8344"    // 服务器端口，tcp创客云端口8344
@@ -30,10 +31,16 @@ void doWiFiTick();
 void startSTA();
 
 // TCP初始化连接
-void doTCPClientTick();
+void doTCPClientTick(CRGB leds[]);
 void startTCPClient();
+
+// 发送数据到TCP服务器
 void sendtoTCPServer(String p);
 
 // led控制函数，具体函数内容见下方
+
 void turnOnLed();
 void turnOffLed();
+
+void decodeHexString(const String hexString,int cells[16][18]);
+void face_update(const String hexString,CRGB leds[]);
