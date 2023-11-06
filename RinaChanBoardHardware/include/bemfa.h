@@ -22,25 +22,32 @@
 
 // 最大字节数
 #define MAX_PACKETSIZE 512
-
 // 设置心跳值60s
 #define KEEPALIVEATIME 60 * 1000
 
 // 连接WIFI
 void doWiFiTick();
+
+// 初始化wifi连接
 void startSTA();
 
-// TCP初始化连接
+// 检查数据,发送心跳,断开连接后尝试重连
 void doTCPClientTick(CRGB leds[]);
+
+// 初始化TCP和服务器建立连接
 void startTCPClient();
 
 // 发送数据到TCP服务器
 void sendtoTCPServer(String p);
 
-// led控制函数，具体函数内容见下方
-
+// 开启LED
 void turnOnLed();
+
+// 关闭LED
 void turnOffLed();
 
+// 表情信息解码
 void decodeHexString(const String hexString,int cells[16][18]);
+
+// 更新脸部表情
 void face_update(const String hexString,CRGB leds[]);

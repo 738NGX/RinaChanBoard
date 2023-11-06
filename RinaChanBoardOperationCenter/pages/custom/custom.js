@@ -1,4 +1,4 @@
-const app = getApp();
+const app=getApp();
 const {
     none,
     mouth01, mouth02, mouth03, mouth04, mouth05, mouth06, mouth07, mouth08,
@@ -7,27 +7,22 @@ const {
     leye09, leye10, leye11, leye12, leye13, leye14, leye15, leye16,
     reye01, reye02, reye03, reye04, reye05, reye06, reye07, reye08,
     reye09, reye10, reye11, reye12, reye13, reye14, reye15, reye16,
-} = require('../../utils/faces.js');
+}=require('../../utils/faces.js');
 
 function extractColorsOptimized(cells) 
 {
-    // Initialize an empty string to hold the color values
-    let binaryString = '';
+    let binaryString='';
 
-    // Directly iterate through the cells assuming they are in order
     cells.forEach(cell => {
-        binaryString += cell.color;
+        binaryString+=cell.color;
     });
 
-    // Split the binary string into chunks of 4 and convert to hexadecimal
-    let hexString = '';
-    for (let i = 0; i < binaryString.length; i += 4) {
-        // Extract 4 binary digits
-        const fourBinaryDigits = binaryString.slice(i, i + 4);
-        // Convert to a hexadecimal digit
-        const hexDigit = parseInt(fourBinaryDigits, 2).toString(16);
-        // Append to the hex string
-        hexString += hexDigit;
+    let hexString='';
+    for (let i=0;i<binaryString.length;i+=4) 
+    {
+        const fourBinaryDigits=binaryString.slice(i, i+4);
+        const hexDigit=parseInt(fourBinaryDigits, 2).toString(16);
+        hexString+=hexDigit;
     }
 
     // Return the concatenated hexadecimal values
@@ -120,12 +115,12 @@ Page({
         app.removeCellsListener(this.cellsListenerCallback);
     },
     toggleColor(e) {
-        const index = e.currentTarget.dataset.index;
-        const cells = this.data.cells.slice();
-        cells[index].color = cells[index].color === 0 ? 1 : 0;
+        const index=e.currentTarget.dataset.index;
+        const cells=this.data.cells.slice();
+        cells[index].color=cells[index].color === 0 ? 1 : 0;
         this.setData({ cells });
         app.setGlobalCells(cells);
-        var msgToSend = extractColorsOptimized(cells);
+        var msgToSend=extractColorsOptimized(cells);
         console.log(msgToSend);
         wx.request({
             url: 'https://api.bemfa.com/api/device/v1/data/1/',
@@ -146,7 +141,7 @@ Page({
         })
     },
     resetColors() {
-        const cells = this.data.cells.map(cell => ({
+        const cells=this.data.cells.map(cell => ({
             ...cell,
             color: 0
         }));
@@ -173,13 +168,13 @@ Page({
 
     // 设置嘴巴
     setMouthByArray(colorArray) {
-        const cells = this.data.cells.slice();
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                const globalRow = row + 8;
-                const globalCol = col + 5;
-                const index = globalRow * 18 + globalCol;
-                cells[index].color = colorArray[row][col];
+        const cells=this.data.cells.slice();
+        for (let row=0; row<8; row++) {
+            for (let col=0; col<8; col++) {
+                const globalRow=row+8;
+                const globalCol=col+5;
+                const index=globalRow*18+globalCol;
+                cells[index].color=colorArray[row][col];
             }
         }
         this.setData({ cells });
@@ -221,13 +216,13 @@ Page({
     setMouth16() { this.setMouthByArray(mouth16); },
     // 设置左眼
     setLeftEyeByArray(colorArray) {
-        const cells = this.data.cells.slice();
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                const globalRow = row + 0;
-                const globalCol = col + 0;
-                const index = globalRow * 18 + globalCol;
-                cells[index].color = colorArray[row][col];
+        const cells=this.data.cells.slice();
+        for (let row=0; row<8; row++) {
+            for (let col=0; col<8; col++) {
+                const globalRow=row+0;
+                const globalCol=col+0;
+                const index=globalRow*18+globalCol;
+                cells[index].color=colorArray[row][col];
             }
         }
         this.setData({ cells });
@@ -269,13 +264,13 @@ Page({
     setLeftEye16() { this.setLeftEyeByArray(leye16); },
     // 设置右眼
     setRightEyeByArray(colorArray) {
-        const cells = this.data.cells.slice();
-        for (let row = 0; row < 8; row++) {
-            for (let col = 0; col < 8; col++) {
-                const globalRow = row + 0;
-                const globalCol = col + 10;
-                const index = globalRow * 18 + globalCol;
-                cells[index].color = colorArray[row][col];
+        const cells=this.data.cells.slice();
+        for (let row=0; row<8; row++) {
+            for (let col=0; col<8; col++) {
+                const globalRow=row+0;
+                const globalCol=col+10;
+                const index=globalRow*18+globalCol;
+                cells[index].color=colorArray[row][col];
             }
         }
         this.setData({ cells });

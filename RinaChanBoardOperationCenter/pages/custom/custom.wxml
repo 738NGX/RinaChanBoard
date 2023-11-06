@@ -1,5 +1,6 @@
 <view class="page">
-    <view class="grid">
+    
+    <view class="infocard"><view class="grid">
         <view class="cell" 
             wx:for="{{cells}}" 
             wx:key="index" 
@@ -7,18 +8,21 @@
             data-index="{{index}}" 
             style="background-color: {{item.color ? '#f971d4' : 'white'}}">
         </view>
+    </view></view>
+    <view class="infocard">
+        <block wx:for="{{features}}" wx:key="name">  
+            <view>{{item.name}}</view>
+            <scroll-view scroll-x="true" class="scroll-view">
+                <block wx:for="{{item.items}}" wx:key="label">
+                    <button class="btn" bindtap="{{item.bindtap}}" style="width:110px">
+                        <image src="{{item.src}}" />{{item.label}}
+                    </button>
+                </block>
+            </scroll-view>
+        </block>
     </view>
-        
-    <button bindtap="resetColors" class="reset-button">清空表情</button>
-
-    <block wx:for="{{features}}" wx:key="name">
-        <view>{{item.name}}</view>
-        <scroll-view scroll-x="true" class="scroll-view">
-            <block wx:for="{{item.items}}" wx:key="label">
-                <button class="btn" bindtap="{{item.bindtap}}" style="width:110px">
-                    <image src="{{item.src}}" />{{item.label}}
-                </button>
-            </block>
-        </scroll-view>
-    </block>
+    <view class="infocard">
+        <view>更多操作</view>
+        <button class="btn2" bindtap="resetColors">清空表情</button>
+    </view>
 </view>
