@@ -7,4 +7,5 @@
             style="background-color: {{item.color ? '#f971d4' : 'white'}}">
         </view>
     </view></view>
+    <view class='infocard'></view>
 </view>

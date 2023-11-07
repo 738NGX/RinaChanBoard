@@ -1,5 +1,14 @@
 const app=getApp();
 
+const {
+    none,mouth,leye,reye,cheek00,cheek,
+}=require('./faces.js');
+
+function horizontalFlip(array) 
+{
+    return array.map(row => row.slice().reverse());
+}
+
 function extractColorsOptimized(cells) 
 {
     let binaryString='';
@@ -19,11 +28,109 @@ function extractColorsOptimized(cells)
     return hexString;
 }
 
+function set_face(obj,leye_idx,reye_idx,mouth_idx,cheek_idx)
+{
+    var set_leye=leye_idx ? leye[leye_idx-1] : none;
+    var set_reye=reye_idx ? reye[reye_idx-1] : none;
+    var set_mouth=mouth_idx ? mouth[mouth_idx-1] : none;
+    var set_cheek=cheek_idx ? cheek[cheek_idx-1] : cheek00;
+
+    const cells=obj.data.cells.map(cell => ({
+        ...cell,
+        color: 0
+    }));
+    for (let row=0; row<8; row++) 
+    {
+        for (let col=0; col<8; col++) 
+        {
+            const globalRow=row+0;
+            const globalCol=col+0;
+            const index=globalRow*18+globalCol;
+            cells[index].color=set_leye[row][col];
+        }
+    }
+    for (let row=0; row<8; row++) 
+    {
+        for (let col=0; col<8; col++) 
+        {
+            const globalRow=row+0;
+            const globalCol=col+10;
+            const index=globalRow*18+globalCol;
+            cells[index].color=set_reye[row][col];
+        }
+    }
+    for (let row=0; row<8; row++) 
+    {
+        for (let col=0; col<8; col++) 
+        {
+            const globalRow=row+8;
+            const globalCol=col+5;
+            const index=globalRow*18+globalCol;
+            cells[index].color=set_mouth[row][col];
+        }
+    }
+    for (let row=0; row<2; row++) 
+    {
+        for (let col=0; col<5; col++) 
+        {
+            const globalRow=row+8;
+            const globalCol=col+0;
+            const index=globalRow*18+globalCol;
+            cells[index].color=set_cheek[row][col];
+        }
+    }
+    var horizontalArray=horizontalFlip(set_cheek.slice());
+    for (let row=0; row<2; row++) 
+    {
+        for (let col=0; col<5; col++) 
+        {
+            const globalRow=row+8;
+            const globalCol=col+13;
+            const index=globalRow*18+globalCol;
+            cells[index].color=horizontalArray[row][col];
+        }
+    }
+    obj.setData({ cells });
+    app.setGlobalCells(cells);
+    
+    console.log(extractColorsOptimized(cells));
+}
+
+function resetColors(obj) 
+{
+    const cells=obj.data.cells.map(cell => ({
+        ...cell,
+        color: 0
+    }));
+    obj.setData({ cells });
+    app.setGlobalCells(cells);
+    wx.request({
+        url: 'https://api.bemfa.com/api/device/v1/data/1/',
+        method: "POST",
+        data:
+        {
+            uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
+            topic: "RinaChanBoard",
+            msg: extractColorsOptimized(cells)
+        },
+        header:
+        {
+            'content-type': "application/x-www-form-urlencoded"
+        },
+        success(res) {
+            console.log(res.data);
+        }
+    })
+}
+
 // 设置嘴巴
-function setMouthByArray(obj,colorArray) {
+function setMouthByArray(obj,colorArray) 
+{
     const cells=obj.data.cells.slice();
-    for (let row=0; row<8; row++) {
-        for (let col=0; col<8; col++) {
+    for (let row=0; row<8; row++) 
+    {
+        for (let col=0; col<8; col++) 
+        {
             const globalRow=row+8;
             const globalCol=col+5;
             const index=globalRow*18+globalCol;
@@ -52,10 +159,13 @@ function setMouthByArray(obj,colorArray) {
 }
 
 // 设置左眼
-function setLeftEyeByArray(obj,colorArray) {
+function setLeftEyeByArray(obj,colorArray) 
+{
     const cells=obj.data.cells.slice();
-    for (let row=0; row<8; row++) {
-        for (let col=0; col<8; col++) {
+    for (let row=0; row<8; row++) 
+    {
+        for (let col=0; col<8; col++) 
+        {
             const globalRow=row+0;
             const globalCol=col+0;
             const index=globalRow*18+globalCol;
@@ -84,10 +194,13 @@ function setLeftEyeByArray(obj,colorArray) {
 }
 
 // 设置右眼
-function setRightEyeByArray(obj,colorArray) {
+function setRightEyeByArray(obj,colorArray) 
+{
     const cells=obj.data.cells.slice();
-    for (let row=0; row<8; row++) {
-        for (let col=0; col<8; col++) {
+    for (let row=0; row<8; row++) 
+    {
+        for (let col=0; col<8; col++) 
+        {
             const globalRow=row+0;
             const globalCol=col+10;
             const index=globalRow*18+globalCol;
@@ -116,19 +229,24 @@ function setRightEyeByArray(obj,colorArray) {
 }
 
 // 设置脸颊
-function setCheekByArray(obj,colorArray) {
+function setCheekByArray(obj,colorArray) 
+{
     var horizontalArray=horizontalFlip(colorArray.slice());
     const cells=obj.data.cells.slice();
-    for (let row=0; row<2; row++) {
-        for (let col=0; col<5; col++) {
+    for (let row=0; row<2; row++) 
+    {
+        for (let col=0; col<5; col++) 
+        {
             const globalRow=row+8;
             const globalCol=col+0;
             const index=globalRow*18+globalCol;
             cells[index].color=colorArray[row][col];
         }
     }
-    for (let row=0; row<2; row++) {
-        for (let col=0; col<5; col++) {
+    for (let row=0; row<2; row++) 
+    {
+        for (let col=0; col<5; col++) 
+        {
             const globalRow=row+8;
             const globalCol=col+13;
             const index=globalRow*18+globalCol;
@@ -158,5 +276,6 @@ function setCheekByArray(obj,colorArray) {
 
 module.exports = {
     setMouthByArray,setLeftEyeByArray,setRightEyeByArray,
-    setCheekByArray,extractColorsOptimized
+    setCheekByArray,extractColorsOptimized,resetColors,
+    set_face,
 };

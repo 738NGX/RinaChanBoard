@@ -14,7 +14,7 @@
             <view>{{item.name}}</view>
             <scroll-view scroll-x="true" class="scroll-view">
                 <block wx:for="{{item.items}}" wx:key="label">
-                    <button class="btn" bindtap="{{item.bindtap}}" style="width:110px">
+                    <button class="btn" bindtap="{{item.bindtap}}" style="width:110px" data-index="{{item['data-index']}}">
                         <image src="{{item.src}}" />{{item.label}}
                     </button>
                 </block>
