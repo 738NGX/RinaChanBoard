@@ -1,33 +1,19 @@
 const app=getApp();
 const {
-    none,
+    none,horizontalFlip,
     mouth01, mouth02, mouth03, mouth04, mouth05, mouth06, mouth07, mouth08,
     mouth09, mouth10, mouth11, mouth12, mouth13, mouth14, mouth15, mouth16,
     leye01, leye02, leye03, leye04, leye05, leye06, leye07, leye08,
     leye09, leye10, leye11, leye12, leye13, leye14, leye15, leye16,
     reye01, reye02, reye03, reye04, reye05, reye06, reye07, reye08,
     reye09, reye10, reye11, reye12, reye13, reye14, reye15, reye16,
+    cheek00,cheek01,cheek02,cheek03,cheek04,
 }=require('../../utils/faces.js');
 
-function extractColorsOptimized(cells) 
-{
-    let binaryString='';
-
-    cells.forEach(cell => {
-        binaryString+=cell.color;
-    });
-
-    let hexString='';
-    for (let i=0;i<binaryString.length;i+=4) 
-    {
-        const fourBinaryDigits=binaryString.slice(i, i+4);
-        const hexDigit=parseInt(fourBinaryDigits, 2).toString(16);
-        hexString+=hexDigit;
-    }
-
-    // Return the concatenated hexadecimal values
-    return hexString;
-}
+const {
+    setMouthByArray,setLeftEyeByArray,setRightEyeByArray,
+    setCheekByArray,extractColorsOptimized
+}=require('../../utils/face_func.js');
 
 Page({
     data:
@@ -101,6 +87,16 @@ Page({
                         { src: '/images/mouth/16.png', label: '16', bindtap: 'setMouth16' },
                     ]
                 },
+                {
+                    name: '脸颊',
+                    items: [
+                        { src: '/images/00.png', label: '00', bindtap: 'resetCheek' },
+                        { src: '/images/cheek/01.png', label: '01', bindtap: 'setCheek01' },
+                        { src: '/images/cheek/02.png', label: '02', bindtap: 'setCheek02' },
+                        { src: '/images/cheek/03.png', label: '03', bindtap: 'setCheek03' },
+                        { src: '/images/cheek/04.png', label: '04', bindtap: 'setCheek04' },
+                    ]
+                },
             ],
     },
     onLoad() {
@@ -165,149 +161,60 @@ Page({
             }
         })
     },
-
-    // 设置嘴巴
-    setMouthByArray(colorArray) {
-        const cells=this.data.cells.slice();
-        for (let row=0; row<8; row++) {
-            for (let col=0; col<8; col++) {
-                const globalRow=row+8;
-                const globalCol=col+5;
-                const index=globalRow*18+globalCol;
-                cells[index].color=colorArray[row][col];
-            }
-        }
-        this.setData({ cells });
-        app.setGlobalCells(cells);
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/',
-            method: "POST",
-            data:
-            {
-                uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-                topic: "RinaChanBoard",
-                msg: extractColorsOptimized(cells)
-            },
-            header:
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) {
-                console.log(res.data);
-            }
-        })
-    },
-    resetMouth() { this.setMouthByArray(none); },
-    setMouth01() { this.setMouthByArray(mouth01); },
-    setMouth02() { this.setMouthByArray(mouth02); },
-    setMouth03() { this.setMouthByArray(mouth03); },
-    setMouth04() { this.setMouthByArray(mouth04); },
-    setMouth05() { this.setMouthByArray(mouth05); },
-    setMouth06() { this.setMouthByArray(mouth06); },
-    setMouth07() { this.setMouthByArray(mouth07); },
-    setMouth08() { this.setMouthByArray(mouth08); },
-    setMouth09() { this.setMouthByArray(mouth09); },
-    setMouth10() { this.setMouthByArray(mouth10); },
-    setMouth11() { this.setMouthByArray(mouth11); },
-    setMouth12() { this.setMouthByArray(mouth12); },
-    setMouth13() { this.setMouthByArray(mouth13); },
-    setMouth14() { this.setMouthByArray(mouth14); },
-    setMouth15() { this.setMouthByArray(mouth15); },
-    setMouth16() { this.setMouthByArray(mouth16); },
-    // 设置左眼
-    setLeftEyeByArray(colorArray) {
-        const cells=this.data.cells.slice();
-        for (let row=0; row<8; row++) {
-            for (let col=0; col<8; col++) {
-                const globalRow=row+0;
-                const globalCol=col+0;
-                const index=globalRow*18+globalCol;
-                cells[index].color=colorArray[row][col];
-            }
-        }
-        this.setData({ cells });
-        app.setGlobalCells(cells);
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/',
-            method: "POST",
-            data:
-            {
-                uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-                topic: "RinaChanBoard",
-                msg: extractColorsOptimized(cells)
-            },
-            header:
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) {
-                console.log(res.data);
-            }
-        })
-    },
-    resetLeftEye() { this.setLeftEyeByArray(none); },
-    setLeftEye01() { this.setLeftEyeByArray(leye01); },
-    setLeftEye02() { this.setLeftEyeByArray(leye02); },
-    setLeftEye03() { this.setLeftEyeByArray(leye03); },
-    setLeftEye04() { this.setLeftEyeByArray(leye04); },
-    setLeftEye05() { this.setLeftEyeByArray(leye05); },
-    setLeftEye06() { this.setLeftEyeByArray(leye06); },
-    setLeftEye07() { this.setLeftEyeByArray(leye07); },
-    setLeftEye08() { this.setLeftEyeByArray(leye08); },
-    setLeftEye09() { this.setLeftEyeByArray(leye09); },
-    setLeftEye10() { this.setLeftEyeByArray(leye10); },
-    setLeftEye11() { this.setLeftEyeByArray(leye11); },
-    setLeftEye12() { this.setLeftEyeByArray(leye12); },
-    setLeftEye13() { this.setLeftEyeByArray(leye13); },
-    setLeftEye14() { this.setLeftEyeByArray(leye14); },
-    setLeftEye15() { this.setLeftEyeByArray(leye15); },
-    setLeftEye16() { this.setLeftEyeByArray(leye16); },
-    // 设置右眼
-    setRightEyeByArray(colorArray) {
-        const cells=this.data.cells.slice();
-        for (let row=0; row<8; row++) {
-            for (let col=0; col<8; col++) {
-                const globalRow=row+0;
-                const globalCol=col+10;
-                const index=globalRow*18+globalCol;
-                cells[index].color=colorArray[row][col];
-            }
-        }
-        this.setData({ cells });
-        app.setGlobalCells(cells);
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/',
-            method: "POST",
-            data:
-            {
-                uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-                topic: "RinaChanBoard",
-                msg: extractColorsOptimized(cells)
-            },
-            header:
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) {
-                console.log(res.data);
-            }
-        })
-    },
-    resetRightEye() { this.setRightEyeByArray(none); },
-    setRightEye01() { this.setRightEyeByArray(reye01); },
-    setRightEye02() { this.setRightEyeByArray(reye02); },
-    setRightEye03() { this.setRightEyeByArray(reye03); },
-    setRightEye04() { this.setRightEyeByArray(reye04); },
-    setRightEye05() { this.setRightEyeByArray(reye05); },
-    setRightEye06() { this.setRightEyeByArray(reye06); },
-    setRightEye07() { this.setRightEyeByArray(reye07); },
-    setRightEye08() { this.setRightEyeByArray(reye08); },
-    setRightEye09() { this.setRightEyeByArray(reye09); },
-    setRightEye10() { this.setRightEyeByArray(reye10); },
-    setRightEye11() { this.setRightEyeByArray(reye11); },
-    setRightEye12() { this.setRightEyeByArray(reye12); },
-    setRightEye13() { this.setRightEyeByArray(reye13); },
-    setRightEye14() { this.setRightEyeByArray(reye14); },
-    setRightEye15() { this.setRightEyeByArray(reye15); },
-    setRightEye16() { this.setRightEyeByArray(reye16); },
+    resetMouth() { setMouthByArray(this,none); },
+    setMouth01() { setMouthByArray(this,mouth01); },
+    setMouth02() { setMouthByArray(this,mouth02); },
+    setMouth03() { setMouthByArray(this,mouth03); },
+    setMouth04() { setMouthByArray(this,mouth04); },
+    setMouth05() { setMouthByArray(this,mouth05); },
+    setMouth06() { setMouthByArray(this,mouth06); },
+    setMouth07() { setMouthByArray(this,mouth07); },
+    setMouth08() { setMouthByArray(this,mouth08); },
+    setMouth09() { setMouthByArray(this,mouth09); },
+    setMouth10() { setMouthByArray(this,mouth10); },
+    setMouth11() { setMouthByArray(this,mouth11); },
+    setMouth12() { setMouthByArray(this,mouth12); },
+    setMouth13() { setMouthByArray(this,mouth13); },
+    setMouth14() { setMouthByArray(this,mouth14); },
+    setMouth15() { setMouthByArray(this,mouth15); },
+    setMouth16() { setMouthByArray(this,mouth16); },
+    resetLeftEye() { setLeftEyeByArray(this,none); },
+    setLeftEye01() { setLeftEyeByArray(this,leye01); },
+    setLeftEye02() { setLeftEyeByArray(this,leye02); },
+    setLeftEye03() { setLeftEyeByArray(this,leye03); },
+    setLeftEye04() { setLeftEyeByArray(this,leye04); },
+    setLeftEye05() { setLeftEyeByArray(this,leye05); },
+    setLeftEye06() { setLeftEyeByArray(this,leye06); },
+    setLeftEye07() { setLeftEyeByArray(this,leye07); },
+    setLeftEye08() { setLeftEyeByArray(this,leye08); },
+    setLeftEye09() { setLeftEyeByArray(this,leye09); },
+    setLeftEye10() { setLeftEyeByArray(this,leye10); },
+    setLeftEye11() { setLeftEyeByArray(this,leye11); },
+    setLeftEye12() { setLeftEyeByArray(this,leye12); },
+    setLeftEye13() { setLeftEyeByArray(this,leye13); },
+    setLeftEye14() { setLeftEyeByArray(this,leye14); },
+    setLeftEye15() { setLeftEyeByArray(this,leye15); },
+    setLeftEye16() { setLeftEyeByArray(this,leye16); },
+    resetRightEye() { setRightEyeByArray(this,none); },
+    setRightEye01() { setRightEyeByArray(this,reye01); },
+    setRightEye02() { setRightEyeByArray(this,reye02); },
+    setRightEye03() { setRightEyeByArray(this,reye03); },
+    setRightEye04() { setRightEyeByArray(this,reye04); },
+    setRightEye05() { setRightEyeByArray(this,reye05); },
+    setRightEye06() { setRightEyeByArray(this,reye06); },
+    setRightEye07() { setRightEyeByArray(this,reye07); },
+    setRightEye08() { setRightEyeByArray(this,reye08); },
+    setRightEye09() { setRightEyeByArray(this,reye09); },
+    setRightEye10() { setRightEyeByArray(this,reye10); },
+    setRightEye11() { setRightEyeByArray(this,reye11); },
+    setRightEye12() { setRightEyeByArray(this,reye12); },
+    setRightEye13() { setRightEyeByArray(this,reye13); },
+    setRightEye14() { setRightEyeByArray(this,reye14); },
+    setRightEye15() { setRightEyeByArray(this,reye15); },
+    setRightEye16() { setRightEyeByArray(this,reye16); },
+    resetCheek() { setCheekByArray(this,cheek00); },
+    setCheek01() { setCheekByArray(this,cheek01); },
+    setCheek02() { setCheekByArray(this,cheek02); },
+    setCheek03() { setCheekByArray(this,cheek03); },
+    setCheek04() { setCheekByArray(this,cheek04); },
 });

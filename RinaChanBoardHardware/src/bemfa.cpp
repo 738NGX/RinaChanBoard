@@ -36,7 +36,7 @@ void startTCPClient()
         tcpTemp+=TOPIC;
         tcpTemp+="\r\n";
         sendtoTCPServer(tcpTemp);
-        tcpTemp = "";
+        tcpTemp="";
 
         preTCPConnected = true;
         TCPclient.setNoDelay(true);

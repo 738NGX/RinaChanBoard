@@ -1,6 +1,6 @@
 <view class="page">
     
-    <view class="infocard"><view class="grid">
+    <view class="gridbase"><view class="grid">
         <view class="cell" 
             wx:for="{{cells}}" 
             wx:key="index" 

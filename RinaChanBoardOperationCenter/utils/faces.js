@@ -28,9 +28,9 @@ const mouth02 = [
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0],
     [1,0,0,0,0,0,0,1],
     [0,1,1,1,1,1,1,0],
+    [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
 ];
@@ -169,7 +169,7 @@ const mouth16 = [
     [0,0,0,0,0,0,0,0],
     [1,0,0,0,0,0,0,1],
     [0,1,0,0,0,0,1,0],
-    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
     [0,1,0,0,0,0,1,0],
     [1,0,0,0,0,0,0,1],
     [0,0,0,0,0,0,0,0],
@@ -353,12 +353,38 @@ const reye14=horizontalFlip(leye14);
 const reye15=horizontalFlip(leye15);
 const reye16=horizontalFlip(leye16);
 
+const cheek00 = [
+    [0,0,0,0,0],
+    [0,0,0,0,0]
+];
+
+const cheek01 = [
+    [0,0,0,0,0],
+    [0,0,1,1,0]
+];
+
+const cheek02 = [
+    [0,0,0,0,0],
+    [0,0,1,0,1]
+];
+
+const cheek03 = [
+    [0,0,1,0,1],
+    [0,1,0,1,0]
+];
+
+const cheek04 = [
+    [0,1,0,1,0],
+    [0,0,1,0,1]
+];
+
 module.exports = {
-    none,
+    none,horizontalFlip,
     mouth01,mouth02,mouth03,mouth04,mouth05,mouth06,mouth07,mouth08,
     mouth09,mouth10,mouth11,mouth12,mouth13,mouth14,mouth15,mouth16,
     leye01,leye02,leye03,leye04,leye05,leye06,leye07,leye08,
     leye09,leye10,leye11,leye12,leye13,leye14,leye15,leye16,
     reye01,reye02,reye03,reye04,reye05,reye06,reye07,reye08,
     reye09,reye10,reye11,reye12,reye13,reye14,reye15,reye16,
+    cheek00,cheek01,cheek02,cheek03,cheek04,
 };
