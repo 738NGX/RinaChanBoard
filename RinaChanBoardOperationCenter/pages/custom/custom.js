@@ -5,7 +5,7 @@ const {
 
 const {
     setMouthByArray,setLeftEyeByArray,setRightEyeByArray,
-    setCheekByArray,extractColorsOptimized
+    setCheekByArray,extractColorsOptimized,update_face_to_server
 }=require('../../utils/face_func.js');
 
 Page({
@@ -111,23 +111,7 @@ Page({
         app.setGlobalCells(cells);
         var msgToSend=extractColorsOptimized(cells);
         console.log(msgToSend);
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/',
-            method: "POST",
-            data:
-            {
-                uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-                topic: "RinaChanBoard",
-                msg: msgToSend
-            },
-            header:
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) {
-                console.log(res.data);
-            }
-        })
+        update_face_to_server(cells);
     },
     resetColors() {
         const cells=this.data.cells.map(cell => ({
@@ -136,23 +120,7 @@ Page({
         }));
         this.setData({ cells });
         app.setGlobalCells(cells);
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/',
-            method: "POST",
-            data:
-            {
-                uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-                topic: "RinaChanBoard",
-                msg: extractColorsOptimized(cells)
-            },
-            header:
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) {
-                console.log(res.data);
-            }
-        })
+        update_face_to_server(cells);
     },
     resetMouth() { setMouthByArray(this,none); },
     setMouth(e) { setMouthByArray(this,mouth[e.currentTarget.dataset.index-1]); },

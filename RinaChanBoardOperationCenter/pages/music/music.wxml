@@ -7,5 +7,9 @@
             style="background-color: {{item.color ? '#f971d4' : 'white'}}">
         </view>
     </view></view>
-    <view class='infocard'></view>
+    <view class='row'>歌曲列表</view>
+    <view class='infocard'>
+    <scroll-view scroll-y="true" style='height:250px;'>
+    </scroll-view>
+    </view>
 </view>

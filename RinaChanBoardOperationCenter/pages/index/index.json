@@ -1,4 +1,6 @@
 {
-  "usingComponents": {
-  }
+    "usingComponents": 
+    {
+        "expander": "/components/expander/expander"
+    }
 }

@@ -4,7 +4,6 @@
     "pages/custom/custom",
     "pages/voice/voice",
     "pages/music/music",
-    "pages/logs/logs",
     "pages/about/about"
   ],
   "tabBar": {

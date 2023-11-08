@@ -2,6 +2,7 @@
 App({
     globalData: 
     {
+        controlling_device: 0,
         cells: [],              // 全局表情数组
         cellsListeners: [],     // 表情数组变化监听
     },
@@ -15,6 +16,17 @@ App({
             col: index % 18,
             color: 0
         }));
+        this.globalData.controlling_device=0;
+    },
+
+    get_controlling_device()
+    {
+        return this.globalData.controlling_device;
+    },
+
+    set_controlling_device(n)
+    {
+        this.globalData.controlling_device=n;
     },
     
     /**
@@ -22,7 +34,7 @@ App({
      */
     setGlobalCells(newCells) 
     {
-        this.globalData._cells=newCells;
+        this.globalData.cells=newCells;
         // 通知所有监听者
         this.globalData.cellsListeners.forEach(callback => callback(newCells));
     },

@@ -3,17 +3,17 @@
 }
 
 .expander .header{
-    padding: 10px;
+    padding: 15px;
     background-color: #fff;
-    border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-radius: 5px;
+    border-bottom: 2px solid #aaa;
+    border-right: 2px solid #aaa;
+    border-radius: 10px;
 }
 
 .expander .content{
-    padding: 10px;
+    padding: 15px;
     background-color: #fff;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-right: 2px solid #aaa;
+    border-bottom: 2px solid #aaa;
+    border-radius: 0px 0px 10px 10px;
 }

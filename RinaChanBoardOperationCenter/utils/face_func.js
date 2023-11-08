@@ -1,4 +1,5 @@
 const app=getApp();
+const util=require('./util.js')
 
 const {
     none,mouth,leye,reye,cheek00,cheek,
@@ -7,6 +8,27 @@ const {
 function horizontalFlip(array) 
 {
     return array.map(row => row.slice().reverse());
+}
+
+function update_face_to_server(cells)
+{
+    wx.request({
+        url: 'https://api.bemfa.com/api/device/v1/data/1/',
+        method: "POST",
+        data:
+        {
+            uid: util.device_info[app.get_controlling_device()].uid,
+            topic: util.device_info[app.get_controlling_device()].topic,
+            msg: extractColorsOptimized(cells)
+        },
+        header:
+        {
+            'content-type': "application/x-www-form-urlencoded"
+        },
+        success(res) {
+            console.log(res.data);
+        }
+    });
 }
 
 function extractColorsOptimized(cells) 
@@ -93,7 +115,7 @@ function set_face(obj,leye_idx,reye_idx,mouth_idx,cheek_idx)
     obj.setData({ cells });
     app.setGlobalCells(cells);
     
-    console.log(extractColorsOptimized(cells));
+    //console.log(extractColorsOptimized(cells));
 }
 
 function resetColors(obj) 
@@ -104,23 +126,7 @@ function resetColors(obj)
     }));
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    wx.request({
-        url: 'https://api.bemfa.com/api/device/v1/data/1/',
-        method: "POST",
-        data:
-        {
-            uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-            topic: "RinaChanBoard",
-            msg: extractColorsOptimized(cells)
-        },
-        header:
-        {
-            'content-type': "application/x-www-form-urlencoded"
-        },
-        success(res) {
-            console.log(res.data);
-        }
-    })
+    update_face_to_server(cells);
 }
 
 // 设置嘴巴
@@ -139,23 +145,7 @@ function setMouthByArray(obj,colorArray)
     }
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    wx.request({
-        url: 'https://api.bemfa.com/api/device/v1/data/1/',
-        method: "POST",
-        data:
-        {
-            uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-            topic: "RinaChanBoard",
-            msg: extractColorsOptimized(cells)
-        },
-        header:
-        {
-            'content-type': "application/x-www-form-urlencoded"
-        },
-        success(res) {
-            console.log(res.data);
-        }
-    })
+    update_face_to_server(cells);
 }
 
 // 设置左眼
@@ -174,23 +164,7 @@ function setLeftEyeByArray(obj,colorArray)
     }
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    wx.request({
-        url: 'https://api.bemfa.com/api/device/v1/data/1/',
-        method: "POST",
-        data:
-        {
-            uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-            topic: "RinaChanBoard",
-            msg: extractColorsOptimized(cells)
-        },
-        header:
-        {
-            'content-type': "application/x-www-form-urlencoded"
-        },
-        success(res) {
-            console.log(res.data);
-        }
-    })
+    update_face_to_server(cells);
 }
 
 // 设置右眼
@@ -209,23 +183,7 @@ function setRightEyeByArray(obj,colorArray)
     }
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    wx.request({
-        url: 'https://api.bemfa.com/api/device/v1/data/1/',
-        method: "POST",
-        data:
-        {
-            uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-            topic: "RinaChanBoard",
-            msg: extractColorsOptimized(cells)
-        },
-        header:
-        {
-            'content-type': "application/x-www-form-urlencoded"
-        },
-        success(res) {
-            console.log(res.data);
-        }
-    })
+    update_face_to_server(cells);
 }
 
 // 设置脸颊
@@ -255,27 +213,11 @@ function setCheekByArray(obj,colorArray)
     }
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    wx.request({
-        url: 'https://api.bemfa.com/api/device/v1/data/1/',
-        method: "POST",
-        data:
-        {
-            uid: 'a8a83e1f0a4c4e42b031e1c323dd9159',
-            topic: "RinaChanBoard",
-            msg: extractColorsOptimized(cells)
-        },
-        header:
-        {
-            'content-type': "application/x-www-form-urlencoded"
-        },
-        success(res) {
-            console.log(res.data);
-        }
-    })
+    update_face_to_server(cells);
 }
 
 module.exports = {
     setMouthByArray,setLeftEyeByArray,setRightEyeByArray,
     setCheekByArray,extractColorsOptimized,resetColors,
-    set_face,
+    set_face,update_face_to_server
 };

@@ -11,12 +11,18 @@
 
 // WIFI名称，区分大小写，不要写错
 #define DEFAULT_STASSID "New_Media"
+//#define DEFAULT_STASSID "738NGX's Magic5"
+
 // WIFI密码
 #define DEFAULT_STAPSW "sufexmt123*"
+//#define DEFAULT_STAPSW "20040210"
+
 // 用户私钥，可在控制台获取,修改为自己的UID
 #define UID "a8a83e1f0a4c4e42b031e1c323dd9159"
+
 // 主题名字，可在控制台新建
 #define TOPIC "RinaChanBoard"
+//#define TOPIC "RinaChanBoardExp"
 
 //**************************************************//
 

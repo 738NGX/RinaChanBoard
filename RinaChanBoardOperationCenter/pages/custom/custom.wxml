@@ -10,6 +10,7 @@
         </view>
     </view></view>
     <view class="infocard">
+        <scroll-view scroll-y="true" style='height:220px;'>
         <block wx:for="{{features}}" wx:key="name">  
             <view>{{item.name}}</view>
             <scroll-view scroll-x="true" class="scroll-view">
@@ -20,6 +21,7 @@
                 </block>
             </scroll-view>
         </block>
+        </scroll-view>
     </view>
     <view class="infocard">
         <view>更多操作</view>
