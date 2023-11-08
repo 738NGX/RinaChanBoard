@@ -1,7 +1,11 @@
 #include <Arduino.h>
-#include <bemfa.h>
-#include <ESP8266WiFi.h>
 #include <FastLED.h>
+
+#include <ESP8266WiFi.h>
+
+#include <voice.h>
+#include <face.h>
+#include <bemfa.h>
 
 // tcp客户端相关初始化
 WiFiClient TCPclient;
@@ -115,17 +119,13 @@ void doTCPClientTick(CRGB leds[])
             Serial.print("msg:--------");
             Serial.println(getMsg);                                     // 打印截取到的消息值
         }
-        if(getMsg=="on")
+        if(getMsg.length()==72)
         {
-            turnOnLed();
+            face_update_by_string(getMsg,leds);
         }
-        else if(getMsg=="off")
+        else if(getMsg.length()==16)
         {
-            turnOffLed();
-        }
-        else if(getMsg.length()==72)
-        {
-            face_update(getMsg,leds);
+            play_voice_face(leds,getMsg);
         }
         TcpClient_Buff = "";
         TcpClient_BuffIndex = 0;
@@ -205,19 +205,4 @@ void decodeHexString(const String hexString,int cells[16][18])
         int col=i%18;
         cells[row][col]=binaryString[i] == '1' ? 1 : 0;
     }
-}
-
-void face_update(const String hexString,CRGB leds[])
-{
-    int face[16][18];
-    decodeHexString(hexString,face);
-    for(int i=0;i<16;i++)
-    {
-        for(int j=0;j<16;j++)
-        {
-            if(i%2) leds[16*i+j]=face[15-i][16-j] ? CRGB::White : CRGB::Black;
-            else leds[16*i+j]= face[15-i][j+1] ? CRGB::White : CRGB::Black;
-        }
-    }
-    FastLED.show();
 }

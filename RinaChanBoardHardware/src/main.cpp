@@ -2,6 +2,8 @@
 #include <FastLED.h>
 
 #include <bemfa.h>
+#include <face.h>
+#include <voice.h>
  
 #define NUM_LEDS 256
 #define DATA_PIN D1

@@ -54,6 +54,3 @@ void turnOffLed();
 
 // 表情信息解码
 void decodeHexString(const String hexString,int cells[16][18]);
-
-// 更新脸部表情
-void face_update(const String hexString,CRGB leds[]);

@@ -1,6 +1,7 @@
 const app=getApp();
 
 const face_func=require('../../utils/face_func.js');
+const util=require('../../utils/util.js');
 
 const{voice_data}=require('../../utils/voice_data.js');
 
@@ -54,6 +55,23 @@ Page({
     {
         var src='https://www.738ngx.site/api/rinachanboard/voices/'+e.currentTarget.dataset.id+'.mp3';
         play_audio(src);
+        wx.request({
+            url: 'https://api.bemfa.com/api/device/v1/data/1/',
+            method: "POST",
+            data:
+            {
+                uid: util.device_info[app.get_controlling_device()].uid,
+                topic: util.device_info[app.get_controlling_device()].topic,
+                msg: e.currentTarget.dataset.id
+            },
+            header:
+            {
+                'content-type': "application/x-www-form-urlencoded"
+            },
+            success(res) {
+                console.log(res.data);
+            }
+        });
         play_face(this,e.currentTarget.dataset.id)
     },
 })
