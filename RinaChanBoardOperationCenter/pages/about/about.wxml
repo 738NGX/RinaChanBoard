@@ -5,14 +5,21 @@
         </view>
         <expander header="程序信息">
             <view>RinaChan Board Operation Center</view>
-            <view>璃奈板操作中心</view>
-            <view>ver. 0.0.1</view>
+            <view>璃奈板操作中心 ver. 0.0.1</view>
+            <view>开源协议: AGPL-3.0</view>
             <icon class="iconfont icon-github"> Github: 738NGX/RinaChanBoard</icon>
         </expander>
         <expander header="作者信息">
             <view>Developed by 738NGX.</view>
             <view>一位来自上财的摆烂计科人兼璃奈厨</view>
             <view>个人网站: https://www.738ngx.site/</view>
+        </expander>
+        <expander header="版本更新说明">
+        <scroll-view scroll-y="true" style='height:100px;'>
+            <block wx:for='{{versions}}' wx:key='id'>
+                <view>{{item.id}} {{item.text}}</view>
+            </block>
+        </scroll-view>
         </expander>
     </view>
 </view>

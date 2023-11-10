@@ -21,8 +21,8 @@
 #define UID "a8a83e1f0a4c4e42b031e1c323dd9159"
 
 // 主题名字，可在控制台新建
-#define TOPIC "RinaChanBoard"
-//#define TOPIC "RinaChanBoardExp"
+//#define TOPIC "RinaChanBoard"
+#define TOPIC "RinaChanBoardExp"
 
 //**************************************************//
 

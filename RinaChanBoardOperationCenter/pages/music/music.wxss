@@ -18,17 +18,46 @@
     border-bottom: 2px solid #aaa;
     border-right: 2px solid #aaa;
     margin: 10px;
-    padding: 30px;
+    padding: 5px;
     display: flex;
     flex-direction: column;
     align-items: left;
     justify-content: center;
 }
 
+.cover{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cover_img{
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+}
+
 .row{
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+.title_row{
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+}
+
+.title_row2{
     margin: 10px;
     display: flex;
     flex-direction: row;
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
 }
 
 .gridbase{
@@ -42,4 +71,8 @@
     flex-direction: column;
     align-items: left;
     justify-content: center;
+}
+
+.btn{
+    background-color: #fff;
 }

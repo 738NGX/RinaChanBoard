@@ -16,7 +16,7 @@ async function play_face(obj,id)
     for(let i=0;i<using_faces.length;i++)
     {
         face_func.set_face(obj,using_faces[i].leye,using_faces[i].reye,using_faces[i].mouth,using_faces[i].cheek); 
-        await sleep(using_faces[i].during*33);
+        await sleep(using_faces[i].during*1000/30.0);
     }
 }
 

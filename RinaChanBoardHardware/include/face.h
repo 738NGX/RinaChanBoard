@@ -1,4 +1,6 @@
 #pragma once
+#include <Arduino.h>
+#include <FastLED.h>
 
 // 更新脸部表情
 void face_update(int face[16][18],CRGB leds[]);
@@ -93,10 +95,10 @@ void set_face(CRGB leds[],int leye_idx,int reye_idx,int mouth_idx,int cheek_idx)
     {0,0,0,0,0,0,0,0},\
     {0,0,0,0,0,0,0,0},\
     {0,0,0,0,0,0,0,0},\
-    {0,0,0,0,0,0,0,0},\
     {1,1,1,1,1,1,1,1},\
     {1,0,0,0,0,0,0,1},\
     {0,1,1,1,1,1,1,0},\
+    {0,0,0,0,0,0,0,0},\
     {0,0,0,0,0,0,0,0},\
 },{\
     {0,0,0,0,0,0,0,0},\
