@@ -45,10 +45,9 @@
 }
 
 .voicecard{
-    background-color: #fafafa;
+    background-color: #fff;
     border-radius: 10px;
-    border-bottom: 2px solid #aaa;
-    border-right: 2px solid #aaa;
+    border: 1px solid #bbb;
     margin: 10px;
     padding: 10px;
     display: flex;
@@ -59,6 +58,7 @@
 
 .voice_text{
     margin: 10px;
+    width:75%;
 }
 
 .play_btn{

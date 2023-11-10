@@ -12,7 +12,7 @@ const int voice_data[][5]=VOICE_DATA;
 const int voice_data_range[][2]=VOICE_DATA_RANGE;
 
 const std::map<String,int> ids={
-    {"vo_na_m0209_0001",0},
+    {"vo_na_m0209_0001",0},{"vo_na_m0209_0002",1},{"vo_na_m0209_0003",2},
 };
 
 void play_voice_face(CRGB leds[],const String id)

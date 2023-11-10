@@ -33,10 +33,7 @@ Page({
     data: 
     {
         cells: [],
-        voices: 
-        [
-            {id:'vo_na_m0209_0001',text:voice_data[0].text},
-        ],
+        voices: voice_data,
     },
     onLoad() 
     { 
