@@ -38,10 +38,11 @@
                 <view class='red_circle'></view>未连接
             </block>
         </view>
-        <view class='row'>
-            下位机固件版本:
-        </view>
     </view>
+    <view class='row'>食用说明</view>
+    <expander header="点击查看食用说明">
+        <view class='row'>单击选择控制设备卡片,选中"体验机",点确认后输入体验密码(某首歌名全是数字的歌),等待连接状态成为已连接后,即可控制璃奈版.</view>            
+    </expander>
     <modal hidden="{{hidden_modal}}" title="密码验证" bindcancel="hideModal" bindconfirm="checkPassword">
         <view>请输入密码：</view>
         <input type="password" bindinput="passwordInput"/>

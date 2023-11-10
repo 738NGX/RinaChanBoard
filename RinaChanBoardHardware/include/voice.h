@@ -69,6 +69,6 @@ void play_voice_face(CRGB leds[],const String id);
 
 #define VOICE_DATA_RANGE {\
     {0,16},\
-    {16,23},\
-    {39,18},\
+    {16,39},\
+    {39,57 },\
 }
