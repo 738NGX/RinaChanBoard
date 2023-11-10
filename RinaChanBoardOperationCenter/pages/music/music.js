@@ -60,7 +60,7 @@ Page({
         console.log(this.data.choosing_music);
         var src=music_data.map(music => music.music_src)[this.data.choosing_music];
         play_audio(src);
-        /*
+        
         wx.request({
             url: 'https://api.bemfa.com/api/device/v1/data/1/',
             method: "POST",
@@ -68,7 +68,7 @@ Page({
             {
                 uid: util.device_info[app.get_controlling_device()].uid,
                 topic: util.device_info[app.get_controlling_device()].topic,
-                msg: e.currentTarget.dataset.id
+                msg: music_data.map(music => music.id)[this.data.choosing_music],
             },
             header:
             {
@@ -78,7 +78,7 @@ Page({
                 console.log(res.data);
             }
         });
-        */
+        
         play_face(this,this.data.choosing_music);
     },
 })

@@ -37,7 +37,7 @@ const music_data=[
         cover_src:'https://www.738ngx.site/api/rinachanboard/images/cover/music_02_00_02.png',
         music_src:'https://www.738ngx.site/api/rinachanboard/musics/music_02_00_02_0.mp3',
         singer:'虹ヶ咲学園スクールアイドル同好会',
-        text:  '虹咲学园学园偶像同好会第二张专辑<Love U my friends>的同名曲。',
+        text:  '虹咲学园学园偶像同好会第二张专辑《Love U my friends》的同名曲。',
         faces:[
             {leye: 6,reye: 6,mouth: 3,cheek: 0,during:200},
             {leye: 1,reye: 1,mouth: 3,cheek: 0,during:160},

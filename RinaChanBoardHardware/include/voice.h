@@ -1,6 +1,6 @@
 #pragma once
-
-#define FPS 30
+#include <Arduino.h>
+#include <FastLED.h>
 
 void play_voice_face(CRGB leds[],const String id);
 

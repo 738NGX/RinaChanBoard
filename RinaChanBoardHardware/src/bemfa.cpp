@@ -4,6 +4,7 @@
 #include <ESP8266WiFi.h>
 
 #include <voice.h>
+#include <music.h>
 #include <face.h>
 #include <bemfa.h>
 
@@ -126,6 +127,10 @@ void doTCPClientTick(CRGB leds[])
         else if(getMsg.length()==16)
         {
             play_voice_face(leds,getMsg);
+        }
+        else if(getMsg.length()==19)
+        {
+            play_music_face(leds,getMsg);
         }
         TcpClient_Buff = "";
         TcpClient_BuffIndex = 0;

@@ -5,7 +5,7 @@
         </view>
         <expander header="程序信息">
             <view>RinaChan Board Operation Center</view>
-            <view>璃奈板操作中心 ver. 0.0.1</view>
+            <view>璃奈板操作中心 ver. {{current_version}}</view>
             <view>开源协议: AGPL-3.0</view>
             <icon class="iconfont icon-github"> Github: 738NGX/RinaChanBoard</icon>
         </expander>
