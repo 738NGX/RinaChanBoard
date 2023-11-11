@@ -1,5 +1,5 @@
 # RinaChanBoard 璃奈板开发笔记
-这是一个立志于寒假结束前搓出来的璃奈板项目()
+这是一个立志于寒假结束前搓出来的璃奈板项目(),本项目遵循AGPL-3.0协议开源.
 
 <img src="./assets/1.jpg" width="200px" />
 
@@ -18,7 +18,7 @@
 
 ### ✅已完成
 
-- 详见上位机/下位机各自的README,包含了版本更新记录.
+- 详见[上位机](./RinaChanBoardOperationCenter/README.md)/[下位机](./RinaChanBoardHardware/README.md)各自的README,包含了版本更新记录.
 
 
 ## 📓参考资料
