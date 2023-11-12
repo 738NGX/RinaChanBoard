@@ -9,6 +9,15 @@
             style="background-color: {{item.color ? '#f971d4' : 'white'}}">
         </view>
     </view></view>
+    <view class="row">表情操作</view>
+    <view class="infocard">
+        <view class="row">
+        <button class="btn2" bindtap="uploadColors">上传表情</button>
+        <button class="btn2" bindtap="downloadColors">下载表情</button>
+        <button class="btn2" bindtap="resetColors">清空表情</button>
+        </view>
+    </view>
+    <view class="row">选择表情</view>
     <view class="infocard">
         <scroll-view scroll-y="true" style='height:220px;'>
         <block wx:for="{{features}}" wx:key="name">  
@@ -23,8 +32,14 @@
         </block>
         </scroll-view>
     </view>
-    <view class="infocard">
-        <view>更多操作</view>
-        <button class="btn2" bindtap="resetColors">清空表情</button>
-    </view>
+    <view class='row'>食用说明</view>
+    <expander header="点击查看食用说明">
+        <view class='row'>
+            从0.0.2版本起,用户可以在"选择表情"栏选择对应部分的表情,也可以直接点击网格点控制相应位置LED灯的开闭.
+        </view>
+        <view class='row'>
+            从0.1.1版本起,所有表情更新不会被立刻触发,用户必须点击"上传表情"按钮后才可以将表情同步到璃奈板;
+            与此同时,用户可以点击"下载表情按钮从璃奈板获取当前正在显示的表情信息."
+        </view>            
+    </expander>
 </view>

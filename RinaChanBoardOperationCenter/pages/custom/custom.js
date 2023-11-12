@@ -1,12 +1,16 @@
 const app=getApp();
-const {
+const 
+{
     none,mouth,leye,reye,cheek00,cheek,
 }=require('../../utils/faces.js');
 
-const {
+const 
+{
     setMouthByArray,setLeftEyeByArray,setRightEyeByArray,
-    setCheekByArray,extractColorsOptimized,update_face_to_server
+    setCheekByArray,update_face_to_server,setColorsByString
 }=require('../../utils/face_func.js');
+
+const util=require('../../utils/util.js')
 
 Page({
     data:
@@ -92,35 +96,83 @@ Page({
             },
         ],
     },
-    onLoad() {
+    onLoad() 
+    {
         this.setData({ cells: app.getGlobalCells() });
         // 添加监听回调
         app.addCellsListener((newCells) => {
             this.setData({ cells: newCells });
         });
     },
-    onUnload() {
+    onUnload() 
+    {
         // 移除监听器
         app.removeCellsListener(this.cellsListenerCallback);
     },
-    toggleColor(e) {
+    toggleColor(e) 
+    {
         const index=e.currentTarget.dataset.index;
         const cells=this.data.cells.slice();
         cells[index].color=cells[index].color === 0 ? 1 : 0;
         this.setData({ cells });
         app.setGlobalCells(cells);
-        var msgToSend=extractColorsOptimized(cells);
-        console.log(msgToSend);
+    },
+    uploadColors() 
+    {
+        const cells=this.data.cells.slice();
         update_face_to_server(cells);
     },
-    resetColors() {
+    async downloadColors() 
+    {
+        wx.request({
+            url: 'https://api.bemfa.com/api/device/v1/data/1/',
+            method: "POST",
+            data:
+            {
+                uid: util.device_info[app.get_controlling_device()].uid,
+                topic: util.device_info[app.get_controlling_device()].topic,
+                msg: "requestFace"
+            },
+            header:
+            {
+                'content-type': "application/x-www-form-urlencoded"
+            },
+            success(res) 
+            {
+                console.log(res.data);
+            }
+        });
+        
+        await util.sleep(400);
+        let msg='';
+        
+        wx.request({
+            url: 'https://api.bemfa.com/api/device/v1/data/1/', //get接口，详见巴法云接入文档
+            data: 
+            {
+                uid: util.device_info[app.get_controlling_device()].uid,
+                topic: util.device_info[app.get_controlling_device()].topic,
+            },
+            header: 
+            {
+                'content-type': "application/x-www-form-urlencoded"
+            },
+            success(res) 
+            {
+                msg=res.data.msg;
+            }
+        })
+        await util.sleep(100);
+        setColorsByString(this,msg);
+    },
+    resetColors() 
+    {
         const cells=this.data.cells.map(cell => ({
             ...cell,
             color: 0
         }));
         this.setData({ cells });
         app.setGlobalCells(cells);
-        update_face_to_server(cells);
     },
     resetMouth() { setMouthByArray(this,none); },
     setMouth(e) { setMouthByArray(this,mouth[e.currentTarget.dataset.index-1]); },

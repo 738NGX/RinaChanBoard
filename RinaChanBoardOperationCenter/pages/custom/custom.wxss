@@ -16,6 +16,12 @@
     white-space: nowrap;
 }
 
+.row{
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
 .btn {
     display: inline-block;
     height: 75px;
@@ -29,11 +35,14 @@
 }
 
 .btn2 {
-    padding: 10px;
     background-color: #fff;
-    border-bottom: 2px solid #ddd;
-    border-right: 2px solid #ddd;
-    border-radius: 5px;
+    border-radius: 0px;
+    height: 30px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
 }
 
 .infocard{

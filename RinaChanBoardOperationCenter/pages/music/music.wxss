@@ -39,13 +39,13 @@
 }
 
 .row{
-    margin: 5px;
+    margin: 10px;
     display: flex;
     flex-direction: row;
 }
 
 .title_row{
-    margin: 5px;
+    margin: 10px;
     display: flex;
     flex-direction: row;
     font-weight: bold;

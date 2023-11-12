@@ -50,6 +50,30 @@ function extractColorsOptimized(cells)
     return hexString;
 }
 
+function setColorsByString(obj,hexString) 
+{
+    let binaryString = '';
+    for (let i = 0; i < hexString.length; i++) {
+        let hexDigit = hexString[i];
+        let binaryDigits = parseInt(hexDigit, 16).toString(2).padStart(4, '0');
+        binaryString += binaryDigits;
+    }
+
+    var cells=Array.from({ length: 16*18 }, (_, index) => (
+    {
+        row: Math.floor(index / 18),
+        col: index % 18,
+        color: 0
+    }));
+
+    for (let i = 0; i < cells.length; i++) {
+        cells[i].color = binaryString[i] === '1' ? 1 : 0;
+    }
+    
+    obj.setData({ cells });
+    app.setGlobalCells(cells);
+}
+
 function set_face(obj,leye_idx,reye_idx,mouth_idx,cheek_idx)
 {
     var set_leye=leye_idx ? leye[leye_idx-1] : none;
@@ -114,8 +138,6 @@ function set_face(obj,leye_idx,reye_idx,mouth_idx,cheek_idx)
     }
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    
-    //console.log(extractColorsOptimized(cells));
 }
 
 function resetColors(obj) 
@@ -145,7 +167,6 @@ function setMouthByArray(obj,colorArray)
     }
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    update_face_to_server(cells);
 }
 
 // 设置左眼
@@ -164,7 +185,6 @@ function setLeftEyeByArray(obj,colorArray)
     }
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    update_face_to_server(cells);
 }
 
 // 设置右眼
@@ -183,7 +203,6 @@ function setRightEyeByArray(obj,colorArray)
     }
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    update_face_to_server(cells);
 }
 
 // 设置脸颊
@@ -213,11 +232,10 @@ function setCheekByArray(obj,colorArray)
     }
     obj.setData({ cells });
     app.setGlobalCells(cells);
-    update_face_to_server(cells);
 }
 
 module.exports = {
     setMouthByArray,setLeftEyeByArray,setRightEyeByArray,
     setCheekByArray,extractColorsOptimized,resetColors,
-    set_face,update_face_to_server
+    set_face,update_face_to_server,setColorsByString
 };

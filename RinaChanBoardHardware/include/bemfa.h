@@ -46,11 +46,7 @@ void startTCPClient();
 // 发送数据到TCP服务器
 void sendtoTCPServer(String p);
 
-// 开启LED
-void turnOnLed();
-
-// 关闭LED
-void turnOffLed();
-
 // 表情信息解码
 void decodeHexString(const String hexString,int cells[16][18]);
+
+void send_face(String s);

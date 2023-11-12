@@ -51,8 +51,7 @@ Page({
                     //console.log(that.data.device_status)
                 }
             })
-
-        }, 5000)
+        },5000)
     },
 
     showModal: function() 

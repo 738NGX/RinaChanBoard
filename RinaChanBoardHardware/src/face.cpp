@@ -53,3 +53,35 @@ void set_face(CRGB leds[],int leye_idx,int reye_idx,int mouth_idx,int cheek_idx)
     face_update(face,leds);
     FastLED.show();
 }
+
+String get_face(CRGB leds[]) {
+    int face[16][18] = {0};
+
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 16; j++) {
+            if (i % 2 == 0) {
+                face[15 - i][j + 1] = leds[16 * i + j] == CRGB::White ? 1 : 0;
+            } else {
+                face[15 - i][16 - j] = leds[16 * i + j] == CRGB::White ? 1 : 0;
+            }
+        }
+    }
+
+    String binaryString;
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 18; j++) {
+            binaryString += face[i][j] ? '1' : '0';
+        }
+    }
+
+    String hexString;
+    for (size_t i = 0; i < binaryString.length(); i += 4) {
+        int value = 0;
+        for (int j = 0; j < 4; j++) {
+            value = (value << 1) | (binaryString[i + j] - '0');
+        }
+        hexString += String(value, HEX);
+    }
+
+    return hexString;
+}

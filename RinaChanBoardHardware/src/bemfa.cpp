@@ -110,7 +110,7 @@ void doTCPClientTick(CRGB leds[])
         if (TcpClient_Buff.length() > 15)
         {   
             // 注意TcpClient_Buff只是个字符串，在上面开头做了初始化 String TcpClient_Buff = "";
-            // 此时会收到推送的指令，指令大概为 cmd=2&uid=xxx&topic=light002&msg=off
+            // 此时会收到推送的指令，指令大概为 cmd=2&uid=xxx&topic=xxx&msg=xxx
             int topicIndex=TcpClient_Buff.indexOf("&topic=")+7;         // 查找&topic=位置，并移动7位
             int msgIndex=TcpClient_Buff.indexOf("&msg=");               // 查找&msg=位置
             getTopic=TcpClient_Buff.substring(topicIndex, msgIndex);    // 截取到topic
@@ -122,18 +122,25 @@ void doTCPClientTick(CRGB leds[])
         }
         if(getMsg.length()==72)
         {
+            // 自定义表情消息
             face_update_by_string(getMsg,leds);
+        }
+        else if(getMsg=="requestFace")
+        {
+            send_face(get_face(leds));
         }
         else if(getMsg.length()==16)
         {
+            // 语音播放消息
             play_voice_face(leds,getMsg);
         }
         else if(getMsg.length()==19)
         {
+            // 歌曲播放消息
             play_music_face(leds,getMsg);
         }
-        TcpClient_Buff = "";
-        TcpClient_BuffIndex = 0;
+        TcpClient_Buff="";
+        TcpClient_BuffIndex=0;
     }
 }
 
@@ -177,18 +184,6 @@ void doWiFiTick()
     }
 }
 
-void turnOnLed()
-{
-    Serial.println("Turn ON");
-    digitalWrite(LED_BUILTIN,LOW);
-}
-
-void turnOffLed()
-{
-    Serial.println("Turn OFF");
-    digitalWrite(LED_BUILTIN,HIGH);
-}
-
 void decodeHexString(const String hexString,int cells[16][18]) 
 {
     String binaryString;
@@ -210,4 +205,16 @@ void decodeHexString(const String hexString,int cells[16][18])
         int col=i%18;
         cells[row][col]=binaryString[i] == '1' ? 1 : 0;
     }
+}
+
+void send_face(String s)
+{
+    String tcpTemp="cmd=2&uid=";
+    tcpTemp+=UID; 
+    tcpTemp+="&topic=";
+    tcpTemp+=TOPIC;
+    tcpTemp+="&msg=";
+    tcpTemp+=s;
+    tcpTemp+="\r\n";
+    sendtoTCPServer(tcpTemp);
 }
