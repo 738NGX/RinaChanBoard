@@ -2,6 +2,7 @@
 #include <FastLED.h>
 
 #include <ESP8266WiFi.h>
+#include <map>
 
 #include <voice.h>
 #include <music.h>
@@ -10,12 +11,58 @@
 
 // tcp客户端相关初始化
 WiFiClient TCPclient;
-String TcpClient_Buff = "";                 // 初始化字符串,用于接收服务器发来的数据
-unsigned int TcpClient_BuffIndex = 0;
-unsigned long TcpClient_preTick = 0;
-unsigned long preHeartTick = 0;             // 心跳
-unsigned long preTCPStartTick = 0;          // 连接
-bool preTCPConnected = false;
+String TcpClient_Buff= "";                 // 初始化字符串,用于接收服务器发来的数据
+unsigned int TcpClient_BuffIndex=0;
+unsigned long TcpClient_preTick=0;
+unsigned long preHeartTick=0;             // 心跳
+unsigned long preTCPStartTick=0;          // 连接
+bool preTCPConnected=false;
+
+unsigned int R=249;
+unsigned int G=113;
+unsigned int B=212;
+uint8_t bright=64;
+
+void updateColor(String color_code,CRGB leds[])
+{
+    unsigned int new_R=0,new_G=0,new_B=0;
+    for(unsigned int i=0;i<color_code.length();i++)
+    {
+        int value=(std::isdigit(color_code[i])) ? color_code[i]-'0' : std::toupper(color_code[i])-'A'+10;
+        switch(i)
+        {
+            case 0: continue;        break;
+            case 1: new_R+=16*value; break;
+            case 2: new_R+=value;    break;
+            case 3: new_G+=16*value; break;
+            case 4: new_G+=value;    break;
+            case 5: new_B+=16*value; break;
+            case 6: new_B+=value;    break;
+            default: continue;       break;
+        }
+    }
+    R=new_R; G=new_G; B=new_B;
+    for(int i=0;i<NUM_LEDS;i++)
+    {
+        leds[i]=leds[i]==CRGB::Black ? CRGB::Black : CRGB(R,G,B);
+    }
+    FastLED.show();
+}
+
+void sendColor()
+{
+    String s="#";
+    String hex[16]={"0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"};
+    s+=hex[R/16]+hex[R%16]+hex[G/16]+hex[G%16]+hex[B/16]+hex[B%16];
+    String tcpTemp="cmd=2&uid=";
+    tcpTemp+=UID;
+    tcpTemp+="&topic=";
+    tcpTemp+=TOPIC;
+    tcpTemp+="&msg=";
+    tcpTemp+=s;
+    tcpTemp+="\r\n";
+    sendtoTCPServer(tcpTemp);
+}
 
 void sendtoTCPServer(String p)
 {
@@ -123,21 +170,49 @@ void doTCPClientTick(CRGB leds[])
         if(getMsg.length()==72)
         {
             // 自定义表情消息
-            face_update_by_string(getMsg,leds);
+            face_update_by_string(getMsg,leds,CRGB(R,G,B));
         }
         else if(getMsg=="requestFace")
         {
             send_face(get_face(leds));
         }
+        else if(getMsg=="requestColor")
+        {
+            sendColor();
+        }
+        else if(getMsg=="requestBright")
+        {
+            String hex[16]={"0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"};
+            String s=hex[bright/100]+hex[bright%100/10]+hex[bright%10];
+            String tcpTemp="cmd=2&uid=";
+            tcpTemp+=UID; 
+            tcpTemp+="&topic=";
+            tcpTemp+=TOPIC;
+            tcpTemp+="&msg=";
+            tcpTemp+=s;
+            tcpTemp+="\r\n";
+            sendtoTCPServer(tcpTemp);
+        }
+        else if(getMsg[0]=='B')
+        {
+            bright=(getMsg[1]-'0')*100+(getMsg[2]-'0')*10+(getMsg[3]-'0');
+            FastLED.setBrightness(bright);
+            FastLED.show();
+        }
+        else if(getMsg.length()==7)
+        {
+            updateColor(getMsg,leds);
+            FastLED.show();
+        }
         else if(getMsg.length()==16)
         {
             // 语音播放消息
-            play_voice_face(leds,getMsg);
+            play_voice_face(leds,CRGB(R,G,B),getMsg);
         }
         else if(getMsg.length()==19)
         {
             // 歌曲播放消息
-            play_music_face(leds,getMsg);
+            play_music_face(leds,CRGB(R,G,B),getMsg);
         }
         TcpClient_Buff="";
         TcpClient_BuffIndex=0;
@@ -191,9 +266,9 @@ void decodeHexString(const String hexString,int cells[16][18])
 
     for(char hexDigit:hexString) 
     {
-        int value = (std::isdigit(hexDigit)) ? hexDigit - '0' : std::toupper(hexDigit) - 'A' + 10;
+        int value=(std::isdigit(hexDigit)) ? hexDigit-'0' : std::toupper(hexDigit)-'A'+10;
 
-        for (int bit=3;bit>=0;bit--) 
+        for(int bit=3;bit>=0;bit--) 
         {
             binaryString+=(value&(1<<bit)) ? '1' : '0';
         }

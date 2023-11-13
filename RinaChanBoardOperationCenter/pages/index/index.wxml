@@ -12,18 +12,9 @@
     </block>
     <view class='row'>选择控制设备</view>
     <view class="infocard"> 
-        <picker bindchange="bindPickerChange" value="{{controlling_device}}" range="{{devices}}">
+        <picker bindchange="bindControllingDeviceChange" value="{{controlling_device}}" range="{{devices}}">
             <view class='row'>
-                正在控制的设备: 
-                <block wx:if='{{controlling_device==1}}'>
-                    工程样机
-                </block>
-                <block wx:elif='{{controlling_device==2}}'>
-                    体验机
-                </block>
-                <block wx:else>
-                    未选择
-                </block>
+                正在控制的设备: {{devices[controlling_device]}}
             </view>
         </picker>
     </view>
@@ -32,11 +23,37 @@
         <view class='row'>
             连接状态: 
             <block wx:if='{{device_status}}'>
-                <view class='green_circle'></view>已连接
+                <view class='circle' style="background-color: green"></view>已连接
             </block>
             <block wx:else>
-                <view class='red_circle'></view>未连接
+                <view class='circle' style="background-color: red"></view>未连接
             </block>
+        </view>
+        <view class='row'>
+            灯珠颜色: 
+            <view class='circle' style="background-color: #{{color}}"></view>
+            #{{color}}
+            <button class="small_btn" style="width:15%;" bindtap="uploadColors">上传</button>
+            <button class="small_btn" style="width:15%;" bindtap="downloadColors">下载</button>
+        </view>
+        <view class='row'>
+            #<input style='width:50%;' maxlength="6" bindinput="bindColorInput" placeholder="输入颜色"/>
+            <picker bindchange="bindColorChange" value="{{color_idx}}" range="{{color_names}}">
+                点击快速选择颜色
+            </picker>
+        </view>
+        <view class='row'>
+            灯珠亮度: 
+            <view class='circle' style="background-color: rgb({{bright}},{{bright}},{{bright}})"></view>
+            {{bright}}
+            <button class="small_btn" style="width:15%;" bindtap="uploadBright">上传</button>
+            <button class="small_btn" style="width:15%;" bindtap="downloadBright">下载</button>
+        </view>
+        <view class='row'>
+            <input type="number" style='width:50%;' maxlength="6" bindinput="bindBrightInput" placeholder="输入亮度(0-255)"/>
+            <picker bindchange="bindBrightChange" value="{{bright_idx}}" range="{{brights}}">
+                点击快速选择亮度
+            </picker>
         </view>
     </view>
     <view class='row'>食用说明</view>
@@ -45,7 +62,7 @@
             单击选择控制设备卡片,选中"体验机",
             点确认后输入体验密码(某首歌名全是数字的歌),
             等待连接状态成为已连接后,即可控制璃奈版.
-        </view>            
+        </view>
     </expander>
     <modal hidden="{{hidden_modal}}" title="密码验证" bindcancel="hideModal" bindconfirm="checkPassword">
         <view>请输入密码：</view>

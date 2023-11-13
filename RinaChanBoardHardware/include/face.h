@@ -7,11 +7,11 @@
 String get_face(CRGB leds[]);
 
 // 更新脸部表情
-void face_update(int face[16][18],CRGB leds[]);
-void face_update_by_string(const String hexString,CRGB leds[]);
+void face_update(int face[16][18],CRGB leds[],CRGB color);
+void face_update_by_string(const String hexString,CRGB leds[],CRGB color);
 
 // 从预设库中设置表情
-void set_face(CRGB leds[],int leye_idx,int reye_idx,int mouth_idx,int cheek_idx);
+void set_face(CRGB leds[],CRGB color,int leye_idx,int reye_idx,int mouth_idx,int cheek_idx);
 
 #define MOUTH {\
 {\

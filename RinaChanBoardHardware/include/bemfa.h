@@ -31,6 +31,16 @@
 // 设置心跳值60s
 #define KEEPALIVEATIME 60 * 1000
 
+#define NUM_LEDS 256
+#define DATA_PIN D1
+#define BUTTON D2
+#define LED_TYPE WS2812B
+#define COLOR_ORDER GRB
+
+void updateColor(String color_code,CRGB leds[]);
+
+void sendColor();
+
 // 连接WIFI
 void doWiFiTick();
 

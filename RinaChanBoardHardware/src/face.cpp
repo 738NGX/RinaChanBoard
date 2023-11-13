@@ -9,27 +9,27 @@ const int leye[][8][8]=LEYE;
 const int mouth[][8][8]=MOUTH;
 const int cheek[][2][5]=CHEEK;
 
-void face_update(int face[16][18],CRGB leds[])
+void face_update(int face[16][18],CRGB leds[],CRGB color)
 {
     for(int i=0;i<16;i++)
     {
         for(int j=0;j<16;j++)
         {
-            if(i%2) leds[16*i+j]=face[15-i][16-j] ? CRGB::White : CRGB::Black;
-            else leds[16*i+j]= face[15-i][j+1] ? CRGB::White : CRGB::Black;
+            if(i%2) leds[16*i+j]=face[15-i][16-j] ? color : CRGB::Black;
+            else leds[16*i+j]= face[15-i][j+1] ? color : CRGB::Black;
         }
     }
 }
 
-void face_update_by_string(const String hexString,CRGB leds[])
+void face_update_by_string(const String hexString,CRGB leds[],CRGB color)
 {
     int face[16][18];
     decodeHexString(hexString,face);
-    face_update(face,leds);
+    face_update(face,leds,color);
     FastLED.show();
 }
 
-void set_face(CRGB leds[],int leye_idx,int reye_idx,int mouth_idx,int cheek_idx)
+void set_face(CRGB leds[],CRGB color,int leye_idx,int reye_idx,int mouth_idx,int cheek_idx)
 {
     int face[16][18]={0};
 
@@ -50,34 +50,43 @@ void set_face(CRGB leds[],int leye_idx,int reye_idx,int mouth_idx,int cheek_idx)
             face[i+8][j+13]=cheek[cheek_idx][i][5-j];
         }
     }
-    face_update(face,leds);
+    face_update(face,leds,color);
     FastLED.show();
 }
 
 String get_face(CRGB leds[]) {
-    int face[16][18] = {0};
+    int face[16][18]={0};
 
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 16; j++) {
-            if (i % 2 == 0) {
-                face[15 - i][j + 1] = leds[16 * i + j] == CRGB::White ? 1 : 0;
-            } else {
-                face[15 - i][16 - j] = leds[16 * i + j] == CRGB::White ? 1 : 0;
+    for(int i=0;i<16;i++) 
+    {
+        for(int j=0;j<16;j++)
+        {
+            if(i%2==0) 
+            {
+                face[15-i][j+1]=leds[16*i + j]==CRGB::Black ? 0 : 1;
+            }
+            else
+            {
+                face[15-i][16-j]=leds[16 * i + j]==CRGB::Black ? 0 : 1;
             }
         }
     }
 
     String binaryString;
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 18; j++) {
-            binaryString += face[i][j] ? '1' : '0';
+    for(int i=0;i<16;i++)
+    {
+        for(int j=0;j<18;j++)
+        {
+            binaryString+=face[i][j] ? '1' : '0';
         }
     }
 
     String hexString;
-    for (size_t i = 0; i < binaryString.length(); i += 4) {
+    for(size_t i=0;i<binaryString.length();i+=4)
+    {
         int value = 0;
-        for (int j = 0; j < 4; j++) {
+        for(int j=0;j<4; j++)
+        {
             value = (value << 1) | (binaryString[i + j] - '0');
         }
         hexString += String(value, HEX);

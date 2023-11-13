@@ -143,7 +143,7 @@ Page({
             }
         });
         
-        await util.sleep(400);
+        await util.sleep(500);
         let msg='';
         
         wx.request({
@@ -160,9 +160,11 @@ Page({
             success(res) 
             {
                 msg=res.data.msg;
+                console.log(msg)
             }
         })
-        await util.sleep(100);
+        await util.sleep(600);
+        console.log('start.')
         setColorsByString(this,msg);
     },
     resetColors() 

@@ -5,14 +5,6 @@
 #include <face.h>
 #include <voice.h>
  
-#define NUM_LEDS 256
-#define DATA_PIN D1
-#define BUTTON D2
-#define LED_TYPE WS2812B
-#define COLOR_ORDER GRB
- 
-uint8_t max_bright=64;
- 
 CRGB leds[NUM_LEDS];
 
 void setup()
@@ -26,7 +18,7 @@ void setup()
     digitalWrite(LED_BUILTIN,HIGH);
     
     LEDS.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds,NUM_LEDS); 
-    FastLED.setBrightness(max_bright);
+    FastLED.setBrightness(64);
 
     Serial.println("Beginning...");
 }

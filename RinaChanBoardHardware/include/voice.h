@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 
-void play_voice_face(CRGB leds[],const String id);
+void play_voice_face(CRGB leds[],CRGB color,const String id);
 
 #define VOICE_DATA {\
     /*vo_na_m0209_0001*/\

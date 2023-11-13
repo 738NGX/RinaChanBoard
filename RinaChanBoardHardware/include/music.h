@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 
-void play_music_face(CRGB leds[],const String id);
+void play_music_face(CRGB leds[],CRGB color,const String id);
 
 #define MUSIC_DATA {\
     /*Love U my friends(short ver.)*/\
