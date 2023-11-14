@@ -4,6 +4,8 @@
 #include <ESP8266WiFi.h>
 #include <FastLED.h>
 
+#define firmware_version "0.0.7"
+
 #define server_ip "bemfa.com" // 巴法云服务器地址默认即可
 #define server_port "8344"    // 服务器端口，tcp创客云端口8344
 
@@ -60,3 +62,5 @@ void sendtoTCPServer(String p);
 void decodeHexString(const String hexString,int cells[16][18]);
 
 void send_face(String s);
+
+String mergeMsg(String s);

@@ -10,18 +10,17 @@
             <image mode='widthFix' src="/images/disconnected.png"></image>
         </view>
     </block>
-    <view class='row'>选择控制设备</view>
+    <view class='row'>璃奈板状态</view>
     <view class="infocard"> 
         <picker bindchange="bindControllingDeviceChange" value="{{controlling_device}}" range="{{devices}}">
             <view class='row'>
-                正在控制的设备: {{devices[controlling_device]}}
+                <image class='icon' src='/images/icons/璃奈.png'></image>
+                正在控制的璃奈板: {{devices[controlling_device]}}
             </view>
         </picker>
-    </view>
-    <view class='row'>设备信息</view>
-    <view class="infocard">
         <view class='row'>
-            连接状态: 
+            <image class='icon' src='/images/icons/连接.png'></image>
+            连接状态:
             <block wx:if='{{device_status}}'>
                 <view class='circle' style="background-color: green"></view>已连接
             </block>
@@ -29,39 +28,68 @@
                 <view class='circle' style="background-color: red"></view>未连接
             </block>
         </view>
+    </view>
+    <view class='row'>璃奈板设置</view>
+    <view class="infocard">
         <view class='row'>
+            <image class='icon' src='/images/icons/亮度.png'></image>
+            灯珠亮度: 
+            <view class='circle' style="background-color: rgb({{bright}},{{bright}},{{bright}})"></view>
+            {{brights[bright_idx]}}
+            <view class='blank' style='width:33%;'></view>
+            
+        </view>
+    </view>
+    <view class='row'>
+        <picker class="infocard" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;align-items:center;flex-direction:row;" bindchange="bindBrightChange" value="{{bright_idx}}" range="{{brights}}">
+            选择亮度
+        </picker>
+        <button class="infocard" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:5px;font-weight:normal;flex-direction:row;" bindtap="uploadBright">
+            <image class='icon' src='/images/icons/上传.png' style='margin-right:3px;' mode='widthFix'></image>
+            上传
+        </button>
+        <button class="infocard" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;font-weight:normal;flex-direction:row;" bindtap="downloadBright">
+            <image class='icon' src='/images/icons/下载.png' style='margin-right:3px;' mode='widthFix'></image>
+            下载
+        </button>
+    </view>
+    <view class="infocard">
+        <view class='row'>
+            <image class='icon' src='/images/icons/颜色.png'></image>
             灯珠颜色: 
             <view class='circle' style="background-color: #{{color}}"></view>
             #{{color}}
-            <button class="small_btn" style="width:15%;" bindtap="uploadColors">上传</button>
-            <button class="small_btn" style="width:15%;" bindtap="downloadColors">下载</button>
-        </view>
-        <view class='row'>
-            #<input style='width:50%;' maxlength="6" bindinput="bindColorInput" placeholder="输入颜色"/>
-            <picker bindchange="bindColorChange" value="{{color_idx}}" range="{{color_names}}">
-                点击快速选择颜色
-            </picker>
-        </view>
-        <view class='row'>
-            灯珠亮度: 
-            <view class='circle' style="background-color: rgb({{bright}},{{bright}},{{bright}})"></view>
-            {{bright}}
-            <button class="small_btn" style="width:15%;" bindtap="uploadBright">上传</button>
-            <button class="small_btn" style="width:15%;" bindtap="downloadBright">下载</button>
-        </view>
-        <view class='row'>
-            <input type="number" style='width:50%;' maxlength="6" bindinput="bindBrightInput" placeholder="输入亮度(0-255)"/>
-            <picker bindchange="bindBrightChange" value="{{bright_idx}}" range="{{brights}}">
-                点击快速选择亮度
-            </picker>
+            <view class='blank' style='width:10%;'></view>
         </view>
     </view>
+    <view class='row'>
+        <picker class="infocard" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;align-items:center;" bindchange="bindColorChange" value="{{color_idx}}" range="{{color_names}}">
+            从应援色中选择
+        </picker>
+        <view class='infocard' style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;align-items:center;flex-direction:row;">
+            <image class='icon' src='/images/icons/输入.png' style='margin-right:5px;' mode='widthFix'></image>
+            #<input maxlength="6" style='width:60%;' bindinput="bindColorInput" placeholder="自定义颜色"/>
+        </view>
+    </view>
+    <view class='row'>
+        <button class="infocard" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;font-weight:normal;flex-direction:row;" bindtap="uploadColors">
+            <image class='icon' src='/images/icons/上传.png' style='margin-right:3px;' mode='widthFix'></image>
+            上传颜色
+        </button>
+        <button class="infocard" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;font-weight:normal;flex-direction:row;" bindtap="downloadColors">
+            <image class='icon' src='/images/icons/下载.png' style='margin-right:3px;' mode='widthFix'></image>
+            下载颜色
+        </button>
+    </view>
     <view class='row'>食用说明</view>
-    <expander header="点击查看食用说明">
+    <expander header="点击查看食用说明" icon='/images/icons/信息.png'>
         <view class='row'>
-            单击选择控制设备卡片,选中"体验机",
-            点确认后输入体验密码(某首歌名全是数字的歌),
+            单击璃奈板状态-正在控制的璃奈板,选中你想要控制的璃奈板代号,
+            点确认后输入密码验证,
             等待连接状态成为已连接后,即可控制璃奈版.
+        </view>
+        <view class='row'>
+            在限时体验期期间,用户可以选择"体验机"进行体验操作.体验密码为某首歌名全是数字的歌.
         </view>
     </expander>
     <modal hidden="{{hidden_modal}}" title="密码验证" bindcancel="hideModal" bindconfirm="checkPassword">

@@ -49,11 +49,8 @@ void updateColor(String color_code,CRGB leds[])
     FastLED.show();
 }
 
-void sendColor()
+String mergeMsg(String s)
 {
-    String s="#";
-    String hex[16]={"0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"};
-    s+=hex[R/16]+hex[R%16]+hex[G/16]+hex[G%16]+hex[B/16]+hex[B%16];
     String tcpTemp="cmd=2&uid=";
     tcpTemp+=UID;
     tcpTemp+="&topic=";
@@ -61,6 +58,16 @@ void sendColor()
     tcpTemp+="&msg=";
     tcpTemp+=s;
     tcpTemp+="\r\n";
+    return tcpTemp;
+}
+
+void sendColor()
+{
+    String s="#";
+    String hex[16]={"0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"};
+    s+=hex[R/16]+hex[R%16]+hex[G/16]+hex[G%16]+hex[B/16]+hex[B%16];
+    
+    String tcpTemp=mergeMsg(s);
     sendtoTCPServer(tcpTemp);
 }
 

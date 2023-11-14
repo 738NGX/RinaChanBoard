@@ -12,7 +12,7 @@
     <scroll-view scroll-y="true" style='height:280px;'>
         <block wx:for='{{voices}}' wx:key='id'>
             <view class='voicecard'>
-                <button class='play_btn' bindtap='play_voice' style='width:50px;height:50px' data-id='{{item.id}}'>
+                <button class='play_btn' bindtap='play_voice' style='width:30px;height:30px' data-id='{{item.id}}'>
                     <image src='/images/play.png' mode='widthFix'></image>
                 </button>
                 <view class='voice_text'>{{item.text}}</view>

@@ -14,7 +14,7 @@ Page({
         hidden_modal: true,
         password: '',
 
-        color:'',
+        color:'f971d4',
         color_idx:0,
         color_info:util.color_info,
         color_names:util.color_info.map(color=>color.name),
@@ -22,7 +22,7 @@ Page({
 
         bright:64,
         bright_idx:0,
-        brights:brights,
+        brights:['正常','輝く','眩しい','光害'],
     },
 
     onLoad: function () 
@@ -128,7 +128,7 @@ Page({
     
     bindBrightChange: function(e)
     {
-        this.setData({bright:brights[parseInt(e.detail.value)]});
+        this.setData({bright:brights[parseInt(e.detail.value)],bright_idx:parseInt(e.detail.value)});
     },
 
     bindBrightInput: function (e) 

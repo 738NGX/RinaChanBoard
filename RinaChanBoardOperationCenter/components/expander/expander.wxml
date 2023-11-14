@@ -1,8 +1,11 @@
 <view class='expander'>
-  <view class='header' bindtap='toggle'>
-    {{header}}
-  </view>
-  <view class='content' wx:if="{{expanded}}">
-    <slot></slot>
-  </view>
+    <view class='header' 
+          style='border-bottom-left-radius:{{expanded ? "0px" : "10px"}}; border-bottom-right-radius:{{expanded ? "0px" : "10px"}}; border-bottom: {{expanded ? "1px" : "0px"}} solid #aaa;'
+          bindtap='toggle'>
+        <image class='icon' src='{{icon}}'></image>
+        {{header}}
+    </view>
+    <view class='content' wx:if="{{expanded}}">
+        <slot></slot>
+    </view>
 </view>

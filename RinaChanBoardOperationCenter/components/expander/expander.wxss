@@ -5,15 +5,24 @@
 .expander .header{
     padding: 15px;
     background-color: #fff;
-    border-bottom: 2px solid #aaa;
-    border-right: 2px solid #aaa;
-    border-radius: 10px;
+    border-bottom: 0px solid #aaa;
+    border-right: 0px solid #aaa;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    flex-direction: row;
 }
 
 .expander .content{
     padding: 15px;
     background-color: #fff;
-    border-right: 2px solid #aaa;
-    border-bottom: 2px solid #aaa;
+    border-right: 0px solid #aaa;
+    border-bottom: 0px solid #aaa;
     border-radius: 0px 0px 10px 10px;
+}
+
+.expander .icon{
+    height: 25px;
+    width:25px;
+    margin-right: 10px;
 }

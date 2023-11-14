@@ -1,19 +1,19 @@
 Component({
     properties: {
-      header: {
-        type: String,
-        value: 'Expand Me'
-      }
+        header: {
+            type: String,
+            value: 'Expand Me'
+        },
+        icon:'',
     },
     data: {
-      expanded: false
+        expanded: false
     },
     methods: {
-      toggle() {
-        this.setData({
-          expanded: !this.data.expanded
-        });
-      }
+        toggle() {
+            this.setData({
+                expanded: !this.data.expanded
+            });
+        }
     }
-  });
-  
+});
