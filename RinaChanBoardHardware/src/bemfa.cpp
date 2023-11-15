@@ -216,10 +216,13 @@ void doTCPClientTick(CRGB leds[])
             // 语音播放消息
             play_voice_face(leds,CRGB(R,G,B),getMsg);
         }
-        else if(getMsg.length()==19)
+        else if(getMsg.length()==23)
         {
             // 歌曲播放消息
-            play_music_face(leds,CRGB(R,G,B),getMsg);
+            String id=getMsg.substring(0,19);
+            String start_s=getMsg.substring(19);
+            int start=(start_s[0]-'0')*1000+(start_s[1]-'0')*100+(start_s[2]-'0')*10+(start_s[3]-'0');
+            play_music_face(leds,CRGB(R,G,B),id,start);
         }
         TcpClient_Buff="";
         TcpClient_BuffIndex=0;

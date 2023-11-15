@@ -72,6 +72,27 @@ Page({
     {
         this.setData({playing:true});
         const using_faces=music_data[this.data.choosing_music].faces;
+        let start=this.data.current_frame.toString();
+        if(start.length==1) start='000'+start;
+        else if(start.length==2) start='00'+start;
+        else if(start.length==3) start='0'+start;
+        wx.request({
+            url: 'https://api.bemfa.com/api/device/v1/data/1/',
+            method: "POST",
+            data:
+            {
+                uid: util.device_info[app.get_controlling_device()].uid,
+                topic: util.device_info[app.get_controlling_device()].topic,
+                msg: music_data[this.data.choosing_music].id+start
+            },
+            header:
+            {
+                'content-type': "application/x-www-form-urlencoded"
+            },
+            success(res) {
+                console.log(res.data);
+            }
+        });
         audio.play();
         while(this.data.playing&&this.data.current_frame<this.data.frames)
         {

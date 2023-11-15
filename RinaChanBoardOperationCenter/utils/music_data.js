@@ -182,6 +182,8 @@ const music_data=[
             {leye: 1,reye: 1,mouth: 7,cheek: 0,frame: 773},
             {leye: 1,reye: 1,mouth: 6,cheek: 0,frame: 776},
             {leye: 1,reye: 1,mouth: 9,cheek: 0,frame: 778},
+            {leye: 1,reye: 1,mouth:10,cheek: 0,frame: 786},
+            {leye: 1,reye: 1,mouth: 9,cheek: 0,frame: 791},
             {leye: 1,reye: 1,mouth: 7,cheek: 0,frame: 794},
             {leye: 1,reye: 1,mouth: 3,cheek: 0,frame: 820},
             {leye: 6,reye: 6,mouth: 3,cheek: 0,frame: 823},
