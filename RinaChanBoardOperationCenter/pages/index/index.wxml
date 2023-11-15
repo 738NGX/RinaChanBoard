@@ -28,6 +28,16 @@
                 <view class='circle' style="background-color: red"></view>未连接
             </block>
         </view>
+        <view class='row'>
+            <image class='icon' src='/images/icons/电量.png'></image>
+            剩余电量:
+            <block wx:if='{{device_status}}'>
+                <view class='circle' style="background-color: green"></view>外接电源
+            </block>
+            <block wx:else>
+                <view class='circle' style="background-color: grey"></view>未知
+            </block>
+        </view>
     </view>
     <view class='row'>璃奈板设置</view>
     <view class="infocard">

@@ -14,9 +14,12 @@
         </picker>
     </view>
     <view class='infocard'>
+        <slider bindchange="sliderChange" min="0" max="{{frames}}" step="1" value="{{current_frame}}" />
+        <view>{{current_frame}}</view>
+        <view>{{current_face}}</view>
         <view class='row'>
             <button class='btn' bindtap='play_music'>开始播放</button>
-            <button class='btn'>中断播放</button>
+            <button class='btn' bindtap='stop_music'>中断播放</button>
         </view>
     </view>
     <view class='row'>歌曲信息</view>

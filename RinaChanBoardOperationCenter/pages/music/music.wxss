@@ -31,3 +31,12 @@
     background-color: #fff;
     padding: 0px;
 }
+
+wx-slider .wx-slider-handle-wrapper {
+    height: 20rpx;
+    
+}
+
+wx-slider .wx-slider-track {
+    background: linear-gradient(to right, #f971d4 0%, #ffe6fa 100%);
+}
