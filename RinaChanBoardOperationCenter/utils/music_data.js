@@ -30,7 +30,7 @@
  */
 
 const music_data=[
-    {id:'none',name:'未选择',singer:'未选择',text:'选一首你想要播放的歌曲吧!',faces:[{leye:1,reye:1,mouth:3,cheek:0,frame:1},]},
+    {id:'none',name:'未选择',singer:'未选择',text:'选一首你想要播放的歌曲吧!',faces:[{leye:1,reye:1,mouth:3,cheek:0,frame:0},{leye:1,reye:1,mouth:3,cheek:0,frame:1},]},
     {
         id:'music_02_00_02_09_0',
         name:'Love U my friends(Short ver.)',

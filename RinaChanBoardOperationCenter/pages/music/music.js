@@ -2,7 +2,6 @@ const app=getApp();
 
 const face_func=require('../../utils/face_func.js');
 const util=require('../../utils/util.js');
-const audio = wx.createInnerAudioContext();
 
 const{music_data}=require('../../utils/music_data.js');
 
@@ -21,6 +20,7 @@ Page({
         music_texts: music_data.map(music => music.text),
         cover_srcs: music_data.map(music => music.cover_src),
         choosing_music: 0,
+        music_src:'',
 
         playing:false,
 
@@ -35,7 +35,6 @@ Page({
         app.addCellsListener((newCells) => {
             this.setData({ cells: newCells });
         });
-        audio.autoplay=false;
     },
     onUnload() {
         // 移除监听器
@@ -49,8 +48,9 @@ Page({
             choosing_music: idx,
             frames:using_faces[using_faces.length-1].frame-1,
             current_frame:0,
+            current_face:0,
         });
-        audio.src=music_data.map(music=>music.music_src)[this.data.choosing_music];
+        this.setData({music_src:music_data.map(music=>music.music_src)[this.data.choosing_music]});
         face_func.set_face(this,using_faces[0].leye,using_faces[0].reye,using_faces[0].mouth,using_faces[0].cheek); 
     },
     sliderChange: function(e)
@@ -59,7 +59,7 @@ Page({
         f=parseInt(e.detail.value);
         this.setData({current_frame:f});
         const using_faces=music_data[this.data.choosing_music].faces;
-        audio.seek(Math.floor(this.data.current_frame/10));
+        
         for(let i=0;i<using_faces.length;i++)
         {
             if(this.data.current_frame<music_data[this.data.choosing_music].faces[i].frame)
@@ -72,8 +72,8 @@ Page({
     },
     async play_music()
     {
-        this.setData({playing:true});
         const using_faces=music_data[this.data.choosing_music].faces;
+        
         let start=this.data.current_frame.toString();
         if(start.length==1) start='000'+start;
         else if(start.length==2) start='00'+start;
@@ -95,8 +95,22 @@ Page({
                 console.log(res.data);
             }
         });
-        audio.seek(Math.floor(this.data.current_frame/10));
+        
+        const audio=wx.createInnerAudioContext();
+        audio.autoplay=false;
+        audio.src=this.data.music_src;
+        if(this.data.current_frame>=this.data.frames)
+        {
+            audio.seek(0);
+            this.setData({current_frame:0});
+        }
+        else
+        {
+            audio.seek(Math.floor(this.data.current_frame/10));
+        }
+        this.setData({playing:true});
         audio.play();
+
         while(this.data.playing&&this.data.current_frame<this.data.frames)
         {
             for(let i=0;i<using_faces.length;i++)
@@ -113,11 +127,12 @@ Page({
             this.setData({current_frame:next_frame});
             await sleep(100);
         }
+        
+        audio.pause();
         this.setData({playing:false});
     },
     async stop_music()
     {
         this.setData({playing:false});
-        audio.pause();
     }
 })
