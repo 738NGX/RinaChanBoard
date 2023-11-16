@@ -8,29 +8,52 @@
         </view>
     </view></view>
     <view class='row'>歌曲操作</view>
-    <view class='infocard'>
-        <picker bindchange="bindPickerChange" value="{{choosing_music}}" range="{{music_names}}">
-            <view class='title_row2'>点击以选择歌曲</view>
-        </picker>
-    </view>
-    <view class='infocard'>
-        <slider bindchange="sliderChange" min="0" max="{{frames}}" step="1" value="{{current_frame}}" />
-        <view>{{current_frame}}</view>
-        <view>{{current_face}}</view>
-        <view class='row'>
-            <button class='btn' bindtap='play_music'>开始播放</button>
-            <button class='btn' bindtap='stop_music'>中断播放</button>
+    <view class='row'>
+        <view class='btn' style='width:50%;margin-right:5px;'>
+            <image class='icon' src='/images/icons/时间.png'></image>
+            <view>{{current_frame}}/{{frames}}</view>
         </view>
+        <view class='btn' style='width:50%;margin-left:5px;'>
+            <image class='icon' src='/images/icons/表情.png'></image>
+            <view>{{current_face+1}}/{{music_data[choosing_music].faces.length-1}}</view>
+        </view>
+    </view>
+    <view class='infocard' style='padding:0px'>
+        <slider bindchange="sliderChange" min="0" max="{{frames}}" step="1" block-size="12" value="{{current_frame}}" />
+    </view>
+    <view class='row'>
+        <button class='btn' style='width:33%;margin-right:5px;' bindtap='play_music'>
+            <block wx:if="{{playing}}">
+                <image class='icon' src='/images/icons/播放-灰.png'></image>
+            </block>
+            <block wx:else>
+                <image class='icon' src='/images/icons/播放.png'></image>
+            </block>
+            播放
+        </button>
+        <button class='btn' style='width:33%;margin-right:5px;margin-left:5px;' bindtap='stop_music'>
+            <block wx:if="{{playing}}">
+                <image class='icon' src='/images/icons/停止.png'></image>
+            </block>
+            <block wx:else>
+                <image class='icon' src='/images/icons/停止-灰.png'></image>
+            </block>
+            停止
+        </button> 
+        <picker class='btn' style='width:33%;margin-left:5px;' bindchange="bindPickerChange" value="{{choosing_music}}" range="{{music_names}}">
+            <view class='row' style='margin:0px;'>
+            <image class='icon' src='/images/icons/歌单.png'></image>
+            歌单
+            </view>
+        </picker>
     </view>
     <view class='row'>歌曲信息</view>
     <view class='infocard'>
-        <view class='title_row'>{{music_names[choosing_music]}}</view>
-        <view class='row'>{{music_singers[choosing_music]}}</view>
-        <view class='row'>
-            <view class='cover'>
-                <image class='cover_img' src='{{cover_srcs[choosing_music]}}' mode='aspectFill'></image>
-            </view>
-            <view class='row'>{{music_texts[choosing_music]}}</view>
+        <view class='row2' style='font-weight:bold; margin-bottom:0px;'>{{music_names[choosing_music]}}</view>
+        <view class='row2' style='margin-top:0px;'>{{music_singers[choosing_music]}}</view>
+        <view class='cover'>
+            <image class='cover_img' src='{{cover_srcs[choosing_music]}}' mode='aspectFill'></image>
         </view>
+        <view class='row'>{{music_texts[choosing_music]}}</view>
     </view>
 </view>

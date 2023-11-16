@@ -15,6 +15,7 @@ Page({
     data: 
     {
         cells: [],
+        music_data:music_data,
         music_singers: music_data.map(music => music.singer),
         music_names: music_data.map(music => music.name),
         music_texts: music_data.map(music => music.text),
@@ -54,10 +55,11 @@ Page({
     },
     sliderChange: function(e)
     {
+        this.setData({playing:false});
         f=parseInt(e.detail.value);
         this.setData({current_frame:f});
         const using_faces=music_data[this.data.choosing_music].faces;
-        audio.seek(this.data.current_frame/10);
+        audio.seek(Math.floor(this.data.current_frame/10));
         for(let i=0;i<using_faces.length;i++)
         {
             if(this.data.current_frame<music_data[this.data.choosing_music].faces[i].frame)
@@ -93,6 +95,7 @@ Page({
                 console.log(res.data);
             }
         });
+        audio.seek(Math.floor(this.data.current_frame/10));
         audio.play();
         while(this.data.playing&&this.data.current_frame<this.data.frames)
         {
