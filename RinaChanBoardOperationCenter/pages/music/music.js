@@ -10,6 +10,15 @@ function sleep (time)
     return new Promise((resolve) => setTimeout(resolve, time));
 }
 
+function frame2time(frame)
+{
+    let min=Math.floor(frame/600).toString();
+    if(min.length==1) min='0'+min;
+    let sec=Math.floor(frame%600/10).toString();
+    if(sec.length==1) sec='0'+sec;
+    return min+':'+sec+'.'+(frame%10).toString();
+}
+
 Page({
     data: 
     {
@@ -25,8 +34,10 @@ Page({
         playing:false,
 
         current_frame:0,
+        current_time:'00:00.0',
         current_face:0,
         frames:1,
+        during:'00:00.1',
     },
     onLoad() 
     { 
@@ -49,6 +60,8 @@ Page({
             frames:using_faces[using_faces.length-1].frame-1,
             current_frame:0,
             current_face:0,
+            current_time:'00:00.0',
+            during:frame2time(using_faces[using_faces.length-1].frame-1),
         });
         this.setData({music_src:music_data.map(music=>music.music_src)[this.data.choosing_music]});
         face_func.set_face(this,using_faces[0].leye,using_faces[0].reye,using_faces[0].mouth,using_faces[0].cheek); 
@@ -57,7 +70,7 @@ Page({
     {
         this.setData({playing:false});
         f=parseInt(e.detail.value);
-        this.setData({current_frame:f});
+        this.setData({current_frame:f,currentTime:frame2time(f)});
         const using_faces=music_data[this.data.choosing_music].faces;
         
         for(let i=0;i<using_faces.length;i++)
@@ -102,7 +115,7 @@ Page({
         if(this.data.current_frame>=this.data.frames)
         {
             audio.seek(0);
-            this.setData({current_frame:0});
+            this.setData({current_frame:0,current_time:'00:00.0'});
         }
         else
         {
@@ -124,7 +137,7 @@ Page({
                 }
             }
             var next_frame=(Math.abs(Math.floor(audio.currentTime*10)-this.data.current_frame)>3)?Math.floor(audio.currentTime*10):this.data.current_frame+1;
-            this.setData({current_frame:next_frame});
+            this.setData({current_frame:next_frame,current_time:frame2time(next_frame)});
             await sleep(100);
         }
         

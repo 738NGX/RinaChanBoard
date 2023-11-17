@@ -9,11 +9,11 @@
     </view></view>
     <view class='row'>歌曲操作</view>
     <view class='row'>
-        <view class='btn' style='width:50%;margin-right:5px;'>
+        <view class='btn' style='width:60%;margin-right:5px;'>
             <image class='icon' src='/images/icons/时间.png'></image>
-            <view>{{current_frame}}/{{frames}}</view>
+            <view>{{current_time}}/{{during}}</view>
         </view>
-        <view class='btn' style='width:50%;margin-left:5px;'>
+        <view class='btn' style='width:40%;margin-left:5px;'>
             <image class='icon' src='/images/icons/表情.png'></image>
             <view>{{current_face+1}}/{{music_data[choosing_music].faces.length-1}}</view>
         </view>
