@@ -22,3 +22,16 @@
     background-color: #fff;
     border: #aaa solid 1px;
 }
+
+.btn2 {
+    background-color: #fff;
+    border-radius: 10px;
+    margin: 0px;
+    border: 0px #aaa solid;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-weight: normal;
+}

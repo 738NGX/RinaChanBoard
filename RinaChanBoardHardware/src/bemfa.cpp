@@ -4,8 +4,6 @@
 #include <ESP8266WiFi.h>
 #include <map>
 
-#include <voice.h>
-#include <music.h>
 #include <face.h>
 #include <bemfa.h>
 
@@ -210,19 +208,6 @@ void doTCPClientTick(CRGB leds[])
         {
             updateColor(getMsg,leds);
             FastLED.show();
-        }
-        else if(getMsg.length()==16)
-        {
-            // 语音播放消息
-            play_voice_face(leds,CRGB(R,G,B),getMsg);
-        }
-        else if(getMsg.length()==23)
-        {
-            // 歌曲播放消息
-            String id=getMsg.substring(0,19);
-            String start_s=getMsg.substring(19);
-            int start=(start_s[0]-'0')*1000+(start_s[1]-'0')*100+(start_s[2]-'0')*10+(start_s[3]-'0');
-            play_music_face(leds,CRGB(R,G,B),id,start);
         }
         TcpClient_Buff="";
         TcpClient_BuffIndex=0;

@@ -124,47 +124,14 @@ Page({
     },
     async downloadColors() 
     {
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/',
-            method: "POST",
-            data:
-            {
-                uid: util.device_info[app.get_controlling_device()].uid,
-                topic: util.device_info[app.get_controlling_device()].topic,
-                msg: "requestFace"
-            },
-            header:
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) 
-            {
-                console.log(res.data);
-            }
+        app.globalData.udpSocket.send({
+            address: app.globalData.remoteIP,
+            port: app.globalData.remotePort,
+            message: 'requestFace'
         });
-        
-        await util.sleep(500);
-        let msg='';
-        
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/', //get接口，详见巴法云接入文档
-            data: 
-            {
-                uid: util.device_info[app.get_controlling_device()].uid,
-                topic: util.device_info[app.get_controlling_device()].topic,
-            },
-            header: 
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) 
-            {
-                msg=res.data.msg;
-                console.log(msg)
-            }
-        })
-        await util.sleep(600);
-        console.log('start.')
+        await util.sleep(100);
+        let msg=app.globalData.messageList[app.globalData.messageList.length-1].text;
+        console.log(msg);
         setColorsByString(this,msg);
     },
     resetColors() 

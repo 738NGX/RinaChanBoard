@@ -10,9 +10,10 @@ Page({
         devices:['未选择','工程样机','体验机'],
         controlling_device: 0,
         next_device: 0,
-        
-        hidden_modal: true,
-        password: '',
+
+        remoteIP:[192,168,1,120],
+        remotePort:1234,
+        localPort:4321,
 
         color:'f971d4',
         color_idx:0,
@@ -30,90 +31,49 @@ Page({
         var that=this
         this.controlling_device=app.get_controlling_device();
         this.next_device=0;
-        // 设备断开不会立即显示离线，由于网络情况的复杂性，离线1分钟左右才判断真离线
-        // 设置定时器，每五秒请求一下设备状态
-        setInterval(function () {
-            //console.log("定时请求设备状态,默认五秒");
-            wx.request({
-                url: 'https://api.bemfa.com/api/device/v1/status/',  //get 设备状态接口，详见巴法云接入文档
-                data: 
-                {
-                    uid: util.device_info[app.get_controlling_device()].uid,
-                    topic: util.device_info[app.get_controlling_device()].topic,
-                },
-                header: 
-                {
-                    'content-type': "application/x-www-form-urlencoded"
-                },
-                success(res) 
-                {
-                    //console.log(res.data)
-                    if (res.data.status === "online") 
-                    {
-                        that.setData({
-                            device_status: true
-                        })
-                    } 
-                    else 
-                    {
-                        that.setData({
-                            device_status: false
-                        })
-                    }
-                    //console.log(that.data.device_status)
-                }
-            })
-        },5000)
     },
 
-    showModal: function() 
+    inputIP(e)
     {
-        this.setData({
-            hidden_modal: false
-        });
-    },
-    hideModal: function() 
-    {
-        this.setData({
-            hidden_modal: true
-        });
-    },
-    passwordInput: function(e) 
-    {
-        this.setData({
-            password: e.detail.value
-        });
-    },
-    checkPassword: function() 
-    {
-        var res=(
-            (this.data.password=='20040210' && this.next_device==1) ||
-            (this.data.password=='5201314' && this.next_device==2)
-        );
-        if (res)
+        let index=parseInt(e.currentTarget.dataset.index);
+        let val=parseInt(e.detail.value);
+        if(val!=val)
         {
-            this.setData({controlling_device: this.next_device});
-            app.set_controlling_device(this.next_device);
-            this.hideModal();
-        } 
-        else 
-        {
-            wx.showToast({
-                title: '密码错误',
-                icon: 'none'
-            });
+            switch(index)
+            {
+                case 0: val=192; break;
+                case 1: val=168; break;
+                case 2: val=  1; break;
+                case 3: val=120; break;
+            }
         }
+        this.data.remoteIP[index]=val;
     },
-
-    bindControllingDeviceChange: function(e) 
+    inputRemotePort(e)
     {
-        this.next_device=parseInt(e.detail.value);
-        if(this.next_device) this.showModal();
-        else 
-        {
-            this.setData({controlling_device: this.next_device});
-            app.set_controlling_device(this.next_device);
-        }
+        let val=parseInt(e.detail.value);
+        if(val!=val) val=1234;
+        this.data.remotePort=val;
+    },
+    inputLocalPort(e)
+    {
+        let val=parseInt(e.detail.value);
+        if(val!=val) val=4321;
+        this.data.localPort=val;
+    },
+    updateUDPClient()
+    {
+        app.updateGlobalUDPClient(this.data.remoteIP,this.data.remotePort,this.data.localPort);
+    },
+    startUDPClient()
+    {
+        this.setData({device_status:true})
+        app.initUdpSocket();
+    },
+    stopUDPClient()
+    {
+        this.setData({device_status:false})
+        app.stopUdpSocket();
     },
 
     bindColorChange: function(e)

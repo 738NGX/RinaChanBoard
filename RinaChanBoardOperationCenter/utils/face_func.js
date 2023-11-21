@@ -12,23 +12,13 @@ function horizontalFlip(array)
 
 function update_face_to_server(cells)
 {
-    wx.request({
-        url: 'https://api.bemfa.com/api/device/v1/data/1/',
-        method: "POST",
-        data:
-        {
-            uid: util.device_info[app.get_controlling_device()].uid,
-            topic: util.device_info[app.get_controlling_device()].topic,
-            msg: extractColorsOptimized(cells)
-        },
-        header:
-        {
-            'content-type': "application/x-www-form-urlencoded"
-        },
-        success(res) {
-            console.log(res.data);
-        }
+    var UDPSocket=app.globalData.udpSocket;
+    UDPSocket.send({
+        address: app.globalData.remoteIP,
+        port: app.globalData.remotePort,
+        message: extractColorsOptimized(cells)
     });
+    console.log('sended')
 }
 
 function extractColorsOptimized(cells) 

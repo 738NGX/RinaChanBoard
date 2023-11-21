@@ -10,34 +10,54 @@
             <image mode='widthFix' src="/images/disconnected.png"></image>
         </view>
     </block>
-    <view class='row'>璃奈板状态</view>
-    <view class="infocard"> 
-        <picker bindchange="bindControllingDeviceChange" value="{{controlling_device}}" range="{{devices}}">
-            <view class='row'>
-                <image class='icon' src='/images/icons/璃奈.png'></image>
-                正在控制的璃奈板: {{devices[controlling_device]}}
-            </view>
-        </picker>
+    <view class='row'>璃奈板通讯</view>
+    <view class='infocard'>
         <view class='row'>
             <image class='icon' src='/images/icons/连接.png'></image>
-            连接状态:
+            UDP客户端状态:
             <block wx:if='{{device_status}}'>
-                <view class='circle' style="background-color: green"></view>已连接
+                <view class='circle' style="background-color: green"></view>运行中
             </block>
             <block wx:else>
-                <view class='circle' style="background-color: red"></view>未连接
+                <view class='circle' style="background-color: red"></view>已关闭
             </block>
         </view>
         <view class='row'>
-            <image class='icon' src='/images/icons/电量.png'></image>
-            剩余电量:
-            <block wx:if='{{device_status}}'>
-                <view class='circle' style="background-color: green"></view>外接电源
-            </block>
-            <block wx:else>
-                <view class='circle' style="background-color: grey"></view>未知
-            </block>
+            <image class='icon' src='/images/icons/璃奈.png'></image>
+            璃奈板IP地址:
+            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='0' placeholder="192"/>.
+            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='1' placeholder="168"/>.
+            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='2' placeholder="1"/>.
+            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='3' placeholder="120"/>
         </view>
+        <view class='row'>
+            <image class='icon' src='/images/icons/端口.png'></image>
+            璃奈板UDP端口:
+            <input maxlength="4" style='width:40px' bindinput="inputRemotePort" placeholder="1234"/>
+        </view>
+        <view class='row'>
+            <image class='icon' src='/images/icons/程序.png'></image>
+            小程序UDP端口:
+            <input maxlength="4" style='width:40px' bindinput="inputLocalPort" placeholder="4321"/>
+        </view>
+    </view>
+    <view class="row">
+        <button class="btn2" style='margin-left:2px;margin-right:2px;' bindtap="updateUDPClient">
+            <image class='icon' src='/images/icons/上传.png'></image>配网
+        </button>
+        <block wx:if="{{device_status}}">
+            <button class="btn2" style='margin-right:2px;' bindtap="stopUDPClient">
+                <image class='icon' src='/images/icons/停止.png'></image>断开
+            </button>
+        </block>
+        <block wx:else>
+            <button class="btn2" style='margin-right:2px;' bindtap="startUDPClient">
+                <image class='icon' src='/images/icons/播放.png'></image>连接
+            </button>
+        </block>
+        <button class="btn2" style='margin-left:2px;' bindtap="">
+            <image class='icon' src='/images/icons/璃奈.png'></image>测试
+        </button>
     </view>
     <view class='row'>璃奈板设置</view>
     <view class="infocard">
@@ -47,18 +67,17 @@
             <view class='circle' style="background-color: rgb({{bright}},{{bright}},{{bright}})"></view>
             {{brights[bright_idx]}}
             <view class='blank' style='width:33%;'></view>
-            
         </view>
     </view>
     <view class='row'>
-        <picker class="infocard" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;align-items:center;flex-direction:row;" bindchange="bindBrightChange" value="{{bright_idx}}" range="{{brights}}">
+        <picker class="btn2" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;" bindchange="bindBrightChange" value="{{bright_idx}}" range="{{brights}}">
             选择亮度
         </picker>
-        <button class="infocard" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:5px;font-weight:normal;flex-direction:row;" bindtap="uploadBright">
+        <button class="btn2" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:5px;" bindtap="uploadBright">
             <image class='icon' src='/images/icons/上传.png' style='margin-right:3px;' mode='widthFix'></image>
             上传
         </button>
-        <button class="infocard" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;font-weight:normal;flex-direction:row;" bindtap="downloadBright">
+        <button class="btn2" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;" bindtap="downloadBright">
             <image class='icon' src='/images/icons/下载.png' style='margin-right:3px;' mode='widthFix'></image>
             下载
         </button>
@@ -73,20 +92,20 @@
         </view>
     </view>
     <view class='row'>
-        <picker class="infocard" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;align-items:center;" bindchange="bindColorChange" value="{{color_idx}}" range="{{color_names}}">
+        <picker class="btn2" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;" bindchange="bindColorChange" value="{{color_idx}}" range="{{color_names}}">
             从应援色中选择
         </picker>
-        <view class='infocard' style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;align-items:center;flex-direction:row;">
+        <view class='btn2' style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;">
             <image class='icon' src='/images/icons/输入.png' style='margin-right:5px;' mode='widthFix'></image>
             #<input maxlength="6" style='width:60%;' bindinput="bindColorInput" placeholder="自定义颜色"/>
         </view>
     </view>
     <view class='row'>
-        <button class="infocard" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;font-weight:normal;flex-direction:row;" bindtap="uploadColors">
+        <button class="btn2" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;" bindtap="uploadColors">
             <image class='icon' src='/images/icons/上传.png' style='margin-right:3px;' mode='widthFix'></image>
             上传颜色
         </button>
-        <button class="infocard" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;font-weight:normal;flex-direction:row;" bindtap="downloadColors">
+        <button class="btn2" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;" bindtap="downloadColors">
             <image class='icon' src='/images/icons/下载.png' style='margin-right:3px;' mode='widthFix'></image>
             下载颜色
         </button>
@@ -102,8 +121,4 @@
             在限时体验期期间,用户可以选择"体验机"进行体验操作.体验密码为某首歌名全是数字的歌.
         </view>
     </expander>
-    <modal hidden="{{hidden_modal}}" title="密码验证" bindcancel="hideModal" bindconfirm="checkPassword">
-        <view>请输入密码：</view>
-        <input type="password" bindinput="passwordInput"/>
-    </modal>
 </view>

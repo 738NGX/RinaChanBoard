@@ -85,6 +85,7 @@ Page({
     },
     async play_music()
     {
+        if(this.data.playing) return;
         const using_faces=music_data[this.data.choosing_music].faces;
         
         let start=this.data.current_frame.toString();
@@ -121,6 +122,7 @@ Page({
         {
             audio.seek(Math.floor(this.data.current_frame/10));
         }
+        face_func.update_face_to_server(this.data.cells);
         this.setData({playing:true});
         audio.play();
 
@@ -133,6 +135,7 @@ Page({
                     if(i-1==this.data.current_face) break;
                     this.setData({current_face:i-1});
                     face_func.set_face(this,using_faces[i-1].leye,using_faces[i-1].reye,using_faces[i-1].mouth,using_faces[i-1].cheek);
+                    face_func.update_face_to_server(this.data.cells);
                     break;
                 }
             }
