@@ -102,23 +102,10 @@ Page({
         var RegExp = /^#[0-9a-f]{6}$/i;
         if(RegExp.test(color_code))
         {
-            wx.request({
-                url: 'https://api.bemfa.com/api/device/v1/data/1/',
-                method: "POST",
-                data:
-                {
-                    uid: util.device_info[app.get_controlling_device()].uid,
-                    topic: util.device_info[app.get_controlling_device()].topic,
-                    msg: color_code,
-                },
-                header:
-                {
-                    'content-type': "application/x-www-form-urlencoded"
-                },
-                success(res) 
-                {
-                    console.log(res.data);
-                }
+            app.globalData.udpSocket.send({
+                address: app.globalData.remoteIP,
+                port: app.globalData.remotePort,
+                message: color_code
             });
         }
         else
@@ -131,47 +118,13 @@ Page({
     },
     async downloadColors()
     {
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/',
-            method: "POST",
-            data:
-            {
-                uid: util.device_info[app.get_controlling_device()].uid,
-                topic: util.device_info[app.get_controlling_device()].topic,
-                msg: "requestColor"
-            },
-            header:
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) 
-            {
-                console.log(res.data);
-            }
+        app.globalData.udpSocket.send({
+            address: app.globalData.remoteIP,
+            port: app.globalData.remotePort,
+            message: 'requestColor'
         });
-
-        await util.sleep(800);
-        let msg='';
-        
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/', //get接口，详见巴法云接入文档
-            data: 
-            {
-                uid: util.device_info[app.get_controlling_device()].uid,
-                topic: util.device_info[app.get_controlling_device()].topic,
-            },
-            header: 
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) 
-            {
-                msg=res.data.msg;
-                console.log(msg)
-            }
-        })
-        await util.sleep(1000);
-        console.log(msg)
+        await util.sleep(100);
+        let msg=app.globalData.messageList[app.globalData.messageList.length-1].text;
         this.setData({color:msg.slice(1)});
     },
 
@@ -185,23 +138,10 @@ Page({
         var RegExp = /^B[0-9]{3}$/i;
         if(RegExp.test(bright_s)&&this.data.bright>=0&&this.data.bright<=255)
         {
-            wx.request({
-                url: 'https://api.bemfa.com/api/device/v1/data/1/',
-                method: "POST",
-                data:
-                {
-                    uid: util.device_info[app.get_controlling_device()].uid,
-                    topic: util.device_info[app.get_controlling_device()].topic,
-                    msg: bright_s,
-                },
-                header:
-                {
-                    'content-type': "application/x-www-form-urlencoded"
-                },
-                success(res) 
-                {
-                    console.log(res.data);
-                }
+            app.globalData.udpSocket.send({
+                address: app.globalData.remoteIP,
+                port: app.globalData.remotePort,
+                message: bright_s
             });
         }
         else
@@ -214,47 +154,13 @@ Page({
     },
     async downloadBright()
     {
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/',
-            method: "POST",
-            data:
-            {
-                uid: util.device_info[app.get_controlling_device()].uid,
-                topic: util.device_info[app.get_controlling_device()].topic,
-                msg: "requestBright"
-            },
-            header:
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) 
-            {
-                console.log(res.data);
-            }
+        app.globalData.udpSocket.send({
+            address: app.globalData.remoteIP,
+            port: app.globalData.remotePort,
+            message: 'requestBright'
         });
-
-        await util.sleep(800);
-        let msg='';
-        
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/', //get接口，详见巴法云接入文档
-            data: 
-            {
-                uid: util.device_info[app.get_controlling_device()].uid,
-                topic: util.device_info[app.get_controlling_device()].topic,
-            },
-            header: 
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) 
-            {
-                msg=res.data.msg;
-                console.log(msg)
-            }
-        })
-        await util.sleep(1000);
-        console.log(msg)
-        this.setData({bright:parseInt(msg)});
+        await util.sleep(100);
+        let msg=app.globalData.messageList[app.globalData.messageList.length-1].text;
+        this.setData({bright:parseInt(msg),bright_idx:Math.round(parseInt(msg)/64)-1});
     }
 })  

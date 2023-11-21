@@ -131,7 +131,6 @@ Page({
         });
         await util.sleep(100);
         let msg=app.globalData.messageList[app.globalData.messageList.length-1].text;
-        console.log(msg);
         setColorsByString(this,msg);
     },
     resetColors() 
