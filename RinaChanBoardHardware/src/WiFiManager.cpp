@@ -456,10 +456,11 @@ void WiFiManager::handleRoot() {
   page += FPSTR(HTTP_STYLE);
   page += _customHeadElement;
   page += FPSTR(HTTP_HEADER_END);
-  page += String(F("<h1>"));
+  page += FPSTR(LOGO);
+  page += String(F("<h1 style='text-align: center;'>"));
   page += _apName;
   page += String(F("</h1>"));
-  page += String(F("<h3>WiFiManager</h3>"));
+  page += String(F("<h3 style='text-align: center;'>自主配网系统by738NGX</h3><p>本系统由tzapu/WiFiManager库@0.16.0版本改编</p>"));
   page += FPSTR(HTTP_PORTAL_OPTIONS);
   page += FPSTR(HTTP_END);
 
@@ -694,25 +695,25 @@ void WiFiManager::handleInfo() {
   page += _customHeadElement;
   page += FPSTR(HTTP_HEADER_END);
   page += F("<dl>");
-  page += F("<dt>Chip ID</dt><dd>");
+  page += F("<dt>芯片ID</dt><dd>");
   page += ESP.getChipId();
   page += F("</dd>");
-  page += F("<dt>Flash Chip ID</dt><dd>");
+  page += F("<dt>闪存芯片ID</dt><dd>");
   page += ESP.getFlashChipId();
   page += F("</dd>");
-  page += F("<dt>IDE Flash Size</dt><dd>");
+  page += F("<dt>IDE闪存容量</dt><dd>");
   page += ESP.getFlashChipSize();
   page += F(" bytes</dd>");
-  page += F("<dt>Real Flash Size</dt><dd>");
+  page += F("<dt>实际闪存容量</dt><dd>");
   page += ESP.getFlashChipRealSize();
   page += F(" bytes</dd>");
-  page += F("<dt>Soft AP IP</dt><dd>");
+  page += F("<dt>软AP IP地址</dt><dd>");
   page += WiFi.softAPIP().toString();
   page += F("</dd>");
-  page += F("<dt>Soft AP MAC</dt><dd>");
+  page += F("<dt>软AP MAC地址</dt><dd>");
   page += WiFi.softAPmacAddress();
   page += F("</dd>");
-  page += F("<dt>Station MAC</dt><dd>");
+  page += F("<dt>基站 MAC地址</dt><dd>");
   page += WiFi.macAddress();
   page += F("</dd>");
   page += F("</dl>");
@@ -734,7 +735,7 @@ void WiFiManager::handleReset() {
   page += FPSTR(HTTP_STYLE);
   page += _customHeadElement;
   page += FPSTR(HTTP_HEADER_END);
-  page += F("Module will reset in a few seconds.");
+  page += F("璃奈板将会在几秒内重新启动...");
   page += FPSTR(HTTP_END);
 
   server->sendHeader("Content-Length", String(page.length()));

@@ -35,7 +35,7 @@ void init_wifi_manager()
     // 设置最小信号强度
     wifiManager.setMinimumSignalQuality(30);
     // 设置固定AP信息
-    IPAddress _ip=IPAddress(192,168,  4, 25);
+    IPAddress _ip=IPAddress(192,168, 11, 13);
     IPAddress _gw=IPAddress(192,168,  4,  1);
     IPAddress _sn=IPAddress(255,255,255,  0);
     wifiManager.setAPStaticIPConfig(_ip,_gw,_sn);
