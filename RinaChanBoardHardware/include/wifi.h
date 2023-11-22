@@ -4,7 +4,6 @@
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
-#include <ArduinoJson.h>
 #include <Ticker.h>
 
 void init_led_builtin();
