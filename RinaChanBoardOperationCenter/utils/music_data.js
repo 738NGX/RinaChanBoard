@@ -6,27 +6,27 @@
  * 
  * 歌手名: 
  * 00 团曲 
- * 01 穗乃果 千歌 步梦 香音
- * 02 绘里 梨子 霞 可可
- * 03 小鸟 果南 雫 千砂都
- * 04 海未 黛雅 果林 堇
- * 05 凛 曜 爱 恋
- * 06 真姬 善子 彼方 希奈子
- * 07 希 花丸 雪菜 芽衣
- * 08 花阳 鞠莉 艾玛 四季
- * 09 妮可 露比 璃奈 夏美
- * 10 / / 栞子 薇恩
- * 11 / / 米娅 冬毬
- * 12 / / 岚珠 /
- * 21 Printemps CYaRon AZuNa CatChu
- * 22 BiBi AZALEA QU4RTZ KALEIDOSCORE
- * 23 LilyWhite GuiltyKiss DiverDiva 5yncri5e
- * 24 / / R3Birth /
- * 31 A-Rise SaintSnow / SunnyPassion
+ * 01 穗乃果    千歌        步梦        香音
+ * 02 绘里      梨子        霞          可可
+ * 03 小鸟      果南        雫          千砂都
+ * 04 海未      黛雅        果林        堇
+ * 05 凛        曜          爱          恋
+ * 06 真姬      善子        彼方        希奈子
+ * 07 希        花丸        雪菜        芽衣
+ * 08 花阳      鞠莉        艾玛        四季
+ * 09 妮可      露比        璃奈        夏美
+ * 10 /         /           栞子        薇恩
+ * 11 /         /           米娅        冬毬
+ * 12 /         /           岚珠        /
+ * 21 Printemps CYaRon      AZuNa       CatChu
+ * 22 BiBi      AZALEA      QU4RTZ      KALEIDOSCORE
+ * 23 LilyWhite GuiltyKiss  DiverDiva   5yncri5e
+ * 24 /         /           R3Birth     /
+ * 31 A-Rise    SaintSnow   /           SunnyPassion
  * 
  * 歌曲编号按照前置条件下的发售顺序
  * 站位按照原歌曲对应歌手编号的站位
- * 完整版为1,短版/为0
+ * 完整版为1,短版为0
  */
 
 const music_data=[
