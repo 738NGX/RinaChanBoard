@@ -28,7 +28,7 @@
             <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='0' placeholder="192"/>.
             <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='1' placeholder="168"/>.
             <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='2' placeholder="1"/>.
-            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='3' placeholder="120"/>
+            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='3' placeholder="135"/>
         </view>
         <view class='row'>
             <image class='icon' src='/images/icons/端口.png'></image>
@@ -64,7 +64,7 @@
         <view class='row'>
             <image class='icon' src='/images/icons/亮度.png'></image>
             灯珠亮度: 
-            <view class='circle' style="background-color: rgb({{bright}},{{bright}},{{bright}})"></view>
+            <view class='circle' style="background-color: rgb({{(bright_idx+1)*64-1}},{{(bright_idx+1)*64-1}},{{(bright_idx+1)*64-1}})"></view>
             {{brights[bright_idx]}}
             <view class='blank' style='width:33%;'></view>
         </view>

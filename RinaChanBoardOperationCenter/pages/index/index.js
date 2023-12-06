@@ -1,17 +1,13 @@
 const app=getApp();
 const util=require('../../utils/util');
-const brights=[64,128,192,255];
+const brights=[16,32,64,128];
 
 Page({
     data:  
     {
         device_status: false,       // 默认离线
-        
-        devices:['未选择','工程样机','体验机'],
-        controlling_device: 0,
-        next_device: 0,
 
-        remoteIP:[192,168,1,120],
+        remoteIP:[192,168,1,135],
         remotePort:1234,
         localPort:4321,
 
@@ -21,7 +17,7 @@ Page({
         color_names:util.color_info.map(color=>color.name),
         colors:util.color_info.map(color=>color.color),
 
-        bright:64,
+        bright:16,
         bright_idx:0,
         brights:['正常','輝く','眩しい','光害'],
     },
@@ -31,6 +27,7 @@ Page({
         var that=this
         this.controlling_device=app.get_controlling_device();
         this.next_device=0;
+        console.log(this.data.remoteIP);
     },
 
     inputIP(e)
@@ -44,7 +41,7 @@ Page({
                 case 0: val=192; break;
                 case 1: val=168; break;
                 case 2: val=  1; break;
-                case 3: val=120; break;
+                case 3: val=135; break;
             }
         }
         this.data.remoteIP[index]=val;
@@ -154,6 +151,7 @@ Page({
     },
     async downloadBright()
     {
+        console.log(this.data.remoteIP);
         app.globalData.udpSocket.send({
             address: app.globalData.remoteIP,
             port: app.globalData.remotePort,
@@ -161,6 +159,15 @@ Page({
         });
         await util.sleep(100);
         let msg=app.globalData.messageList[app.globalData.messageList.length-1].text;
-        this.setData({bright:parseInt(msg),bright_idx:Math.round(parseInt(msg)/64)-1});
+        var idx;
+        switch(parseInt(msg))
+        {
+            case  16:idx=0; break;
+            case  32:idx=1; break;
+            case  64:idx=2; break;
+            case 128:idx=3; break;
+            default :idx=0; break;
+        }
+        this.setData({bright:parseInt(msg),bright_idx:idx});
     }
 })  

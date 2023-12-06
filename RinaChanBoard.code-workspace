@@ -5,6 +5,10 @@
 		},
 		{
 			"path": "RinaChanBoardOperationCenter"
+		},
+		{
+			"name": "RinaChanBoardHardwareV2",
+			"path": "RinaChanBoardHardwareV2"
 		}
 	]
 }

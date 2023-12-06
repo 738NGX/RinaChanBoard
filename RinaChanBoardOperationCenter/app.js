@@ -9,7 +9,7 @@ App({
         udpSocket:{},
         udp_client_on:false,
         
-        remoteIP:'192.168.1.120',
+        remoteIP:'192.168.1.135',
         remotePort:1234,
         
         localPort:4321,
