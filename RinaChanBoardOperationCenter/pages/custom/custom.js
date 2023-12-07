@@ -38,6 +38,8 @@ Page({
                     { src: '/images/leye/14.png', label: '14', bindtap: 'setLeftEye' ,'data-index': 14},
                     { src: '/images/leye/15.png', label: '15', bindtap: 'setLeftEye' ,'data-index': 15},
                     { src: '/images/leye/16.png', label: '16', bindtap: 'setLeftEye' ,'data-index': 16},
+                    { src: '/images/leye/17.png', label: '17', bindtap: 'setLeftEye' ,'data-index': 17},
+                    { src: '/images/leye/18.png', label: '18', bindtap: 'setLeftEye' ,'data-index': 18},
                 ]
             },
             {
@@ -60,6 +62,8 @@ Page({
                     { src: '/images/reye/14.png', label: '14', bindtap: 'setRightEye' ,'data-index': 14},
                     { src: '/images/reye/15.png', label: '15', bindtap: 'setRightEye' ,'data-index': 15},
                     { src: '/images/reye/16.png', label: '16', bindtap: 'setRightEye' ,'data-index': 16},
+                    { src: '/images/reye/17.png', label: '17', bindtap: 'setRightEye' ,'data-index': 17},
+                    { src: '/images/reye/18.png', label: '18', bindtap: 'setRightEye' ,'data-index': 18},
                 ]
             },
             {
@@ -82,6 +86,9 @@ Page({
                     { src: '/images/mouth/14.png', label: '14', bindtap: 'setMouth' ,'data-index': 14},
                     { src: '/images/mouth/15.png', label: '15', bindtap: 'setMouth' ,'data-index': 15},
                     { src: '/images/mouth/16.png', label: '16', bindtap: 'setMouth' ,'data-index': 16},
+                    { src: '/images/mouth/17.png', label: '17', bindtap: 'setMouth' ,'data-index': 17},
+                    { src: '/images/mouth/18.png', label: '18', bindtap: 'setMouth' ,'data-index': 18},
+                    { src: '/images/mouth/19.png', label: '19', bindtap: 'setMouth' ,'data-index': 19},
                 ]
             },
             {
