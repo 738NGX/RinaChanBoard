@@ -12,13 +12,13 @@
     <view class="row">表情操作</view>
     <view class="row">
         <button class="btn2" style='margin-right:2px;' bindtap="uploadColors">
-            <image class='icon' src='/images/icons/上传.png'></image>上传
+            <image class='icon' src='/images/icons/upload.png'></image>上传
         </button>
         <button class="btn2" style='margin-left:2px;margin-right:2px;' bindtap="downloadColors">
-            <image class='icon' src='/images/icons/下载.png'></image>下载
+            <image class='icon' src='/images/icons/download.png'></image>下载
         </button>
         <button class="btn2" style='margin-left:2px;' bindtap="resetColors">
-            <image class='icon' src='/images/icons/清空.png'></image>清空
+            <image class='icon' src='/images/icons/clear.png'></image>清空
         </button>
     </view>
     <view class="row">选择表情</view>
@@ -37,7 +37,7 @@
         </scroll-view>
     </view>
     <view class='row'>食用说明</view>
-    <expander header="点击查看食用说明" icon='/images/icons/信息.png'>
+    <expander header="点击查看食用说明" icon='/images/icons/info.png'>
         <view class='row'>
             从0.0.2版本起,用户可以在"选择表情"栏选择对应部分的表情,也可以直接点击网格点控制相应位置LED灯的开闭.
         </view>

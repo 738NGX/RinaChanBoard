@@ -1,0 +1,68 @@
+{
+  "miniVersion": "v2",
+  "name": "璃奈板OC",
+  "version": "0.0.1",
+  "i18nFilePath": "i18n",
+  "mini-android": {
+    "sdkVersion": "1.1.9",
+    "toolkitVersion": "0.10.0",
+    "useExtendedSdk": {
+      "media": true,
+      "bluetooth": true,
+      "network": true,
+      "scanner": false,
+      "xweb": true,
+      "xwebEmbed": true
+    },
+    "icons": {
+      "hdpi": "",
+      "xhdpi": "",
+      "xxhdpi": "",
+      "xxxhdpi": ""
+    },
+    "splashscreen": {
+      "hdpi": "",
+      "xhdpi": "",
+      "xxhdpi": ""
+    },
+    "enableVConsole": "close",
+    "privacy": {
+      "enable": false
+    },
+    "abi": {
+      "arm64-v8a": true
+    }
+  },
+  "mini-ios": {
+    "sdkVersion": "1.2.7",
+    "toolkitVersion": "0.0.9",
+    "useExtendedSdk": {
+      "WeAppOpenFuns": true,
+      "WeAppNetwork": true,
+      "WeAppBluetooth": true,
+      "WeAppMedia": true,
+      "WeAppLBS": false,
+      "WeAppOthers": false
+    },
+    "enableVConsole": "open",
+    "icons": {
+      "mainIcon120": "",
+      "mainIcon180": "",
+      "spotlightIcon80": "",
+      "spotlightIcon120": "",
+      "settingsIcon58": "",
+      "settingsIcon87": "",
+      "notificationIcon40": "",
+      "notificationIcon60": "",
+      "appStore1024": ""
+    },
+    "splashScreen": {
+      "customImage": ""
+    },
+    "privacy": {
+      "enable": false
+    },
+    "enableOpenUrlNavigate": true
+  },
+  "versionCode": 100
+}

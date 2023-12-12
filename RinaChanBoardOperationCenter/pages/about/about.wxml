@@ -3,19 +3,19 @@
         <view class='logo'>
             <image src="/images/logo0.png" mode="widthFix"></image>
         </view>
-        <expander header="程序信息" icon='/images/icons/程序.png'>
+        <expander header="程序信息" icon='/images/icons/app.png'>
             <view>RinaChan Board Operation Center</view>
             <view>璃奈板操作中心 ver. {{current_version}}</view>
             <view>开源协议: AGPL-3.0</view>
             <icon class="iconfont icon-github"> Github: 738NGX/RinaChanBoard</icon>
         </expander>
-        <expander header="作者信息" icon='/images/icons/作者.png'>
+        <expander header="作者信息" icon='/images/icons/author.png'>
             <view>Developed by 738NGX.</view>
             <view>👋一位来自上财的摆烂计科人兼璃奈厨</view>
             <view>🏠Blog主页: https://www.738ngx.site/</view>
             <view>📧个人邮箱: ningyue@738ngx.site</view>
         </expander>
-        <expander header="版本更新说明" icon='/images/icons/版本.png'>
+        <expander header="版本更新说明" icon='/images/icons/version.png'>
         <scroll-view scroll-y="true" style='height:200px;'>
             <block wx:for='{{versions}}' wx:key='id'>
                 <view>{{item.id}} {{item.text}}</view>

@@ -384,6 +384,16 @@ const leye = [
     [0,1,1,1,1,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
+],[
+    // 19
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,1,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
 ]];
 
 const reye=[
@@ -396,6 +406,7 @@ const reye=[
     horizontalFlip(leye[12]),horizontalFlip(leye[13]),
     horizontalFlip(leye[14]),horizontalFlip(leye[15]),
     horizontalFlip(leye[16]),horizontalFlip(leye[17]),
+    horizontalFlip(leye[18]),
 ];
 
 const cheek00 = [
@@ -410,7 +421,7 @@ const cheek = [[
 ],[
     // 2
     [0,0,0,0,0],
-    [0,0,1,0,1]
+    [0,1,0,1,0]
 ],[
     // 3
     [0,0,1,0,1],

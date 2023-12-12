@@ -70,7 +70,8 @@ Page({
     {
         this.setData({playing:false});
         f=parseInt(e.detail.value);
-        this.setData({current_frame:f,currentTime:frame2time(f)});
+        this.setData({current_frame:f});
+        this.setData({current_time:frame2time(this.data.current_frame)});
         const using_faces=music_data[this.data.choosing_music].faces;
         
         for(let i=0;i<using_faces.length;i++)
@@ -87,28 +88,6 @@ Page({
     {
         if(this.data.playing) return;
         const using_faces=music_data[this.data.choosing_music].faces;
-        
-        let start=this.data.current_frame.toString();
-        if(start.length==1) start='000'+start;
-        else if(start.length==2) start='00'+start;
-        else if(start.length==3) start='0'+start;
-        wx.request({
-            url: 'https://api.bemfa.com/api/device/v1/data/1/',
-            method: "POST",
-            data:
-            {
-                uid: util.device_info[app.get_controlling_device()].uid,
-                topic: util.device_info[app.get_controlling_device()].topic,
-                msg: music_data[this.data.choosing_music].id+start
-            },
-            header:
-            {
-                'content-type': "application/x-www-form-urlencoded"
-            },
-            success(res) {
-                console.log(res.data);
-            }
-        });
         
         const audio=wx.createInnerAudioContext();
         audio.autoplay=false;

@@ -10,11 +10,11 @@
     <view class='row'>歌曲操作</view>
     <view class='row'>
         <view class='btn' style='width:60%;margin-right:5px;'>
-            <image class='icon' src='/images/icons/时间.png'></image>
+            <image class='icon' src='/images/icons/time.png'></image>
             <view>{{current_time}}/{{during}}</view>
         </view>
         <view class='btn' style='width:40%;margin-left:5px;'>
-            <image class='icon' src='/images/icons/表情.png'></image>
+            <image class='icon' src='/images/icons/emoji.png'></image>
             <view>{{current_face+1}}/{{music_data[choosing_music].faces.length-1}}</view>
         </view>
     </view>
@@ -24,25 +24,25 @@
     <view class='row'>
         <button class='btn' style='width:33%;margin-right:5px;' bindtap='play_music'>
             <block wx:if="{{playing}}">
-                <image class='icon' src='/images/icons/播放-灰.png'></image>
+                <image class='icon' src='/images/icons/notplay.png'></image>
             </block>
             <block wx:else>
-                <image class='icon' src='/images/icons/播放.png'></image>
+                <image class='icon' src='/images/icons/play.png'></image>
             </block>
             播放
         </button>
         <button class='btn' style='width:33%;margin-right:5px;margin-left:5px;' bindtap='stop_music'>
             <block wx:if="{{playing}}">
-                <image class='icon' src='/images/icons/停止.png'></image>
+                <image class='icon' src='/images/icons/stop.png'></image>
             </block>
             <block wx:else>
-                <image class='icon' src='/images/icons/停止-灰.png'></image>
+                <image class='icon' src='/images/icons/notstop.png'></image>
             </block>
             停止
         </button> 
         <picker class='btn' style='width:33%;margin-left:5px;' bindchange="bindPickerChange" value="{{choosing_music}}" range="{{music_names}}">
             <view class='row' style='margin:0px;'>
-            <image class='icon' src='/images/icons/歌单.png'></image>
+            <image class='icon' src='/images/icons/list.png'></image>
             歌单
             </view>
         </picker>

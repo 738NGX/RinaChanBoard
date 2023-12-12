@@ -13,7 +13,7 @@
     <view class='row'>璃奈板通讯</view>
     <view class='infocard'>
         <view class='row'>
-            <image class='icon' src='/images/icons/连接.png'></image>
+            <image class='icon' src='/images/icons/connect.png'></image>
             UDP客户端状态:
             <block wx:if='{{device_status}}'>
                 <view class='circle' style="background-color: green"></view>运行中
@@ -23,7 +23,7 @@
             </block>
         </view>
         <view class='row'>
-            <image class='icon' src='/images/icons/璃奈.png'></image>
+            <image class='icon' src='/images/icons/rina.png'></image>
             璃奈板IP地址:
             <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='0' placeholder="192"/>.
             <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='1' placeholder="168"/>.
@@ -31,38 +31,38 @@
             <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='3' placeholder="135"/>
         </view>
         <view class='row'>
-            <image class='icon' src='/images/icons/端口.png'></image>
+            <image class='icon' src='/images/icons/port.png'></image>
             璃奈板UDP端口:
             <input maxlength="4" style='width:40px' bindinput="inputRemotePort" placeholder="1234"/>
         </view>
         <view class='row'>
-            <image class='icon' src='/images/icons/程序.png'></image>
+            <image class='icon' src='/images/icons/app.png'></image>
             小程序UDP端口:
             <input maxlength="4" style='width:40px' bindinput="inputLocalPort" placeholder="4321"/>
         </view>
     </view>
     <view class="row">
         <button class="btn2" style='margin-left:2px;margin-right:2px;' bindtap="updateUDPClient">
-            <image class='icon' src='/images/icons/上传.png'></image>配网
+            <image class='icon' src='/images/icons/upload.png'></image>配网
         </button>
         <block wx:if="{{device_status}}">
             <button class="btn2" style='margin-right:2px;' bindtap="stopUDPClient">
-                <image class='icon' src='/images/icons/停止.png'></image>断开
+                <image class='icon' src='/images/icons/stop.png'></image>断开
             </button>
         </block>
         <block wx:else>
             <button class="btn2" style='margin-right:2px;' bindtap="startUDPClient">
-                <image class='icon' src='/images/icons/播放.png'></image>连接
+                <image class='icon' src='/images/icons/play.png'></image>连接
             </button>
         </block>
         <button class="btn2" style='margin-left:2px;' bindtap="">
-            <image class='icon' src='/images/icons/璃奈.png'></image>测试
+            <image class='icon' src='/images/icons/rina.png'></image>测试
         </button>
     </view>
     <view class='row'>璃奈板设置</view>
     <view class="infocard">
         <view class='row'>
-            <image class='icon' src='/images/icons/亮度.png'></image>
+            <image class='icon' src='/images/icons/brightness.png'></image>
             灯珠亮度: 
             <view class='circle' style="background-color: rgb({{(bright_idx+1)*64-1}},{{(bright_idx+1)*64-1}},{{(bright_idx+1)*64-1}})"></view>
             {{brights[bright_idx]}}
@@ -74,19 +74,19 @@
             选择亮度
         </picker>
         <button class="btn2" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:5px;" bindtap="uploadBright">
-            <image class='icon' src='/images/icons/上传.png' style='margin-right:3px;' mode='widthFix'></image>
+            <image class='icon' src='/images/icons/upload.png' style='margin-right:3px;' mode='widthFix'></image>
             上传
         </button>
         <button class="btn2" style="width:33%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;" bindtap="downloadBright">
-            <image class='icon' src='/images/icons/下载.png' style='margin-right:3px;' mode='widthFix'></image>
+            <image class='icon' src='/images/icons/download.png' style='margin-right:3px;' mode='widthFix'></image>
             下载
         </button>
     </view>
     <view class="infocard">
         <view class='row'>
-            <image class='icon' src='/images/icons/颜色.png'></image>
+            <image class='icon' src='/images/icons/color.png'></image>
             灯珠颜色: 
-            <view class='circle' style="background-color: #{{color}}"></view>
+            <view class='circle' style="background-color: \#{{color}}"></view>
             #{{color}}
             <view class='blank' style='width:10%;'></view>
         </view>
@@ -96,22 +96,22 @@
             从应援色中选择
         </picker>
         <view class='btn2' style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;">
-            <image class='icon' src='/images/icons/输入.png' style='margin-right:5px;' mode='widthFix'></image>
+            <image class='icon' src='/images/icons/input.png' style='margin-right:5px;' mode='widthFix'></image>
             #<input maxlength="6" style='width:60%;' bindinput="bindColorInput" placeholder="自定义颜色"/>
         </view>
     </view>
     <view class='row'>
         <button class="btn2" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:0px;margin-right:5px;" bindtap="uploadColors">
-            <image class='icon' src='/images/icons/上传.png' style='margin-right:3px;' mode='widthFix'></image>
+            <image class='icon' src='/images/icons/upload.png' style='margin-right:3px;' mode='widthFix'></image>
             上传颜色
         </button>
         <button class="btn2" style="width:50%;margin-top:0px;margin-bottom:0px;margin-left:5px;margin-right:0px;" bindtap="downloadColors">
-            <image class='icon' src='/images/icons/下载.png' style='margin-right:3px;' mode='widthFix'></image>
+            <image class='icon' src='/images/icons/download.png' style='margin-right:3px;' mode='widthFix'></image>
             下载颜色
         </button>
     </view>
     <view class='row'>食用说明</view>
-    <expander header="点击查看食用说明" icon='/images/icons/信息.png'>
+    <expander header="点击查看食用说明" icon='/images/icons/info.png'>
         <view class='row'>
             自0.1.5版本起,小程序与璃奈板之间的通讯协议修改为UDP协议.用户需要在路由器后台(或者手机热点后台)中找到璃奈板的ip地址并且填写在小程序的相应位置.
             UDP端口一般情况不需要做额外的设置.需要注意一个端口只能由一台设备占用.
