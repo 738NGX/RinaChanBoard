@@ -10,7 +10,7 @@ CRGB def_color(249,113,212);
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     pinMode(DATA_PIN,OUTPUT);
     LEDS.addLeds<LED_TYPE,DATA_PIN,COLOR_ORDER>(leds,NUM_LEDS); 
     init_led(leds,def_color);
