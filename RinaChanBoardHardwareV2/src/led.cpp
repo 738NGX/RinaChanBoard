@@ -29,10 +29,13 @@ void init_led(CRGB leds[],CRGB color)
     face_update_by_string("0000000007def810a205ef810a205ef800000000117a26505155884d25117a2000000000",leds,color);
     FastLED.show();
     delay(1000);
+    face_update_by_string("000000000753b91488753b854887723800000000110ec4422910ec44229dcea000000000",leds,color);
+    FastLED.show();
+    delay(1000);
     face_update_by_string("0000000001e3e044201e0804820113e00000000004420191405488133e04488000000000",leds,color);
     FastLED.show();
     delay(1000);
-    face_update_by_string("00000000000000601818060601818060000000000000003f000840012000300000000000",leds,color);
+    face_update_by_string("00000000000000c00c30030c00c30030000000000000003f000840012000300000000000",leds,color);
     FastLED.show();
 }
 
