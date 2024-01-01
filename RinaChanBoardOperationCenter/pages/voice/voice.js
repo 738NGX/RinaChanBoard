@@ -13,21 +13,17 @@ function sleep (time)
 async function play_face(obj,id)
 {
     const using_faces=voice_data.find(function (obj){return obj.id ==id;}).faces;
+    const audio=wx.createInnerAudioContext();
+    audio.autoplay=false;
+    audio.src='https://www.738ngx.site/api/rinachanboard/voices/'+id+'.mp3';;
+    audio.play();
+
     for(let i=0;i<using_faces.length;i++)
     {
         face_func.set_face(obj,using_faces[i].leye,using_faces[i].reye,using_faces[i].mouth,using_faces[i].cheek); 
         face_func.update_face_to_server(obj.data.cells)
-        await sleep(using_faces[i].during*1000/30.0);
+        await sleep(using_faces[i].during*100);
     }
-}
-
-function play_audio(src)
-{
-    const audio=wx.createInnerAudioContext();
-    audio.autoplay=false;
-    audio.src=src;
-    console.log('Playing '+src)
-    audio.play();
 }
 
 Page({
@@ -51,8 +47,6 @@ Page({
     },
     play_voice(e)
     {
-        var src='https://www.738ngx.site/api/rinachanboard/voices/'+e.currentTarget.dataset.id+'.mp3';
-        play_audio(src);
         play_face(this,e.currentTarget.dataset.id)
     },
 })

@@ -12,8 +12,8 @@ bool shouldSaveConfig = false;
 void init_wifi_manager()
 {
     WiFiManager wifiManager;
-
-    wifiManager.resetSettings();
+    
+    //wifiManager.resetSettings();
 
     wifiManager.setConnectTimeout(0);
     wifiManager.setDebugOutput(true);
