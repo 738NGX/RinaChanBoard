@@ -15,7 +15,7 @@ void init_wifi_manager()
     
     //wifiManager.resetSettings();
 
-    wifiManager.setConnectTimeout(0);
+    wifiManager.setConnectTimeout(30);
     wifiManager.setDebugOutput(true);
     wifiManager.setMinimumSignalQuality(30);
 
