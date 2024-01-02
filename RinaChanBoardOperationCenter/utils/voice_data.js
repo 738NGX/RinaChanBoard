@@ -153,6 +153,26 @@ const voice_data=[
             {leye: 1,reye: 1,mouth: 3,cheek: 0,during:  1},
         ]
     },
+    {
+        id:'vo_na_m0209_0007',
+        text:'一起来看学园偶像的影片吧?',
+        faces:[
+            {leye: 1,reye: 1,mouth: 3,cheek: 0,during:  2},
+            {leye: 1,reye: 1,mouth: 6,cheek: 0,during:  4},
+            {leye: 1,reye: 1,mouth: 3,cheek: 0,during:  6},
+            {leye: 2,reye: 2,mouth: 3,cheek: 0,during:  2},
+            {leye: 2,reye: 2,mouth: 6,cheek: 0,during:  9},
+            {leye: 2,reye: 2,mouth: 3,cheek: 0,during:  2},
+            {leye: 2,reye: 2,mouth: 6,cheek: 0,during:  1},
+            {leye: 2,reye: 2,mouth: 3,cheek: 0,during:  1},
+            {leye: 2,reye: 2,mouth: 6,cheek: 0,during:  1},
+            {leye: 2,reye: 2,mouth: 3,cheek: 0,during:  4},
+            {leye:18,reye:18,mouth: 3,cheek: 0,during:  3},
+            {leye:18,reye:18,mouth: 6,cheek: 0,during:  3},
+            {leye:18,reye:18,mouth: 3,cheek: 0,during:  1},
+            {leye: 1,reye: 1,mouth: 3,cheek: 0,during:  2},
+        ]
+    },
 ]
 
 module.exports={

@@ -7,7 +7,7 @@ Page({
     {
         device_status: false,       // 默认离线
 
-        remoteIP:[192,168,1,135],
+        remoteIP:[192,168,143,130],
         remotePort:1234,
         localPort:4321,
 
@@ -40,8 +40,8 @@ Page({
             {
                 case 0: val=192; break;
                 case 1: val=168; break;
-                case 2: val=  1; break;
-                case 3: val=135; break;
+                case 2: val=143; break;
+                case 3: val=130; break;
             }
         }
         this.data.remoteIP[index]=val;
