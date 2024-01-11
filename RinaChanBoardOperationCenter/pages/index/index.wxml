@@ -27,8 +27,8 @@
             璃奈板IP地址:
             <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='0' placeholder="192"/>.
             <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='1' placeholder="168"/>.
-            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='2' placeholder="143"/>.
-            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='3' placeholder="130"/>
+            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='2' placeholder="111"/>.
+            <input maxlength="3" style='width:30px' bindinput="inputIP" data-index='3' placeholder="250"/>
         </view>
         <view class='row'>
             <image class='icon' src='/images/icons/port.png'></image>
