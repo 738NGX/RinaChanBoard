@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>assets/frame.png</file>
+    </qresource>
+    <qresource prefix="/audio">
+    </qresource>
+</RCC>
