@@ -17,13 +17,21 @@
 void init_led(CRGB leds[], CRGB color);
 
 /**
- * @brief 表情信息解码
+ * @brief 表情信息解码，弃用
  *
  * @param hexString
  * @param cells
  */
-void decodeHexString(const String hexString, int cells[16][18]);
+[[deprecated]] void decodeHexString(const String hexString, int cells[16][18]);
+/**
+ * @brief 表情信息解码
+ *
+ * @param hexBytes  [in]
+ * @param cells     [out]
+ * @param length    [in]
 
+ */
+void decodeFaceHex(const char hexBytes[], int (&cells)[16][18], size_t length);
 /**
  * @brief 将颜色编码为十六进制字符串
  *

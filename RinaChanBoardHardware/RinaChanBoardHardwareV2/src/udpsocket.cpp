@@ -63,8 +63,9 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
     {
         case 36: { // 从上位机接受表情状态字符串
                    // face_update_by_string(incomingPacket, this->leds, CRGB(R, G, B));
-            face_update(int(*face)[18], this->leds, CRGB(R, G, B))
-                FastLED.show();
+            decodeFaceHex(incomingPacket, faceBuf, 36);
+            face_update(faceBuf, this->leds, CRGB(R, G, B));
+            FastLED.show();
             break;
         }
         case 1: { // 从上位机接受亮度更新

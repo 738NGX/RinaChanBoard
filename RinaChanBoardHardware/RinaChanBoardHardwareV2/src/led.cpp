@@ -47,7 +47,7 @@ void init_led(CRGB leds[], CRGB color)
     FastLED.show();
 }
 
-void decodeHexString(const String hexString, int cells[16][18])
+[[deprecated]] void decodeHexString(const String hexString, int cells[16][18])
 {
     String binaryString;
     binaryString.reserve(hexString.length() * 4);
@@ -127,6 +127,28 @@ void updateColor(String color_code, CRGB leds[], unsigned int &R, unsigned int &
         leds[i] = leds[i] == CRGB::Black ? CRGB::Black : CRGB(R, G, B);
     }
     FastLED.show();
+}
+
+void decodeFaceHex(const char hexBytes[], int (&cells)[16][18], size_t length)
+{
+    size_t bitIndex = 0; // 用于定位当前写入到 cells 的 bit 位置
+
+    for (size_t i = 0; i < length; i++)
+    {
+        uint8_t byte = hexBytes[i]; // 获取当前字节
+
+        // 遍历该字节的 8 位二进制
+        for (int bit = 7; bit >= 0; bit--)
+        {
+            int row = bitIndex / 18; // 确定行
+            int col = bitIndex % 18; // 确定列
+            if (row >= 16)           // 防止越界
+                return;
+
+            cells[row][col] = (byte & (1 << bit)) ? 1 : 0; // 提取二进制位并存入 cells
+            bitIndex++;
+        }
+    }
 }
 
 void face_update(int face[16][18], CRGB leds[], CRGB color)

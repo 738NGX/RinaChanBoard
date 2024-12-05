@@ -57,6 +57,7 @@ private:
     AsyncUDP Udp;
     CRGB *leds;
     uint8_t faceHexBuffer[36];
+    int faceBuf[16][18];
 
 public:
     enum class RequestType : uint16_t {
