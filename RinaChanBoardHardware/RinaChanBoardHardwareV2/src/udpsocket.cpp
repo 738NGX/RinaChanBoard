@@ -3,7 +3,6 @@
 #include <FastLED.h>
 #include <WiFi.h>
 
-#include <cstdint>
 #include <udpsocket.h>
 
 #include <led.h>
@@ -37,7 +36,7 @@ void LedUDPHandler::begin()
                       WiFi.localIP().toString().c_str(),
                       localUDPPort);
         Udp.onPacket([this](AsyncUDPPacket packet) {
-            this->handlePacket(packet); // 调用独立的成员函数
+            this->handlePacket(packet); // 调用独立的成员函数需要转一下
         });
     }
     else
@@ -56,60 +55,61 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
                   packet.remoteIP().toString().c_str(), packet.remotePort(),
                   packet.length());
 
-    // 读取Udp数据包并存放在incomingPacket
-    size_t len = packet.length();
+    size_t len = packet.length();                               // 读取Udp数据包并存放在incomingPacket
     if (len > INCOME_PACKET_MAXLEN) len = INCOME_PACKET_MAXLEN; // 防止溢出
     memcpy(incomingPacket, packet.data(), len);
-    incomingPacket[len] = 0; // 确保字符串以null结尾
 
-    // if (len <= 0)
-    //     return;
 
     Serial.printf("UDP数据包内容为: %s\n", incomingPacket);
 
     switch (len)
     {
-        case 72:
-            // 从上位机接受表情状态字符串
+        case 72: { // 从上位机接受表情状态字符串
             face_update_by_string(incomingPacket, this->leds, CRGB(R, G, B));
             FastLED.show();
             break;
-        case 4:
-            // 从上位机接受亮度更新
-            bright = (incomingPacket[1] - '0') * 100 +
-                     (incomingPacket[2] - '0') * 10 + (incomingPacket[3] - '0');
+        }
+        case 1: { // 从上位机接受亮度更新
+            bright = incomingPacket[0];
             FastLED.setBrightness(bright);
             FastLED.show();
             break;
-        case 7:
-            // 从上位机接受颜色更新
+        }
+        case 7: { // 从上位机接受颜色更新
             updateColor(incomingPacket, this->leds, R, G, B);
             FastLED.show();
+            break;
+        }
 
+        case 2: {
+            uint16_t requestPacket = (incomingPacket[0] << 8) | incomingPacket[1];
+            switch (requestPacket)
+            {
+                case static_cast<uint16_t>(RequestType::FACE):
+                    // 发送状态字符串到上位机
+                    sendCallBack(packet, get_face(this->leds));
+                    break;
+                case static_cast<uint16_t>(RequestType::COLOR):
+                    // 发送颜色字符串到上位机
+                    sendCallBack(packet, R << 16 | G << 8 | B);
+                    break;
+                case static_cast<uint16_t>(RequestType::BRIGHT):
+                    sendCallBack(packet, bright);
+                    break;
+                default:
+                    sendCallBack(packet, "Command Error!");
+                    break;
+            }
+            break;
+        }
         default:
             sendCallBack(packet, "Command Error!");
             break;
     }
-
-    if (strcmp(incomingPacket, "requestFace") == 0)
-    {
-        // 发送状态字符串到上位机
-        sendCallBack(packet, get_face(this->leds));
-    }
-    else if (strcmp(incomingPacket, "requestColor") == 0)
-    {
-        // 发送颜色字符串到上位机
-        sendCallBack(packet, encodeColor(R, G, B));
-    }
-    else if (strcmp(incomingPacket, "requestBright") == 0)
-    {
-        // 发送亮度字符串到上位机
-        sendCallBack(packet, encodeBright(bright));
-    }
-    else
-    {
-        sendCallBack(packet, "Command Error!");
-    }
+}
+void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const int value)
+{
+    Udp.writeTo((uint8_t *)&value, sizeof(value), packet.remoteIP(), remoteUDPPort);
 }
 
 void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const char *buffer)

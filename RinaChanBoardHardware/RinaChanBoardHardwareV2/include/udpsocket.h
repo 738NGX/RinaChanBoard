@@ -1,5 +1,7 @@
 #pragma once
 
+#include "sys/_intsup.h"
+#include <cstdint>
 #include <Arduino.h>
 #include <FastLED.h>
 #include <WiFi.h>
@@ -56,6 +58,11 @@ private:
     CRGB *leds;
 
 public:
+    enum class RequestType : uint16_t {
+        FACE   = 0x1001,
+        COLOR  = 0x1002,
+        BRIGHT = 0x1003
+    };
     LedUDPHandler(CRGB *leds)
         : leds(leds)
     {
@@ -64,5 +71,5 @@ public:
     void handlePacket(AsyncUDPPacket packet);
     void sendCallBack(AsyncUDPPacket &packet, const char *buffer);
     void sendCallBack(AsyncUDPPacket &packet, const String str);
-    // ~LedUDPHandler();
+    void sendCallBack(AsyncUDPPacket &packet, const int value);
 };
