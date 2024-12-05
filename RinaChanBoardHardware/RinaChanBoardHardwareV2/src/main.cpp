@@ -1,4 +1,3 @@
-#include "esp32-hal.h"
 #include <Arduino.h>
 #include <FastLED.h>
 
@@ -9,9 +8,11 @@
 CRGB leds[NUM_LEDS];
 CRGB def_color(249, 113, 212);
 LedUDPHandler udpHandler(leds);
+HardwareSerial debugSerial(0);
+
 void setup()
 {
-    Serial.begin(115200);
+    debugSerial.begin(115200, SERIAL_8N1); 
     pinMode(DATA_PIN, OUTPUT);
     LEDS.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
     init_led(leds, def_color);
@@ -30,5 +31,6 @@ void setup()
 void loop()
 {
     // UDPSocket(leds);
-    delay(1);
+    // debugSerial.print("hello");
+    delay(100);
 }

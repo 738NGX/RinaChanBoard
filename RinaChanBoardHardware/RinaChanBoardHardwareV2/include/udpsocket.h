@@ -56,6 +56,7 @@ class LedUDPHandler
 private:
     AsyncUDP Udp;
     CRGB *leds;
+    uint8_t faceHexBuffer[36];
 
 public:
     enum class RequestType : uint16_t {
@@ -71,5 +72,6 @@ public:
     void handlePacket(AsyncUDPPacket packet);
     void sendCallBack(AsyncUDPPacket &packet, const char *buffer);
     void sendCallBack(AsyncUDPPacket &packet, const String str);
-    void sendCallBack(AsyncUDPPacket &packet, const int value);
+    void sendCallBack(AsyncUDPPacket &packet, const int value, uint8_t length);
+    void sendCallBack(AsyncUDPPacket &packet, const char *hexBuffer, uint8_t length);
 };

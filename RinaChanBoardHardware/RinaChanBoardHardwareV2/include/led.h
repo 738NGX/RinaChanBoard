@@ -28,13 +28,13 @@ void decodeHexString(const String hexString, int cells[16][18]);
  * @brief 将颜色编码为十六进制字符串
  *
  */
-// String encodeColor(unsigned R, unsigned int G, unsigned int B);
+// [[deprecated]]String encodeColor(unsigned R, unsigned int G, unsigned int B);
 
 /**
  * @brief 将亮度编码为十进制字符串
  *
  */
-// String encodeBright(u_int8_t bright);
+// [[deprecated]]String encodeBright(u_int8_t bright);
 
 /**
  * @brief 更新led颜色
@@ -60,7 +60,7 @@ void face_update(int face[16][18], CRGB leds[], CRGB color);
  * @param leds 目标led
  * @param color 目标颜色
  */
-void face_update_by_string(const String hexString, CRGB leds[], CRGB color);
+[[deprecated]] void face_update_by_string(const String hexString, CRGB leds[], CRGB color);
 
 /**
  * @brief 从led开闭状态获取状态字符串
@@ -68,4 +68,12 @@ void face_update_by_string(const String hexString, CRGB leds[], CRGB color);
  * @param leds 源led
  * @return String 状态字符串
  */
-String get_face(CRGB leds[]);
+[[deprecated]] String get_face(CRGB leds[]);
+/**
+ * @brief 从led开闭状态获取状态，使用bit位表示
+ *
+ * @param leds      in  源led
+ * @param hexData   out 目标数组
+ */
+
+void get_face_hex(CRGB leds[], uint8_t *hexData);
