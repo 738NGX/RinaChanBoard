@@ -1,37 +1,25 @@
+#include "AsyncUDP.h"
 #include <Arduino.h>
 #include <FastLED.h>
 #include <WiFi.h>
 
 #include <cstdint>
 #include <udpsocket.h>
-#include <AsyncUDP.h>
-#include <led.h>
 
-WiFiUDP Udp;                                  // 实例化WiFiUDP
-unsigned int localUDPPort  = LOCAL_UDP_PORT;  // 本地监听端口
-unsigned int remoteUDPPort = REMOTE_UDP_PORT; // 远程监听端口
-char incomingPacket[255];                     // 保存Udp工具发过来的消息
+#include <led.h>
+#define INCOME_PACKET_MAXLEN 255
+// AsyncUDP Udp;                                   // 实例化WiFiUDP
+const uint16_t localUDPPort  = LOCAL_UDP_PORT;  // 本地监听端口
+const uint16_t remoteUDPPort = REMOTE_UDP_PORT; // 远程监听端口
+                                                //
+char incomingPacket[INCOME_PACKET_MAXLEN];      // 保存Udp工具发过来的消息
 
 unsigned int R = 249;
 unsigned int G = 113;
 unsigned int B = 212;
 uint8_t bright = 16;
 
-void sendCallBack(const char *buffer)
-{
-    Udp.beginPacket(Udp.remoteIP(), remoteUDPPort); // 配置远端ip地址和端口
-    Udp.print(buffer);                              // 把数据写入发送缓冲区
-    Udp.endPacket();                                // 发送数据
-}
-
-void sendCallBack(const String str)
-{
-    Udp.beginPacket(Udp.remoteIP(), remoteUDPPort); // 配置远端ip地址和端口
-    Udp.print(str.c_str());                         // 把数据写入发送缓冲区
-    Udp.endPacket();                                // 发送数据
-}
-
-void init_wifi()
+void LedUDPHandler::begin()
 {
     // Serial.printf("正在连接 %s ",ssid);
     // WiFi.begin(ssid,password);                      // 连接到wifi
@@ -41,44 +29,49 @@ void init_wifi()
     //     Serial.print(".");
     // }
     Serial.println("连接成功");
-    if (Udp.begin(localUDPPort))
+    if (Udp.listen(localUDPPort))
     {
         // 启动Udp监听服务
         Serial.println("监听成功");
-        // wifi模块的ip地址在这里搞
-        Serial.printf("现在收听IP：%s, UDP端口：%d\n", WiFi.localIP().toString().c_str(), localUDPPort);
+        Serial.printf("现在收听IP：%s, UDP端口：%d\n",
+                      WiFi.localIP().toString().c_str(),
+                      localUDPPort);
+        Udp.onPacket([this](AsyncUDPPacket packet) {
+            this->handlePacket(packet); // 调用独立的成员函数
+        });
     }
     else
     {
         Serial.println("监听失败");
+        // TODO: 失败的逻辑是？重启？
     }
 }
 
-void UDPSocket(CRGB leds[])
+void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
 {
-    // 解析Udp数据包
-    int packetSize = Udp.parsePacket(); // 获得解析包
-    if (!packetSize)
+    if (packet.length() <= 0) // TODO: 该函数只会在接到包的时候被调用，可能可以去掉
         return;
     // 收到Udp数据包
     Serial.printf("收到来自远程IP：%s（远程端口：%d）的数据包字节数：%d\n",
-                  Udp.remoteIP().toString().c_str(), Udp.remotePort(),
-                  packetSize);
+                  packet.remoteIP().toString().c_str(), packet.remotePort(),
+                  packet.length());
 
     // 读取Udp数据包并存放在incomingPacket
-    int len = Udp.read(incomingPacket, 255);
-    if (len <= 0)
-        return;
+    size_t len = packet.length();
+    if (len > INCOME_PACKET_MAXLEN) len = INCOME_PACKET_MAXLEN; // 防止溢出
+    memcpy(incomingPacket, packet.data(), len);
+    incomingPacket[len] = 0; // 确保字符串以null结尾
 
-    incomingPacket[len] = 0; // 清空缓存
-                             // TODO:规避动态分配内存
+    // if (len <= 0)
+    //     return;
+
     Serial.printf("UDP数据包内容为: %s\n", incomingPacket);
 
     switch (len)
     {
         case 72:
             // 从上位机接受表情状态字符串
-            face_update_by_string(incomingPacket, leds, CRGB(R, G, B));
+            face_update_by_string(incomingPacket, this->leds, CRGB(R, G, B));
             FastLED.show();
             break;
         case 4:
@@ -90,31 +83,43 @@ void UDPSocket(CRGB leds[])
             break;
         case 7:
             // 从上位机接受颜色更新
-            updateColor(incomingPacket, leds, R, G, B);
+            updateColor(incomingPacket, this->leds, R, G, B);
             FastLED.show();
 
         default:
-            sendCallBack("Command Error!");
+            sendCallBack(packet, "Command Error!");
             break;
     }
 
-    if      (strcmp(incomingPacket, "requestFace") == 0)
+    if (strcmp(incomingPacket, "requestFace") == 0)
     {
         // 发送状态字符串到上位机
-        sendCallBack(get_face(leds));
+        sendCallBack(packet, get_face(this->leds));
     }
     else if (strcmp(incomingPacket, "requestColor") == 0)
     {
         // 发送颜色字符串到上位机
-        sendCallBack(encodeColor(R, G, B));
+        sendCallBack(packet, encodeColor(R, G, B));
     }
     else if (strcmp(incomingPacket, "requestBright") == 0)
     {
         // 发送亮度字符串到上位机
-        sendCallBack(encodeBright(bright));
+        sendCallBack(packet, encodeBright(bright));
     }
     else
     {
-        sendCallBack("Command Error!");
+        sendCallBack(packet, "Command Error!");
     }
+}
+
+void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const char *buffer)
+{
+    AsyncUDPMessage msg;
+    msg.printf("%s", buffer); // 格式化字符串
+    Udp.sendTo(msg, packet.remoteIP(), remoteUDPPort);
+}
+
+void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const String str)
+{
+    sendCallBack(packet, str.c_str());
 }
