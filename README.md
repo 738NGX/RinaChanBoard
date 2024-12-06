@@ -23,11 +23,11 @@
 - 主控、灯板PCB设计。
 - 基于QT6.8.0的测试软件。
 - ~~微信小程序上位机（RinaChanBoardOperationCenter.wechatapp）~~，已停止维护。
-- ~~适用于ESP8266的下位机（RinaChanBoardHardware），~~已停止维护。
+- ~~适用于ESP8266的下位机（RinaChanBoardHardware）~~，已停止维护。
 
 ## 🏠 文档导航
 
-2. [总体设计](./Documents/2.总体设计.md)；
+2. [总体设计](./Documents/2.总体设计.md)
 3. [数据结构设计](./Documents/3.数据结构设计.md)
 4. [通信报文设计](./Documents/4.通信报文设计.md)
 5. [下位机系统功能设计](./Documents/5.下位机系统功能设计.md)
