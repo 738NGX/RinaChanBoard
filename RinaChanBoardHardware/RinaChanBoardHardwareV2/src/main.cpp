@@ -1,4 +1,4 @@
-#include "esp_wifi.h"
+#include "WiFi.h"
 #include <Arduino.h>
 #include <FastLED.h>
 
@@ -18,6 +18,7 @@ void setup()
     LEDS.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
     init_led(leds, def_color);
     debugSerial.println("LED初始化完成,WIFI连接程序开始.");
+    WiFi.setSleep(false);
     esp_wifi_set_ps(WIFI_PS_NONE);
 
     face_update_by_string("0000000001c0408810040402010000002010000000000033001320040801320033000000", leds, def_color);
@@ -32,5 +33,5 @@ void setup()
 
 void loop()
 {
-    delay(500);// 空转，防止占用CPU
+    delay(500); // 空转，防止占用CPU
 }

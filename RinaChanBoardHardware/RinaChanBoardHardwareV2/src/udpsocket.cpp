@@ -51,16 +51,20 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
 #endif // ENABLE_SERIAL_DEBUG
     switch (len)
     {
-        case static_cast<uint8_t>(PackTypeLen::FACE): {
-            // 从上位机接受表情状态更新
+        case static_cast<uint8_t>(PackTypeLen::FACE_FULL): {
+            // 从上位机接受全脸状态更新
             decodeFaceHex(incomingPacket,
                           faceBuf,
-                          static_cast<uint8_t>(PackTypeLen::FACE));
+                          static_cast<uint8_t>(PackTypeLen::FACE_FULL));
 
             face_update(faceBuf,
                         this->leds,
                         CRGB(R, G, B));
             FastLED.show();
+            break;
+        }
+        case static_cast<uint8_t>(PackTypeLen::FACE_LITE): {
+            // 从上位机接受表情部件状态更新
             break;
         }
         case static_cast<uint8_t>(PackTypeLen::COLOR): {
@@ -100,7 +104,7 @@ void LedUDPHandler::handleRequest(AsyncUDPPacket packet, char incomingPacket[])
             get_face_hex(this->leds, faceHexBuffer);
             sendCallBack(packet,
                          faceHexBuffer,
-                         static_cast<uint8_t>(PackTypeLen::FACE));
+                         static_cast<uint8_t>(PackTypeLen::FACE_FULL));
             break;
         }
         case static_cast<uint16_t>(LedUDPHandler::RequestType::COLOR): { // 发送颜色字符串到上位机

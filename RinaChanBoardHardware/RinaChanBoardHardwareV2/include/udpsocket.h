@@ -43,10 +43,10 @@ private:
     AsyncUDP Udp;
     CRGB *leds;
     uint8_t faceHexBuffer[36];
-    int faceBuf[16][18];
-    const uint16_t localUDPPort  = LOCAL_UDP_PORT;  
-    const uint16_t remoteUDPPort = REMOTE_UDP_PORT; 
-    char incomingPacket[UDP_INCOME_PACKET_MAXLEN];  
+    uint8_t faceBuf[16][18];
+    const uint16_t localUDPPort  = LOCAL_UDP_PORT;
+    const uint16_t remoteUDPPort = REMOTE_UDP_PORT;
+    char incomingPacket[UDP_INCOME_PACKET_MAXLEN];
     uint8_t R      = 249;
     uint8_t G      = 113;
     uint8_t B      = 212;
@@ -54,18 +54,19 @@ private:
 
     /**
      * @brief 内部函数，用于处理请求包
-     * 
-     * @param packet 
-     * @param incomingPacket 
+     *
+     * @param packet
+     * @param incomingPacket
      */
     void handleRequest(AsyncUDPPacket packet, char incomingPacket[]);
 
 public:
     enum class PackTypeLen : uint8_t {
-        FACE    = 36,
-        COLOR   = 3,
-        REQUEST = 2,
-        BRIGHT  = 1,
+        FACE_FULL = 36,
+        FACE_LITE = 4,
+        COLOR     = 3,
+        REQUEST   = 2,
+        BRIGHT    = 1,
     };
     enum class RequestType : uint16_t {
         FACE    = 0x1001,

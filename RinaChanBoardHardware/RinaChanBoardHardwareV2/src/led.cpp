@@ -3,6 +3,9 @@
 
 #include <cstdint>
 #include <led.h>
+
+#include "emoji_set.hpp"
+
 #define LED_MAX_ROW          16
 #define LED_MAX_COL          18
 #define FACE_HEX_DATA_LENGTH 36
@@ -59,7 +62,7 @@ void updateColor(CRGB leds[], const uint8_t &R, const uint8_t &G, const uint8_t 
     FastLED.show();
 }
 
-void decodeFaceHex(const char hexBytes[], int (&cells)[16][18], size_t length)
+void decodeFaceHex(const char hexBytes[], uint8_t (&cells)[16][18], size_t length)
 {
     size_t bitIndex = 0; // 用于定位当前写入到 cells 的 bit 位置
     for (size_t i = 0; i < length; i++)
@@ -86,7 +89,7 @@ void decodeFaceHex(const char hexBytes[], int (&cells)[16][18], size_t length)
  * @param hexString
  * @param cells
  */
-static void decodeHexString(const String hexString, int cells[16][18])
+static void decodeHexString(const String hexString, uint8_t (&cells)[16][18])
 {
     String binaryString;
     binaryString.reserve(hexString.length() * 4);
