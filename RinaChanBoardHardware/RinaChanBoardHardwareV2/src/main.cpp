@@ -1,3 +1,4 @@
+#include "esp_wifi.h"
 #include <Arduino.h>
 #include <FastLED.h>
 
@@ -12,11 +13,12 @@ HardwareSerial debugSerial(0);
 
 void setup()
 {
-    debugSerial.begin(115200, SERIAL_8N1); 
+    debugSerial.begin(115200, SERIAL_8N1);
     pinMode(DATA_PIN, OUTPUT);
     LEDS.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
     init_led(leds, def_color);
-    Serial.println("LED初始化完成,WIFI连接程序开始.");
+    debugSerial.println("LED初始化完成,WIFI连接程序开始.");
+    esp_wifi_set_ps(WIFI_PS_NONE);
 
     face_update_by_string("0000000001c0408810040402010000002010000000000033001320040801320033000000", leds, def_color);
     FastLED.show();
@@ -30,7 +32,5 @@ void setup()
 
 void loop()
 {
-    // UDPSocket(leds);
-    // debugSerial.print("hello");
-    delay(100);
+    delay(500);// 空转，防止占用CPU
 }

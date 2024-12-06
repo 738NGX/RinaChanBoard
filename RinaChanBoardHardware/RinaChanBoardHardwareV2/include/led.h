@@ -17,13 +17,6 @@
 void init_led(CRGB leds[], CRGB color);
 
 /**
- * @brief 表情信息解码，弃用
- *
- * @param hexString
- * @param cells
- */
-[[deprecated]] void decodeHexString(const String hexString, int cells[16][18]);
-/**
  * @brief 表情信息解码
  *
  * @param hexBytes  [in]
@@ -32,25 +25,22 @@ void init_led(CRGB leds[], CRGB color);
 
  */
 void decodeFaceHex(const char hexBytes[], int (&cells)[16][18], size_t length);
-/**
- * @brief 将颜色编码为十六进制字符串
- *
- */
-// [[deprecated]]String encodeColor(unsigned R, unsigned int G, unsigned int B);
 
 /**
- * @brief 将亮度编码为十进制字符串
- *
- */
-// [[deprecated]]String encodeBright(u_int8_t bright);
-
-/**
- * @brief 更新led颜色
+ * @brief 通过RGB值直接更新led颜色
  *
  * @param color_code
  * @param leds
  */
-void updateColor(String color_code, CRGB leds[], unsigned int &R, unsigned int &G, unsigned int &B);
+void updateColor(CRGB leds[], const uint8_t &R, const uint8_t &G, const uint8_t &B);
+
+/**
+ * @brief 使用HexString更新led颜色，不要用于传输
+ *
+ * @param color_code
+ * @param leds
+ */
+[[deprecated]] void updateColor(String color_code, CRGB leds[], uint8_t &R, uint8_t &G, uint8_t &B);
 
 /**
  * @brief 从数组更新璃奈板表情
@@ -63,25 +53,18 @@ void face_update(int face[16][18], CRGB leds[], CRGB color);
 
 /**
  * @brief 从状态字符串更新璃奈板表情
- *
+ * @warning 注意：不要用于UDP传输
  * @param hexString 72位长的十六进制状态字符串,可以被译码位16*18的数组
  * @param leds 目标led
  * @param color 目标颜色
  */
-[[deprecated]] void face_update_by_string(const String hexString, CRGB leds[], CRGB color);
+void face_update_by_string(const String hexString, CRGB leds[], CRGB color);
 
 /**
  * @brief 从led开闭状态获取状态字符串
  *
  * @param leds 源led
  * @return String 状态字符串
- */
-[[deprecated]] String get_face(CRGB leds[]);
-/**
- * @brief 从led开闭状态获取状态，使用bit位表示
- *
- * @param leds      in  源led
- * @param hexData   out 目标数组
  */
 
 void get_face_hex(CRGB leds[], uint8_t *hexData);

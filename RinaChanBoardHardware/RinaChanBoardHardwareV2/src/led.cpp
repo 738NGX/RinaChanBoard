@@ -3,6 +3,9 @@
 
 #include <cstdint>
 #include <led.h>
+#define LED_MAX_ROW          16
+#define LED_MAX_COL          18
+#define FACE_HEX_DATA_LENGTH 36
 
 const int led_map[][18] = {
     {-1, -1, 38, 39, 70, 71, 102, 103, 134, 135, 166, 167, 198, 199, 230, 231, -1, -1},
@@ -22,7 +25,7 @@ const int led_map[][18] = {
     {-1, 23, 24, 53, 56, 85, 88, 117, 120, 149, 152, 181, 184, 213, 216, 245, 246, -1},
     {-1, -1, -1, 54, 55, 86, 87, 118, 119, 150, 151, 182, 183, 214, 215, -1, -1, -1},
 };
-#define HEX_DATA_LENGTH 36
+
 void init_led(CRGB leds[], CRGB color)
 {
     FastLED.setBrightness(16);
@@ -47,7 +50,43 @@ void init_led(CRGB leds[], CRGB color)
     FastLED.show();
 }
 
-[[deprecated]] void decodeHexString(const String hexString, int cells[16][18])
+void updateColor(CRGB leds[], const uint8_t &R, const uint8_t &G, const uint8_t &B)
+{
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+        leds[i] = ((leds[i] == CRGB::Black) ? CRGB::Black : CRGB(R, G, B));
+    }
+    FastLED.show();
+}
+
+void decodeFaceHex(const char hexBytes[], int (&cells)[16][18], size_t length)
+{
+    size_t bitIndex = 0; // 用于定位当前写入到 cells 的 bit 位置
+    for (size_t i = 0; i < length; i++)
+    {
+        uint8_t byte = hexBytes[i]; // 获取当前字节
+
+        // 遍历该字节的 8 位二进制
+        for (int bit = 7; bit >= 0; bit--)
+        {
+            int row = bitIndex / LED_MAX_COL; // 确定行
+            int col = bitIndex % LED_MAX_COL; // 确定列
+            if (row >= LED_MAX_ROW)           // 防止越界
+                return;
+
+            cells[row][col] = (byte & (1 << bit)) ? 1 : 0; // 提取二进制位并存入 cells
+            bitIndex++;
+        }
+    }
+}
+
+/**
+ * @brief 内部函数，用于解码HexString到表情矩阵，请不要直接调用
+ *
+ * @param hexString
+ * @param cells
+ */
+static void decodeHexString(const String hexString, int cells[16][18])
 {
     String binaryString;
     binaryString.reserve(hexString.length() * 4);
@@ -69,86 +108,12 @@ void init_led(CRGB leds[], CRGB color)
         cells[row][col] = binaryString[i] == '1' ? 1 : 0;
     }
 }
-
-[[deprecated]] String encodeColor(unsigned R, unsigned int G, unsigned int B)
+void face_update_by_string(const String hexString, CRGB leds[], CRGB color)
 {
-    String s       = "#";
-    String hex[16] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
-    s += hex[R / 16] + hex[R % 16] + hex[G / 16] + hex[G % 16] + hex[B / 16] + hex[B % 16];
-    return s;
-}
-
-[[deprecated]] String encodeBright(u_int8_t bright)
-{
-    String hex[16] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
-    String s       = hex[bright / 100] + hex[bright % 100 / 10] + hex[bright % 10];
-    return s;
-}
-
-void updateColor(String color_code, CRGB leds[], unsigned int &R, unsigned int &G, unsigned int &B)
-{
-    unsigned int new_R = 0, new_G = 0, new_B = 0;
-    for (unsigned int i = 0; i < color_code.length(); i++)
-    {
-        int value = (std::isdigit(color_code[i])) ? color_code[i] - '0' : std::toupper(color_code[i]) - 'A' + 10;
-        switch (i)
-        {
-            case 0:
-                continue;
-                break;
-            case 1:
-                new_R += 16 * value;
-                break;
-            case 2:
-                new_R += value;
-                break;
-            case 3:
-                new_G += 16 * value;
-                break;
-            case 4:
-                new_G += value;
-                break;
-            case 5:
-                new_B += 16 * value;
-                break;
-            case 6:
-                new_B += value;
-                break;
-            default:
-                continue;
-                break;
-        }
-    }
-    R = new_R;
-    G = new_G;
-    B = new_B;
-    for (int i = 0; i < NUM_LEDS; i++)
-    {
-        leds[i] = leds[i] == CRGB::Black ? CRGB::Black : CRGB(R, G, B);
-    }
+    int face[16][18];
+    decodeHexString(hexString, face);
+    face_update(face, leds, color);
     FastLED.show();
-}
-
-void decodeFaceHex(const char hexBytes[], int (&cells)[16][18], size_t length)
-{
-    size_t bitIndex = 0; // 用于定位当前写入到 cells 的 bit 位置
-
-    for (size_t i = 0; i < length; i++)
-    {
-        uint8_t byte = hexBytes[i]; // 获取当前字节
-
-        // 遍历该字节的 8 位二进制
-        for (int bit = 7; bit >= 0; bit--)
-        {
-            int row = bitIndex / 18; // 确定行
-            int col = bitIndex % 18; // 确定列
-            if (row >= 16)           // 防止越界
-                return;
-
-            cells[row][col] = (byte & (1 << bit)) ? 1 : 0; // 提取二进制位并存入 cells
-            bitIndex++;
-        }
-    }
 }
 
 void face_update(int face[16][18], CRGB leds[], CRGB color)
@@ -163,56 +128,12 @@ void face_update(int face[16][18], CRGB leds[], CRGB color)
     }
 }
 
-[[deprecated]] void face_update_by_string(const String hexString, CRGB leds[], CRGB color)
-{
-    int face[16][18];
-    decodeHexString(hexString, face);
-    face_update(face, leds, color);
-    FastLED.show();
-}
-
-[[deprecated]] String get_face(CRGB leds[])
-{
-    int face[16][18] = {0};
-
-    for (int i = 0; i < 16; i++)
-    {
-        for (int j = 0; j < 18; j++)
-        {
-            if (led_map[i][j] == -1) continue;
-            face[i][j] = leds[led_map[i][j]] == CRGB::Black ? 0 : 1;
-        }
-    }
-
-    String binaryString;
-    for (int i = 0; i < 16; i++)
-    {
-        for (int j = 0; j < 18; j++)
-        {
-            binaryString += face[i][j] ? '1' : '0';
-        }
-    }
-
-    String hexString;
-    for (size_t i = 0; i < binaryString.length(); i += 4)
-    {
-        int value = 0;
-        for (int j = 0; j < 4; j++)
-        {
-            value = (value << 1) | (binaryString[i + j] - '0');
-        }
-        hexString += String(value, HEX);
-    }
-
-    return hexString;
-}
-
 void get_face_hex(CRGB leds[], uint8_t *hexData)
 {
     int bitIndex = 0; // 位索引
 
     uint8_t face[16][18] = {0};
-    memset(hexData, 0, HEX_DATA_LENGTH);
+    memset(hexData, 0, FACE_HEX_DATA_LENGTH);
 
     for (int i = 0; i < 16; i++)
     {

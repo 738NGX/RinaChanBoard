@@ -4,107 +4,85 @@
 #include <WiFi.h>
 
 #include <udpsocket.h>
-
 #include <led.h>
-#define INCOME_PACKET_MAXLEN 255
+#define ENABLE_SERIAL_DEBUG
 
+#ifdef ENABLE_SERIAL_DEBUG
 extern HardwareSerial debugSerial;
-const uint16_t localUDPPort  = LOCAL_UDP_PORT;  // 本地监听端口
-const uint16_t remoteUDPPort = REMOTE_UDP_PORT; // 远程监听端口
-                                                //
-char incomingPacket[INCOME_PACKET_MAXLEN];      // 保存Udp工具发过来的消息
-
-unsigned int R = 249;
-unsigned int G = 113;
-unsigned int B = 212;
-uint8_t bright = 16;
+#endif // ENABLE_SERIAL_DEBUG
 
 void LedUDPHandler::begin()
 {
-    debugSerial.println("连接成功");
     if (Udp.listen(localUDPPort))
     {
-        // 启动Udp监听服务
+#ifdef ENABLE_SERIAL_DEBUG
         debugSerial.println("监听成功");
         debugSerial.printf("现在收听IP：%s, UDP端口：%d\n",
                            WiFi.localIP().toString().c_str(),
                            localUDPPort);
+#endif // ENABLE_SERIAL_DEBUG
         Udp.onPacket([this](AsyncUDPPacket packet) {
             this->handlePacket(packet); // 调用独立的成员函数需要转一下
         });
     }
     else
     {
-        debugSerial.println("监听失败");
-        // TODO: 失败的逻辑是？重启？
+#ifdef ENABLE_SERIAL_DEBUG
+        debugSerial.println("监听失败"); // TODO: 失败的逻辑是？重启？
+
+#endif // ENABLE_SERIAL_DEBUG
     }
 }
 
 void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
 {
-    if (packet.length() <= 0) // TODO: 该函数只会在接到包的时候被调用，可能可以去掉
-        return;
-    // 收到Udp数据包
+    size_t len = packet.length();
+    if (len > UDP_INCOME_PACKET_MAXLEN) len = UDP_INCOME_PACKET_MAXLEN; // 防止溢出
+    memcpy(incomingPacket, packet.data(), len);                         // 读取Udp数据包并存放在incomingPacket
+#ifdef ENABLE_SERIAL_DEBUG
     debugSerial.printf(">>[get]远程IP:%s:%d length:%d\n",
-                       packet.remoteIP().toString().c_str(), packet.remotePort(),
+                       packet.remoteIP().toString().c_str(),
+                       packet.remotePort(),
                        packet.length());
-
-    size_t len = packet.length();                               // 读取Udp数据包并存放在incomingPacket
-    if (len > INCOME_PACKET_MAXLEN) len = INCOME_PACKET_MAXLEN; // 防止溢出
-    memcpy(incomingPacket, packet.data(), len);
-
     for (uint8_t i = 0; i < len; i++)
-    {
-        debugSerial.printf("%02X ", incomingPacket[i]); // 打印每个字节的十六进制
-    }
-    debugSerial.printf("\n");
+        debugSerial.printf("%02X ", incomingPacket[i]);
 
+    debugSerial.printf("\n");
+#endif // ENABLE_SERIAL_DEBUG
     switch (len)
     {
-        case 36: { // 从上位机接受表情状态字符串
-                   // face_update_by_string(incomingPacket, this->leds, CRGB(R, G, B));
-            decodeFaceHex(incomingPacket, faceBuf, 36);
-            face_update(faceBuf, this->leds, CRGB(R, G, B));
+        case static_cast<uint8_t>(PackTypeLen::FACE): {
+            // 从上位机接受表情状态更新
+            decodeFaceHex(incomingPacket,
+                          faceBuf,
+                          static_cast<uint8_t>(PackTypeLen::FACE));
+
+            face_update(faceBuf,
+                        this->leds,
+                        CRGB(R, G, B));
             FastLED.show();
             break;
         }
-        case 1: { // 从上位机接受亮度更新
+        case static_cast<uint8_t>(PackTypeLen::COLOR): {
+            // 从上位机接受颜色更新
+            R = (uint8_t)incomingPacket[0];
+            G = (uint8_t)incomingPacket[1];
+            B = (uint8_t)incomingPacket[2];
+            updateColor(this->leds, R, G, B);
+            FastLED.show();
+            break;
+        }
+        case static_cast<uint8_t>(PackTypeLen::REQUEST): {
+            // 从上位机接受请求包
+            handleRequest(packet, incomingPacket);
+            break;
+        }
+        break;
+        case static_cast<uint8_t>(PackTypeLen::BRIGHT): {
+            // 从上位机接受亮度更新
             bright = incomingPacket[0];
             FastLED.setBrightness(bright);
             FastLED.show();
-            break;
-        }
-        case 7: { // 从上位机接受颜色更新
-            updateColor(incomingPacket, this->leds, R, G, B);
-            FastLED.show();
-            break;
-        }
-
-        case 2: {
-            uint16_t requestPacket = (incomingPacket[0] << 8) | incomingPacket[1];
-            switch (requestPacket)
-            {
-                case static_cast<uint16_t>(RequestType::FACE):
-                    // 发送状态字符串到上位机
-                    get_face_hex(this->leds, faceHexBuffer);
-                    sendCallBack(packet,
-                                 get_face(this->leds));
-                    break;
-                case static_cast<uint16_t>(RequestType::COLOR):
-                    // 发送颜色字符串到上位机
-                    sendCallBack(packet,
-                                 R << 16 | G << 8 | B,
-                                 3);
-                    break;
-                case static_cast<uint16_t>(RequestType::BRIGHT):
-                    sendCallBack(packet,
-                                 bright,
-                                 1);
-                    break;
-                default:
-                    sendCallBack(packet, "Command Error!");
-                    break;
-            }
             break;
         }
         default:
@@ -112,36 +90,69 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
             break;
     }
 }
+
+void LedUDPHandler::handleRequest(AsyncUDPPacket packet, char incomingPacket[])
+{
+    uint16_t requestPacket = (incomingPacket[0] << 8) | incomingPacket[1];
+    switch (requestPacket)
+    {
+        case static_cast<uint16_t>(LedUDPHandler::RequestType::FACE): { // 发送状态字符串到上位机
+            get_face_hex(this->leds, faceHexBuffer);
+            sendCallBack(packet,
+                         faceHexBuffer,
+                         static_cast<uint8_t>(PackTypeLen::FACE));
+            break;
+        }
+        case static_cast<uint16_t>(LedUDPHandler::RequestType::COLOR): { // 发送颜色字符串到上位机
+            sendCallBack(packet,
+                         R << 16 | G << 8 | B,
+                         static_cast<uint8_t>(PackTypeLen::COLOR));
+            break;
+        }
+        case static_cast<uint16_t>(LedUDPHandler::RequestType::BRIGHT): {
+            sendCallBack(packet,
+                         bright,
+                         static_cast<uint8_t>(PackTypeLen::BRIGHT));
+            break;
+        }
+        default: {
+            sendCallBack(packet, "Command Error!");
+            break;
+        }
+    }
+}
+
 void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const int value, uint8_t length)
 {
     Udp.writeTo((uint8_t *)&value, length, packet.remoteIP(), remoteUDPPort);
-    debugSerial.printf("<<[SEND]远程IP: %s:%d\n %02X \n ",
+#ifdef ENABLE_SERIAL_DEBUG
+    debugSerial.printf("<<[SEND]远程IP: %s:%d\n %X \n ",
                        packet.remoteIP().toString().c_str(),
                        remoteUDPPort,
                        value);
+#endif // ENABLE_SERIAL_DEBUG
 }
 
-void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const char *hexBuffer, uint8_t length)
+void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const uint8_t *hexBuffer, uint8_t length)
 {
     Udp.writeTo((uint8_t *)&hexBuffer, length, packet.remoteIP(), remoteUDPPort);
-    // 打印十六进制数据
+#ifdef ENABLE_SERIAL_DEBUG
     debugSerial.printf("<<[SEND]远程IP: %s:%d\n<<",
                        packet.remoteIP().toString().c_str(),
                        remoteUDPPort);
     for (uint8_t i = 0; i < length; i++)
-    {
-        debugSerial.printf("%02X ", (uint8_t)hexBuffer[i]); // 打印每个字节的十六进制值
-    }
+        debugSerial.printf("%02X ", (uint8_t)hexBuffer[i]);
+#endif // ENABLE_SERIAL_DEBUG
 }
 
-[[deprecated]] void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const char *buffer)
+void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const char *buffer)
 {
     AsyncUDPMessage msg;
     msg.printf("%s", buffer); // 格式化字符串
     Udp.sendTo(msg, packet.remoteIP(), remoteUDPPort);
 }
 
-[[deprecated]] void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const String str)
+void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const String str)
 {
     sendCallBack(packet, str.c_str());
 }
