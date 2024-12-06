@@ -113,13 +113,13 @@ static void decodeHexString(const String hexString, uint8_t (&cells)[16][18])
 }
 void face_update_by_string(const String hexString, CRGB leds[], CRGB color)
 {
-    int face[16][18];
+    uint8_t face[16][18];
     decodeHexString(hexString, face);
     face_update(face, leds, color);
     FastLED.show();
 }
 
-void face_update(int face[16][18], CRGB leds[], CRGB color)
+void face_update(uint8_t face[16][18], CRGB leds[], CRGB color)
 {
     for (int i = 0; i < 16; i++)
     {
