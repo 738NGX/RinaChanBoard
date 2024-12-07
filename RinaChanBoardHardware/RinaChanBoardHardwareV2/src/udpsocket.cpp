@@ -1,11 +1,6 @@
-#include "AsyncUDP.h"
-#include <Arduino.h>
-#include <FastLED.h>
-#include <WiFi.h>
-
-#include <cstdint>
 #include <udpsocket.h>
 #include <led.h>
+
 #define ENABLE_SERIAL_DEBUG
 
 #ifdef ENABLE_SERIAL_DEBUG
@@ -21,12 +16,14 @@ void LedUDPHandler::begin()
 
 #endif // ENABLE_SERIAL_DEBUG
     }
+
 #ifdef ENABLE_SERIAL_DEBUG
     debugSerial.println("监听成功");
     debugSerial.printf("现在收听IP：%s, UDP端口：%d\n",
                        WiFi.localIP().toString().c_str(),
                        localUDPPort);
 #endif // ENABLE_SERIAL_DEBUG
+
     Udp.onPacket([this](AsyncUDPPacket packet) {
         this->handlePacket(packet); // 调用独立的成员函数需要转一下
     });
@@ -36,8 +33,8 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
 {
     size_t len = packet.length();
     if (len > UDP_INCOME_PACKET_MAXLEN)
-        len = UDP_INCOME_PACKET_MAXLEN;         // 防止溢出
-    memcpy(incomingPacket, packet.data(), len); // 读取Udp数据包并存放在incomingPacket
+        len = UDP_INCOME_PACKET_MAXLEN;
+    memcpy(incomingPacket, packet.data(), len);
 #ifdef ENABLE_SERIAL_DEBUG
     debugSerial.printf(">>[get]Remote IP:%s:%d length:%d\n",
                        packet.remoteIP().toString().c_str(),
@@ -45,17 +42,17 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
                        packet.length());
     for (uint8_t i = 0; i < len; i++)
         debugSerial.printf("%02X ", incomingPacket[i]);
-
     debugSerial.printf("\n");
 #endif // ENABLE_SERIAL_DEBUG
-    switch (len)
+
+    switch (len) // 通过长度判断包类型
     {
         case static_cast<uint8_t>(PackTypeLen::FACE_FULL): {
             // 从上位机接受全脸状态更新
             decodeFaceHex(incomingPacket,
                           faceBuf,
                           static_cast<uint8_t>(PackTypeLen::FACE_FULL));
-
+            
             faceUpdate_FullPack(faceBuf,
                                 this->leds,
                                 CRGB(R, G, B));
@@ -75,6 +72,7 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
                                    cheekCode,
                                    this->leds,
                                    CRGB(R, G, B));
+            FastLED.show();
             break;
         }
         case static_cast<uint8_t>(PackTypeLen::COLOR): {
@@ -143,9 +141,9 @@ void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const int value, uint8_
 {
     Udp.writeTo((uint8_t *)&value, length, packet.remoteIP(), remoteUDPPort);
 #ifdef ENABLE_SERIAL_DEBUG
-    debugSerial.printf("<<[SEND]RemoteIP: %s:%d\n %X \n ",
+    debugSerial.printf("<<[SEND]RemoteIP: %s:%d\n %02X \n ",
                        packet.remoteIP().toString().c_str(),
-                       remoteUDPPort,
+                       packet.remoteUDPPort,
                        value);
 #endif // ENABLE_SERIAL_DEBUG
 }
@@ -156,7 +154,7 @@ void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const uint8_t *hexBuffe
 #ifdef ENABLE_SERIAL_DEBUG
     debugSerial.printf("<<[SEND]RemoteIP: %s:%d\n",
                        packet.remoteIP().toString().c_str(),
-                       remoteUDPPort);
+                       packet.remoteUDPPort);
     for (uint8_t i = 0; i < length; i++)
         debugSerial.printf("%02X ", hexBuffer[i]);
     debugSerial.printf("\n");

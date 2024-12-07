@@ -5,7 +5,7 @@
 #include <FastLED.h>
 #include <WiFi.h>
 #include <AsyncUDP.h>
-#include <cstdint>
+
 //-------------------------------------//
 //               Wifi 信息
 //-------------------------------------//

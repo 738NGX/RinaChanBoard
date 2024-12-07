@@ -1,10 +1,6 @@
-#include <Arduino.h>
-#include <FastLED.h>
-
 #include <cstdint>
-#include <led.h>
-#include <cassert>
 
+#include "led.h"
 #include "emoji_set.hpp"
 
 #define LED_MAX_ROW          16
@@ -65,14 +61,14 @@ void updateColor(CRGB leds[], const uint8_t &R, const uint8_t &G, const uint8_t 
     FastLED.show();
 }
 
-void decodeFaceHex(const char hexBytes[], uint8_t (&cells)[LED_MAX_ROW][LED_MAX_COL], size_t length)
+void decodeFaceHex(const char hexBytes[],
+                   uint8_t (&cells)[LED_MAX_ROW][LED_MAX_COL],
+                   size_t length)
 {
     size_t bitIndex = 0; // 用于定位当前写入到 cells 的 bit 位置
     for (size_t i = 0; i < length; i++)
     {
         uint8_t byte = hexBytes[i]; // 获取当前字节
-
-        // 遍历该字节的 8 位二进制
         for (int bit = 7; bit >= 0; bit--)
         {
             int row = bitIndex / LED_MAX_COL; // 确定行
@@ -92,7 +88,8 @@ void decodeFaceHex(const char hexBytes[], uint8_t (&cells)[LED_MAX_ROW][LED_MAX_
  * @param hexString
  * @param cells
  */
-static void decodeHexString(const String hexString, uint8_t (&cells)[LED_MAX_ROW][LED_MAX_COL])
+static void decodeHexString(const String hexString,
+                            uint8_t (&cells)[LED_MAX_ROW][LED_MAX_COL])
 {
     String binaryString;
     binaryString.reserve(hexString.length() * 4);
@@ -166,6 +163,7 @@ static void updateLedMatrixByEmoji_XFlip(const std::array<std::array<uint8_t, 8>
         for (uint8_t j = 0; j < width; j++)
         {
             if (led_map[i + startRow][j + startCol] < 0) continue;
+
             leds[led_map[i + startRow][j + startCol]] = emoji[i][width - j - 1] ? color : CRGB::Black;
         }
     }
@@ -174,7 +172,7 @@ static void updateLedMatrixByEmoji_XFlip(const std::array<std::array<uint8_t, 8>
 void faceUpdate_litePackage(uint8_t const LEyeCode,
                             uint8_t const REyeCode,
                             uint8_t const MouthCode,
-                            uint8_t const cheekCode,
+                            uint8_t const CheekCode,
                             CRGB leds[],
                             CRGB color)
 {
@@ -200,28 +198,25 @@ void faceUpdate_litePackage(uint8_t const LEyeCode,
                            rina.MOUTH_HEIGHT_AND_WIDTH,
                            leds,
                            color);
-    updateLedMatrixByEmoji(rina.Cheek[cheekCode].content,
+    updateLedMatrixByEmoji(rina.Cheek[CheekCode].content,
                            rina.R_CHEEK_START_ROW,
                            rina.R_CHEEK_START_COL,
                            rina.CHEEK_HEIGHT_AND_WIDTH,
                            rina.CHEEK_HEIGHT_AND_WIDTH,
                            leds,
                            color);
-    updateLedMatrixByEmoji_XFlip(rina.Cheek[cheekCode].content,
+    updateLedMatrixByEmoji_XFlip(rina.Cheek[CheekCode].content,
                                  rina.L_CHEEK_START_ROW,
                                  rina.L_CHEEK_START_COL,
                                  rina.CHEEK_HEIGHT_AND_WIDTH,
                                  rina.CHEEK_HEIGHT_AND_WIDTH,
                                  leds,
                                  color);
-    FastLED.show();
 }
 
 void getFaceHex(CRGB leds[], uint8_t *hexData)
 {
-    int bitIndex = 0; // 位索引
-
-    uint8_t face[LED_MAX_ROW][LED_MAX_COL] = {0};
+    uint16_t bitIndex = 0;
     memset(hexData, 0, FACE_HEX_DATA_LENGTH);
 
     for (int i = 0; i < LED_MAX_ROW; i++)
