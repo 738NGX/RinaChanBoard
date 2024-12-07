@@ -142,9 +142,6 @@ static void updateLedMatrixByEmoji(const std::array<std::array<uint8_t, 8>, 8> &
                                    CRGB leds[],
                                    const CRGB color)
 {
-    // 运行时检查传入参数是否合法
-    assert(startRow + height <= LED_MAX_ROW && "startRow + height exceeds LED matrix size");
-    assert(startCol + width <= LED_MAX_COL && "startCol + width exceeds LED matrix size");
 
     for (uint8_t i = 0; i < height; i++)
     {
@@ -169,7 +166,7 @@ static void updateLedMatrixByEmoji_XFlip(const std::array<std::array<uint8_t, 8>
         for (uint8_t j = 0; j < width; j++)
         {
             if (led_map[i + startRow][j + startCol] < 0) continue;
-            leds[led_map[i + startRow][j + startCol]] = emoji[i][width - j] ? color : CRGB::Black;
+            leds[led_map[i + startRow][j + startCol]] = emoji[i][width - j - 1] ? color : CRGB::Black;
         }
     }
 }
