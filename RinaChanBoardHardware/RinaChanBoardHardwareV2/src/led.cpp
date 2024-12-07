@@ -155,6 +155,25 @@ static void updateLedMatrixByEmoji(const std::array<std::array<uint8_t, 8>, 8> &
         }
     }
 }
+static void updateLedMatrixByEmoji_XFlip(const std::array<std::array<uint8_t, 8>, 8> &emoji,
+                                         const uint8_t startRow,
+                                         const uint8_t startCol,
+                                         const uint8_t height,
+                                         const uint8_t width,
+                                         CRGB leds[],
+                                         const CRGB color)
+{
+
+    for (uint8_t i = 0; i < height; i++)
+    {
+        for (uint8_t j = 0; j < width; j++)
+        {
+            if (led_map[i + startRow][j + startCol] < 0) continue;
+            leds[led_map[i + startRow][j + startCol]] = emoji[i][width - j] ? color : CRGB::Black;
+        }
+    }
+}
+
 void faceUpdate_litePackage(uint8_t const LEyeCode,
                             uint8_t const REyeCode,
                             uint8_t const MouthCode,
@@ -166,15 +185,15 @@ void faceUpdate_litePackage(uint8_t const LEyeCode,
     updateLedMatrixByEmoji(rina.LEye[LEyeCode].content,
                            rina.L_EYE_START_ROW,
                            rina.L_EYE_START_COL,
-                           rina.L_EYE_HEIGHT_AND_WIDTH,
-                           rina.L_EYE_HEIGHT_AND_WIDTH,
+                           rina.EYE_HEIGHT_AND_WIDTH,
+                           rina.EYE_HEIGHT_AND_WIDTH,
                            leds,
                            color);
     updateLedMatrixByEmoji(rina.REye[REyeCode].content,
                            rina.R_EYE_START_ROW,
                            rina.R_EYE_START_COL,
-                           rina.R_EYE_HEIGHT_AND_WIDTH,
-                           rina.R_EYE_HEIGHT_AND_WIDTH,
+                           rina.EYE_HEIGHT_AND_WIDTH,
+                           rina.EYE_HEIGHT_AND_WIDTH,
                            leds,
                            color);
     updateLedMatrixByEmoji(rina.Mouth[MouthCode].content,
@@ -185,12 +204,19 @@ void faceUpdate_litePackage(uint8_t const LEyeCode,
                            leds,
                            color);
     updateLedMatrixByEmoji(rina.Cheek[cheekCode].content,
-                           rina.L_CHEEK_START_ROW,
-                           rina.L_CHEEK_START_COL,
-                           rina.L_CHEEK_HEIGHT_AND_WIDTH,
-                           rina.L_CHEEK_HEIGHT_AND_WIDTH,
+                           rina.R_CHEEK_START_ROW,
+                           rina.R_CHEEK_START_COL,
+                           rina.CHEEK_HEIGHT_AND_WIDTH,
+                           rina.CHEEK_HEIGHT_AND_WIDTH,
                            leds,
                            color);
+    updateLedMatrixByEmoji_XFlip(rina.Cheek[cheekCode].content,
+                                 rina.L_CHEEK_START_ROW,
+                                 rina.L_CHEEK_START_COL,
+                                 rina.CHEEK_HEIGHT_AND_WIDTH,
+                                 rina.CHEEK_HEIGHT_AND_WIDTH,
+                                 leds,
+                                 color);
     FastLED.show();
 }
 
