@@ -13,25 +13,23 @@ extern HardwareSerial debugSerial;
 
 void LedUDPHandler::begin()
 {
-    if (Udp.listen(localUDPPort))
-    {
-#ifdef ENABLE_SERIAL_DEBUG
-        debugSerial.println("监听成功");
-        debugSerial.printf("现在收听IP：%s, UDP端口：%d\n",
-                           WiFi.localIP().toString().c_str(),
-                           localUDPPort);
-#endif // ENABLE_SERIAL_DEBUG
-        Udp.onPacket([this](AsyncUDPPacket packet) {
-            this->handlePacket(packet); // 调用独立的成员函数需要转一下
-        });
-    }
-    else
+
+    if (!Udp.listen(localUDPPort))
     {
 #ifdef ENABLE_SERIAL_DEBUG
         debugSerial.println("监听失败"); // TODO: 失败的逻辑是？重启？
 
 #endif // ENABLE_SERIAL_DEBUG
     }
+#ifdef ENABLE_SERIAL_DEBUG
+    debugSerial.println("监听成功");
+    debugSerial.printf("现在收听IP：%s, UDP端口：%d\n",
+                       WiFi.localIP().toString().c_str(),
+                       localUDPPort);
+#endif // ENABLE_SERIAL_DEBUG
+    Udp.onPacket([this](AsyncUDPPacket packet) {
+        this->handlePacket(packet); // 调用独立的成员函数需要转一下
+    });
 }
 
 void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
@@ -57,9 +55,9 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
                           faceBuf,
                           static_cast<uint8_t>(PackTypeLen::FACE_FULL));
 
-            face_update(faceBuf,
-                        this->leds,
-                        CRGB(R, G, B));
+            faceUpdate(faceBuf,
+                       this->leds,
+                       CRGB(R, G, B));
             FastLED.show();
             break;
         }
@@ -101,7 +99,7 @@ void LedUDPHandler::handleRequest(AsyncUDPPacket packet, char incomingPacket[])
     switch (requestPacket)
     {
         case static_cast<uint16_t>(LedUDPHandler::RequestType::FACE): { // 发送状态字符串到上位机
-            get_face_hex(this->leds, faceHexBuffer);
+            getFaceHex(this->leds, faceHexBuffer);
             sendCallBack(packet,
                          faceHexBuffer,
                          static_cast<uint8_t>(PackTypeLen::FACE_FULL));

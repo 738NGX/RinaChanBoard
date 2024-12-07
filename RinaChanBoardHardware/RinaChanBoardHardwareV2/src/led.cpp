@@ -29,25 +29,25 @@ const int led_map[][18] = {
     {-1, -1, -1, 54, 55, 86, 87, 118, 119, 150, 151, 182, 183, 214, 215, -1, -1, -1},
 };
 
-void init_led(CRGB leds[], CRGB color)
+void initLED(CRGB leds[], CRGB color)
 {
     FastLED.setBrightness(16);
-    face_update_by_string("0000000007def810a205ef810a205ef800000000117a26505155884d25117a2000000000",
+    faceUpdateByString("0000000007def810a205ef810a205ef800000000117a26505155884d25117a2000000000",
                           leds,
                           color);
     FastLED.show();
     delay(1000);
-    face_update_by_string("000000000753b91488753b854887723800000000110ec4422910ec44229dcea000000000",
+    faceUpdateByString("000000000753b91488753b854887723800000000110ec4422910ec44229dcea000000000",
                           leds,
                           color);
     FastLED.show();
     delay(1000);
-    face_update_by_string("0000000001e3e044201e0804820113e00000000004420191405488133e04488000000000",
+    faceUpdateByString("0000000001e3e044201e0804820113e00000000004420191405488133e04488000000000",
                           leds,
                           color);
     FastLED.show();
     delay(1000);
-    face_update_by_string("00000000000000c00c30030c00c30030000000000000003f000840012000300000000000",
+    faceUpdateByString("00000000000000c00c30030c00c30030000000000000003f000840012000300000000000",
                           leds,
                           color);
     FastLED.show();
@@ -111,15 +111,15 @@ static void decodeHexString(const String hexString, uint8_t (&cells)[16][18])
         cells[row][col] = binaryString[i] == '1' ? 1 : 0;
     }
 }
-void face_update_by_string(const String hexString, CRGB leds[], CRGB color)
+void faceUpdateByString(const String hexString, CRGB leds[], CRGB color)
 {
     uint8_t face[16][18];
     decodeHexString(hexString, face);
-    face_update(face, leds, color);
+    faceUpdate(face, leds, color);
     FastLED.show();
 }
 
-void face_update(uint8_t face[16][18], CRGB leds[], CRGB color)
+void faceUpdate(uint8_t face[16][18], CRGB leds[], CRGB color)
 {
     for (int i = 0; i < 16; i++)
     {
@@ -131,7 +131,7 @@ void face_update(uint8_t face[16][18], CRGB leds[], CRGB color)
     }
 }
 
-void get_face_hex(CRGB leds[], uint8_t *hexData)
+void getFaceHex(CRGB leds[], uint8_t *hexData)
 {
     int bitIndex = 0; // 位索引
 
@@ -156,4 +156,15 @@ void get_face_hex(CRGB leds[], uint8_t *hexData)
             bitIndex++;
         }
     }
+}
+
+void faceUpdate_litePackage(const uint8_t LEyeCode,
+                             const uint8_t REyeCode,
+                             const uint8_t MouthCode,
+                             const uint8_t cheekCode,
+                             CRGB (&leds)[],
+                             CRGB color)
+{
+    // TODO: 未实现
+    return;
 }

@@ -14,7 +14,7 @@
  * @param leds
  * @param color
  */
-void init_led(CRGB leds[], CRGB color);
+void initLED(CRGB leds[], CRGB color);
 
 /**
  * @brief 表情信息解码
@@ -49,7 +49,24 @@ void updateColor(CRGB leds[], const uint8_t &R, const uint8_t &G, const uint8_t 
  * @param leds 目标led
  * @param color 目标颜色
  */
-void face_update(uint8_t face[16][18], CRGB leds[], CRGB color);
+void faceUpdate(uint8_t face[16][18], CRGB leds[], CRGB color);
+
+/**
+ * @brief
+ *
+ * @param[in]   LEyeCode   左眼表情编号
+ * @param[in]   REyeCode   右眼表情编号
+ * @param[in]   MouthCode  嘴巴表情编号
+ * @param[in]   cheekCode  脸颊表情编号
+ * @param[out]  leds       目标led矩阵
+ * @param[in]   color      目标颜色
+ */
+void faceUpdate_LitePack(const uint8_t LEyeCode,
+                         const uint8_t REyeCode,
+                         const uint8_t MouthCode,
+                         const uint8_t cheekCode,
+                         CRGB (&leds)[],
+                         CRGB color);
 
 /**
  * @brief 从状态字符串更新璃奈板表情
@@ -58,7 +75,7 @@ void face_update(uint8_t face[16][18], CRGB leds[], CRGB color);
  * @param leds 目标led
  * @param color 目标颜色
  */
-void face_update_by_string(const String hexString, CRGB leds[], CRGB color);
+void faceUpdateByString(const String hexString, CRGB leds[], CRGB color);
 
 /**
  * @brief 从led开闭状态获取状态字符串
@@ -67,4 +84,4 @@ void face_update_by_string(const String hexString, CRGB leds[], CRGB color);
  * @return String 状态字符串
  */
 
-void get_face_hex(CRGB leds[], uint8_t *hexData);
+void getFaceHex(CRGB leds[], uint8_t *hexData);

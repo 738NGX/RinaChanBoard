@@ -28,12 +28,12 @@ public:
     static const uint8_t MAX_LEYE_COUNT  = 27;
     static const uint8_t MAX_REYE_COUNT  = 27;
     static const uint8_t MAX_MOUTH_COUNT = 32;
-    static const uint8_t MAX_FACE_COUNT  = 5;
+    static const uint8_t MAX_CHEEK_COUNT  = 5;
 
     emoji LEye[MAX_LEYE_COUNT + 1];
     emoji REye[MAX_REYE_COUNT + 1];
     emoji Mouth[MAX_MOUTH_COUNT + 1];
-    emoji Face[MAX_FACE_COUNT + 1];
+    emoji Cheek[MAX_CHEEK_COUNT + 1];
     emoji EmptyPart;
     emojiSet();
 };
@@ -89,11 +89,11 @@ emojiSet::emojiSet()
             cpp_code += f'    REye[{id_position}].id = {item["id"]};\n'
         elif first_digit == 3:  # Mouth
             cpp_code += f'    Mouth[{id_position}].id = {item["id"]};\n'
-        elif first_digit == 4:  # Face
-            cpp_code += f'    Face[{id_position}].id = {item["id"]};\n'
+        elif first_digit == 4:  # Cheek
+            cpp_code += f'    Cheek[{id_position}].id = {item["id"]};\n'
 
         # 处理二维数组
-        cpp_code += f'    {"LEye" if first_digit == 1 else "REye" if first_digit == 2 else "Mouth" if first_digit == 3 else "Face"}[{id_position}].content = {{{{\n'
+        cpp_code += f'    {"LEye" if first_digit == 1 else "REye" if first_digit == 2 else "Mouth" if first_digit == 3 else "Cheek"}[{id_position}].content = {{{{\n'
         for i, row in enumerate(item["content"]):
             # 为避免末尾多余逗号，使用条件判断
             if i == len(item["content"]) - 1:
