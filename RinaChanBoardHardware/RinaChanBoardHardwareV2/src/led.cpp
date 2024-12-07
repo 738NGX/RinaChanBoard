@@ -32,22 +32,22 @@ const int led_map[][18] = {
 void initLED(CRGB leds[], CRGB color)
 {
     FastLED.setBrightness(16);
-    faceUpdateByString("0000000007def810a205ef810a205ef800000000117a26505155884d25117a2000000000",
+    faceUpdate_StringFullPack("0000000007def810a205ef810a205ef800000000117a26505155884d25117a2000000000",
                           leds,
                           color);
     FastLED.show();
     delay(1000);
-    faceUpdateByString("000000000753b91488753b854887723800000000110ec4422910ec44229dcea000000000",
+    faceUpdate_StringFullPack("000000000753b91488753b854887723800000000110ec4422910ec44229dcea000000000",
                           leds,
                           color);
     FastLED.show();
     delay(1000);
-    faceUpdateByString("0000000001e3e044201e0804820113e00000000004420191405488133e04488000000000",
+    faceUpdate_StringFullPack("0000000001e3e044201e0804820113e00000000004420191405488133e04488000000000",
                           leds,
                           color);
     FastLED.show();
     delay(1000);
-    faceUpdateByString("00000000000000c00c30030c00c30030000000000000003f000840012000300000000000",
+    faceUpdate_StringFullPack("00000000000000c00c30030c00c30030000000000000003f000840012000300000000000",
                           leds,
                           color);
     FastLED.show();
@@ -111,15 +111,15 @@ static void decodeHexString(const String hexString, uint8_t (&cells)[16][18])
         cells[row][col] = binaryString[i] == '1' ? 1 : 0;
     }
 }
-void faceUpdateByString(const String hexString, CRGB leds[], CRGB color)
+void faceUpdate_StringFullPack(const String hexString, CRGB leds[], CRGB color)
 {
     uint8_t face[16][18];
     decodeHexString(hexString, face);
-    faceUpdate(face, leds, color);
+    faceUpdate_FullPack(face, leds, color);
     FastLED.show();
 }
 
-void faceUpdate(uint8_t face[16][18], CRGB leds[], CRGB color)
+void faceUpdate_FullPack(uint8_t face[16][18], CRGB leds[], CRGB color)
 {
     for (int i = 0; i < 16; i++)
     {

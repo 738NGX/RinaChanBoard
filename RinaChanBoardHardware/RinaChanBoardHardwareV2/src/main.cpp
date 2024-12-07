@@ -21,13 +21,13 @@ void setup()
     WiFi.setSleep(false);
     esp_wifi_set_ps(WIFI_PS_NONE);
 
-    faceUpdateByString("0000000001c0408810040402010000002010000000000033001320040801320033000000", leds, def_color);
+    faceUpdate_StringFullPack("0000000001c0408810040402010000002010000000000033001320040801320033000000", leds, def_color);
     FastLED.show();
     init_wifi_manager();
-    faceUpdateByString("00000000000000c00630060c02030078000000001400a01e00084002100048000c000000", leds, def_color);
+    faceUpdate_StringFullPack("00000000000000c00630060c02030078000000001400a01e00084002100048000c000000", leds, def_color);
     FastLED.show();
     udpHandler.begin();
-    faceUpdateByString("00000000000000c00c30030c00c30030000000000000003f000840012000300000000000", leds, def_color);
+    faceUpdate_StringFullPack("00000000000000c00c30030c00c30030000000000000003f000840012000300000000000", leds, def_color);
     FastLED.show();
 }
 

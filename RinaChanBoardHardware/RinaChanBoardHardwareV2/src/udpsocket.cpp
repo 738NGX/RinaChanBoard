@@ -55,9 +55,9 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
                           faceBuf,
                           static_cast<uint8_t>(PackTypeLen::FACE_FULL));
 
-            faceUpdate(faceBuf,
-                       this->leds,
-                       CRGB(R, G, B));
+            faceUpdate_FullPack(faceBuf,
+                                this->leds,
+                                CRGB(R, G, B));
             FastLED.show();
             break;
         }
@@ -98,20 +98,23 @@ void LedUDPHandler::handleRequest(AsyncUDPPacket packet, char incomingPacket[])
     uint16_t requestPacket = (incomingPacket[0] << 8) | incomingPacket[1];
     switch (requestPacket)
     {
-        case static_cast<uint16_t>(LedUDPHandler::RequestType::FACE): { // 发送状态字符串到上位机
+        case static_cast<uint16_t>(LedUDPHandler::RequestType::FACE): {
+            // 发送状态hex字节流到上位机
             getFaceHex(this->leds, faceHexBuffer);
             sendCallBack(packet,
                          faceHexBuffer,
                          static_cast<uint8_t>(PackTypeLen::FACE_FULL));
             break;
         }
-        case static_cast<uint16_t>(LedUDPHandler::RequestType::COLOR): { // 发送颜色字符串到上位机
+        case static_cast<uint16_t>(LedUDPHandler::RequestType::COLOR): {
+            // 发送颜色hex字节流到上位机
             sendCallBack(packet,
                          R << 16 | G << 8 | B,
                          static_cast<uint8_t>(PackTypeLen::COLOR));
             break;
         }
         case static_cast<uint16_t>(LedUDPHandler::RequestType::BRIGHT): {
+            // 发送亮度字节流到上位机
             sendCallBack(packet,
                          bright,
                          static_cast<uint8_t>(PackTypeLen::BRIGHT));

@@ -24,7 +24,9 @@ void initLED(CRGB leds[], CRGB color);
  * @param length    [in]
 
  */
-void decodeFaceHex(const char hexBytes[], uint8_t (&cells)[16][18], size_t length);
+void decodeFaceHex(const char hexBytes[],
+                   uint8_t (&cells)[16][18],
+                   size_t length);
 
 /**
  * @brief 通过RGB值直接更新led颜色
@@ -32,7 +34,10 @@ void decodeFaceHex(const char hexBytes[], uint8_t (&cells)[16][18], size_t lengt
  * @param color_code
  * @param leds
  */
-void updateColor(CRGB leds[], const uint8_t &R, const uint8_t &G, const uint8_t &B);
+void updateColor(CRGB leds[],
+                 const uint8_t &R,
+                 const uint8_t &G,
+                 const uint8_t &B);
 
 /**
  * @brief 使用HexString更新led颜色，不要用于传输
@@ -40,7 +45,11 @@ void updateColor(CRGB leds[], const uint8_t &R, const uint8_t &G, const uint8_t 
  * @param color_code
  * @param leds
  */
-[[deprecated]] void updateColor(String color_code, CRGB leds[], uint8_t &R, uint8_t &G, uint8_t &B);
+[[deprecated]] void updateColor(String color_code,
+                                CRGB leds[],
+                                uint8_t &R,
+                                uint8_t &G,
+                                uint8_t &B);
 
 /**
  * @brief 从数组更新璃奈板表情
@@ -49,7 +58,9 @@ void updateColor(CRGB leds[], const uint8_t &R, const uint8_t &G, const uint8_t 
  * @param leds 目标led
  * @param color 目标颜色
  */
-void faceUpdate(uint8_t face[16][18], CRGB leds[], CRGB color);
+void faceUpdate_FullPack(uint8_t face[16][18],
+                CRGB leds[],
+                CRGB color);
 
 /**
  * @brief
@@ -75,7 +86,9 @@ void faceUpdate_LitePack(const uint8_t LEyeCode,
  * @param leds 目标led
  * @param color 目标颜色
  */
-void faceUpdateByString(const String hexString, CRGB leds[], CRGB color);
+void faceUpdate_StringFullPack(const String hexString,
+                        CRGB leds[],
+                        CRGB color);
 
 /**
  * @brief 从led开闭状态获取状态字符串
