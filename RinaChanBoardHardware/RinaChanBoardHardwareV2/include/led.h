@@ -5,7 +5,8 @@
 
 #define NUM_LEDS    270
 #define DATA_PIN    12
-
+#define LED_MAX_ROW 16
+#define LED_MAX_COL 18
 #define LED_TYPE    WS2812
 #define COLOR_ORDER GRB
 
@@ -26,7 +27,8 @@ void initLED(CRGB leds[], CRGB color);
 
  */
 void decodeFaceHex(const char hexBytes[],
-                   uint8_t (&cells)[16][18],
+                   const uint8_t offsetRows,
+                   uint8_t (&cells)[LED_MAX_ROW][LED_MAX_COL],
                    size_t length);
 
 /**

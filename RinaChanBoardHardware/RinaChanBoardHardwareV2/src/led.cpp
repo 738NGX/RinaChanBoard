@@ -3,13 +3,12 @@
 #include "led.h"
 #include "emoji_set.hpp"
 
-#define LED_MAX_ROW          16
-#define LED_MAX_COL          18
+
 #define FACE_HEX_DATA_LENGTH 36
 
 emojiSet rina;
 
-const int led_map[][LED_MAX_COL] = {
+const int led_map[LED_MAX_ROW][LED_MAX_COL] = {
     {-1, -1, 38, 39, 70, 71, 102, 103, 134, 135, 166, 167, 198, 199, 230, 231, -1, -1},
     {-1, 10, 37, 40, 69, 72, 101, 104, 133, 136, 165, 168, 197, 200, 229, 232, 259, -1},
     {9, 11, 36, 41, 68, 73, 100, 105, 132, 137, 164, 169, 196, 201, 228, 233, 258, 260},
@@ -62,6 +61,7 @@ void updateColor(CRGB leds[], const uint8_t &R, const uint8_t &G, const uint8_t 
 }
 
 void decodeFaceHex(const char hexBytes[],
+                   const uint8_t offsetRows,
                    uint8_t (&cells)[LED_MAX_ROW][LED_MAX_COL],
                    size_t length)
 {
@@ -71,9 +71,9 @@ void decodeFaceHex(const char hexBytes[],
         uint8_t byte = hexBytes[i]; // 获取当前字节
         for (int bit = 7; bit >= 0; bit--)
         {
-            int row = bitIndex / LED_MAX_COL; // 确定行
-            int col = bitIndex % LED_MAX_COL; // 确定列
-            if (row >= LED_MAX_ROW)           // 防止越界
+            int row = offsetRows + (bitIndex / LED_MAX_COL); // 确定行
+            int col = bitIndex % LED_MAX_COL;                // 确定列
+            if (row >= LED_MAX_ROW)                          // 防止越界
                 return;
 
             cells[row][col] = (byte & (1 << bit)) ? 1 : 0; // 提取二进制位并存入 cells
@@ -125,7 +125,7 @@ void faceUpdate_FullPack(uint8_t face[LED_MAX_ROW][LED_MAX_COL], CRGB leds[], CR
     {
         for (int j = 0; j < LED_MAX_COL; j++)
         {
-            if (led_map[i][j] < 0) continue;
+            if (led_map[i][j] == -1) continue;
             leds[led_map[i][j]] = face[i][j] ? color : CRGB::Black;
         }
     }

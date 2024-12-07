@@ -62,11 +62,12 @@ private:
 
 public:
     enum class PackTypeLen : uint8_t {
-        FACE_FULL = 36,
-        FACE_LITE = 4,
-        COLOR     = 3,
-        REQUEST   = 2,
-        BRIGHT    = 1,
+        FACE_FULL      = 36,
+        FACE_TEXT_LITE = 16,
+        FACE_LITE      = 4,
+        COLOR          = 3,
+        REQUEST        = 2,
+        BRIGHT         = 1,
     };
     enum class RequestType : uint16_t {
         FACE    = 0x1001,

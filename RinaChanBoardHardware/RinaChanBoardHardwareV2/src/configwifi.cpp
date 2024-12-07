@@ -12,24 +12,24 @@ bool shouldSaveConfig = false;
 void init_wifi_manager()
 {
     WiFiManager wifiManager;
-    
-    //wifiManager.resetSettings();
+
+    // wifiManager.resetSettings();
 
     wifiManager.setConnectTimeout(30);
     wifiManager.setDebugOutput(true);
     wifiManager.setMinimumSignalQuality(30);
 
-    IPAddress _ip=IPAddress(192,168, 11, 13);
-    IPAddress _gw=IPAddress(192,168,  4,  1);
-    IPAddress _sn=IPAddress(255,255,255,  0);
+    IPAddress _ip = IPAddress(192, 168, 11, 13);
+    IPAddress _gw = IPAddress(192, 168, 4, 1);
+    IPAddress _sn = IPAddress(255, 255, 255, 0);
 
-    wifiManager.setAPStaticIPConfig(_ip,_gw,_sn);
+    wifiManager.setAPStaticIPConfig(_ip, _gw, _sn);
     wifiManager.setAPCallback(configModeCallback);
     wifiManager.setSaveConfigCallback(saveConfigCallback);
     wifiManager.setBreakAfterConfig(true);
     wifiManager.setRemoveDuplicateAPs(true);
 
-    if(!wifiManager.autoConnect("RinaChanBoard"))
+    if (!wifiManager.autoConnect("RinaChanBoard"))
     {
         Serial.println("failed to connect and hit timeout");
         ESP.restart();

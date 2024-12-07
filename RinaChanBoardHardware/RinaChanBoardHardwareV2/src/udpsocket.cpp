@@ -1,8 +1,9 @@
 #include <udpsocket.h>
 #include <led.h>
 
-#define ENABLE_SERIAL_DEBUG
+#define TEXT_CENTER_ALIGN_OFFSET_ROWS 4
 
+#define ENABLE_SERIAL_DEBUG
 #ifdef ENABLE_SERIAL_DEBUG
 extern HardwareSerial debugSerial;
 #endif // ENABLE_SERIAL_DEBUG
@@ -50,9 +51,23 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
         case static_cast<uint8_t>(PackTypeLen::FACE_FULL): {
             // 从上位机接受全脸状态更新
             decodeFaceHex(incomingPacket,
+                          0,
                           faceBuf,
                           static_cast<uint8_t>(PackTypeLen::FACE_FULL));
-            
+
+            faceUpdate_FullPack(faceBuf,
+                                this->leds,
+                                CRGB(R, G, B));
+            FastLED.show();
+            break;
+        }
+        case static_cast<uint8_t>(PackTypeLen::FACE_TEXT_LITE): {
+            // 从上位机接受7行文字的小包更新
+            decodeFaceHex(incomingPacket,
+                          TEXT_CENTER_ALIGN_OFFSET_ROWS,
+                          faceBuf,
+                          static_cast<uint8_t>(PackTypeLen::FACE_TEXT_LITE));
+
             faceUpdate_FullPack(faceBuf,
                                 this->leds,
                                 CRGB(R, G, B));
@@ -108,7 +123,7 @@ void LedUDPHandler::handleRequest(AsyncUDPPacket packet, char incomingPacket[])
     uint16_t requestPacket = (incomingPacket[0] << 8) | incomingPacket[1];
     switch (requestPacket)
     {
-        case static_cast<uint16_t>(LedUDPHandler::RequestType::FACE): {
+        case static_cast<uint16_t>(RequestType::FACE): {
             // 发送状态hex字节流到上位机
             getFaceHex(this->leds, faceHexBuffer);
             sendCallBack(packet,
@@ -116,18 +131,25 @@ void LedUDPHandler::handleRequest(AsyncUDPPacket packet, char incomingPacket[])
                          static_cast<uint8_t>(PackTypeLen::FACE_FULL));
             break;
         }
-        case static_cast<uint16_t>(LedUDPHandler::RequestType::COLOR): {
+        case static_cast<uint16_t>(RequestType::COLOR): {
             // 发送颜色hex字节流到上位机
             sendCallBack(packet,
                          R << 16 | G << 8 | B,
                          static_cast<uint8_t>(PackTypeLen::COLOR));
             break;
         }
-        case static_cast<uint16_t>(LedUDPHandler::RequestType::BRIGHT): {
+        case static_cast<uint16_t>(RequestType::BRIGHT): {
             // 发送亮度字节流到上位机
             sendCallBack(packet,
                          bright,
                          static_cast<uint8_t>(PackTypeLen::BRIGHT));
+            break;
+        }
+        case static_cast<uint8_t>(RequestType::VERSION): {
+            // TODO:发送版本号到上位机
+            break;
+        }
+        case static_cast<uint8_t>(RequestType::BATTRY): {
             break;
         }
         default: {
@@ -143,7 +165,7 @@ void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const int value, uint8_
 #ifdef ENABLE_SERIAL_DEBUG
     debugSerial.printf("<<[SEND]RemoteIP: %s:%d\n %02X \n ",
                        packet.remoteIP().toString().c_str(),
-                       packet.remoteUDPPort,
+                       packet.remotePort(),
                        value);
 #endif // ENABLE_SERIAL_DEBUG
 }
@@ -154,7 +176,7 @@ void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const uint8_t *hexBuffe
 #ifdef ENABLE_SERIAL_DEBUG
     debugSerial.printf("<<[SEND]RemoteIP: %s:%d\n",
                        packet.remoteIP().toString().c_str(),
-                       packet.remoteUDPPort);
+                       packet.remotePort());
     for (uint8_t i = 0; i < length; i++)
         debugSerial.printf("%02X ", hexBuffer[i]);
     debugSerial.printf("\n");

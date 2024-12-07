@@ -19,7 +19,7 @@ void setup()
     initLED(leds, def_color);
     debugSerial.println("LED初始化完成,WIFI连接程序开始.");
     WiFi.setSleep(false);
-    esp_wifi_set_ps(WIFI_PS_NONE);
+    // esp_wifi_set_ps(WIFI_PS_NONE);
 
     faceUpdate_StringFullPack("0000000001c0408810040402010000002010000000000033001320040801320033000000", leds, def_color);
     FastLED.show();
