@@ -59,8 +59,8 @@ void updateColor(CRGB leds[],
  * @param color 目标颜色
  */
 void faceUpdate_FullPack(uint8_t face[16][18],
-                CRGB leds[],
-                CRGB color);
+                         CRGB leds[],
+                         CRGB color);
 
 /**
  * @brief
@@ -72,12 +72,12 @@ void faceUpdate_FullPack(uint8_t face[16][18],
  * @param[out]  leds       目标led矩阵
  * @param[in]   color      目标颜色
  */
-void faceUpdate_LitePack(const uint8_t LEyeCode,
-                         const uint8_t REyeCode,
-                         const uint8_t MouthCode,
-                         const uint8_t cheekCode,
-                         CRGB (&leds)[],
-                         CRGB color);
+void faceUpdate_litePackage(uint8_t const LEyeCode,
+                            uint8_t const REyeCode,
+                            uint8_t const MouthCode,
+                            uint8_t const cheekCode,
+                            CRGB leds[],
+                            CRGB color);
 
 /**
  * @brief 从状态字符串更新璃奈板表情
@@ -87,8 +87,8 @@ void faceUpdate_LitePack(const uint8_t LEyeCode,
  * @param color 目标颜色
  */
 void faceUpdate_StringFullPack(const String hexString,
-                        CRGB leds[],
-                        CRGB color);
+                               CRGB leds[],
+                               CRGB color);
 
 /**
  * @brief 从led开闭状态获取状态字符串

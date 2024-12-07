@@ -3,6 +3,7 @@
 #include <FastLED.h>
 #include <WiFi.h>
 
+#include <cstdint>
 #include <udpsocket.h>
 #include <led.h>
 #define ENABLE_SERIAL_DEBUG
@@ -13,7 +14,6 @@ extern HardwareSerial debugSerial;
 
 void LedUDPHandler::begin()
 {
-
     if (!Udp.listen(localUDPPort))
     {
 #ifdef ENABLE_SERIAL_DEBUG
@@ -35,10 +35,11 @@ void LedUDPHandler::begin()
 void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
 {
     size_t len = packet.length();
-    if (len > UDP_INCOME_PACKET_MAXLEN) len = UDP_INCOME_PACKET_MAXLEN; // 防止溢出
-    memcpy(incomingPacket, packet.data(), len);                         // 读取Udp数据包并存放在incomingPacket
+    if (len > UDP_INCOME_PACKET_MAXLEN)
+        len = UDP_INCOME_PACKET_MAXLEN;         // 防止溢出
+    memcpy(incomingPacket, packet.data(), len); // 读取Udp数据包并存放在incomingPacket
 #ifdef ENABLE_SERIAL_DEBUG
-    debugSerial.printf(">>[get]远程IP:%s:%d length:%d\n",
+    debugSerial.printf(">>[get]Remote IP:%s:%d length:%d\n",
                        packet.remoteIP().toString().c_str(),
                        packet.remotePort(),
                        packet.length());
@@ -63,6 +64,17 @@ void LedUDPHandler::handlePacket(AsyncUDPPacket packet)
         }
         case static_cast<uint8_t>(PackTypeLen::FACE_LITE): {
             // 从上位机接受表情部件状态更新
+            uint8_t LEyeCode  = incomingPacket[0];
+            uint8_t REyeCode  = incomingPacket[1];
+            uint8_t MouthCode = incomingPacket[2];
+            uint8_t cheekCode = incomingPacket[3];
+
+            faceUpdate_litePackage(LEyeCode,
+                                   REyeCode,
+                                   MouthCode,
+                                   cheekCode,
+                                   this->leds,
+                                   CRGB(R, G, B));
             break;
         }
         case static_cast<uint8_t>(PackTypeLen::COLOR): {
@@ -131,7 +143,7 @@ void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const int value, uint8_
 {
     Udp.writeTo((uint8_t *)&value, length, packet.remoteIP(), remoteUDPPort);
 #ifdef ENABLE_SERIAL_DEBUG
-    debugSerial.printf("<<[SEND]远程IP: %s:%d\n %X \n ",
+    debugSerial.printf("<<[SEND]RemoteIP: %s:%d\n %X \n ",
                        packet.remoteIP().toString().c_str(),
                        remoteUDPPort,
                        value);
@@ -140,13 +152,14 @@ void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const int value, uint8_
 
 void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const uint8_t *hexBuffer, uint8_t length)
 {
-    Udp.writeTo((uint8_t *)&hexBuffer, length, packet.remoteIP(), remoteUDPPort);
+    Udp.writeTo((uint8_t *)hexBuffer, length, packet.remoteIP(), remoteUDPPort);
 #ifdef ENABLE_SERIAL_DEBUG
-    debugSerial.printf("<<[SEND]远程IP: %s:%d\n<<",
+    debugSerial.printf("<<[SEND]RemoteIP: %s:%d\n",
                        packet.remoteIP().toString().c_str(),
                        remoteUDPPort);
     for (uint8_t i = 0; i < length; i++)
-        debugSerial.printf("%02X ", (uint8_t)hexBuffer[i]);
+        debugSerial.printf("%02X ", hexBuffer[i]);
+    debugSerial.printf("\n");
 #endif // ENABLE_SERIAL_DEBUG
 }
 

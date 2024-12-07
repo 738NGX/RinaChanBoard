@@ -28,7 +28,27 @@ public:
     static const uint8_t MAX_LEYE_COUNT  = 27;
     static const uint8_t MAX_REYE_COUNT  = 27;
     static const uint8_t MAX_MOUTH_COUNT = 32;
-    static const uint8_t MAX_CHEEK_COUNT  = 5;
+    static const uint8_t MAX_CHEEK_COUNT = 5;
+
+    static const uint8_t L_EYE_START_ROW = 0;
+    static const uint8_t L_EYE_START_COL = 0;
+    static const uint8_t L_EYE_HEIGHT_AND_WIDTH = 8;
+
+    static const uint8_t R_EYE_START_ROW = 0;
+    static const uint8_t R_EYE_START_COL = 10;
+    static const uint8_t R_EYE_HEIGHT_AND_WIDTH = 8;
+
+    static const uint8_t MOUTH_START_ROW = 8;
+    static const uint8_t MOUTH_START_COL = 5;
+    static const uint8_t MOUTH_HEIGHT_AND_WIDTH = 10;
+
+    static const uint8_t L_CHEEK_START_ROW = 8;
+    static const uint8_t L_CHEEK_START_COL = 0;
+    static const uint8_t L_CHEEK_HEIGHT_AND_WIDTH = 4;
+
+    static const uint8_t R_CHEEK_START_ROW = 8;
+    static const uint8_t R_CHEEK_START_COL = 14;
+    static const uint8_t R_CHEEK_HEIGHT_AND_WIDTH = 4;
 
     emoji LEye[MAX_LEYE_COUNT + 1];
     emoji REye[MAX_REYE_COUNT + 1];
