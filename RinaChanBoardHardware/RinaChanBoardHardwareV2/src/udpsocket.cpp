@@ -150,7 +150,7 @@ void LedUDPHandler::handleRequest(AsyncUDPPacket packet, char incomingPacket[])
                          version);
             break;
         }
-        case static_cast<uint16_t>(RequestType::BATTRY): {
+        case static_cast<uint16_t>(RequestType::BATTERY): {
             // TODO:发送ADC数据到上位机
             break;
         }

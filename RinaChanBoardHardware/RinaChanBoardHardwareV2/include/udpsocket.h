@@ -79,7 +79,7 @@ public:
         COLOR   = 0x1002,
         BRIGHT  = 0x1003,
         VERSION = 0x1004,
-        BATTRY  = 0x1005,
+        BATTERY = 0x1005,
     };
     LedUDPHandler(CRGB *leds)
         : leds(leds)
