@@ -6,6 +6,7 @@
 #include <WiFi.h>
 #include <AsyncUDP.h>
 
+#include "hw_sw_info.h"
 //-------------------------------------//
 //               Wifi 信息
 //-------------------------------------//
@@ -51,6 +52,10 @@ private:
     uint8_t G      = 113;
     uint8_t B      = 212;
     uint8_t bright = 16;
+
+    String version = String(RINA_CHAN_BOARD_VERSION_MAJOR) + "." +
+                     String(RINA_CHAN_BOARD_VERSION_MINOR) + "." +
+                     String(RINA_CHAN_BOARD_VERSION_PATCH) + "-dev";
 
     /**
      * @brief 内部函数，用于处理请求包

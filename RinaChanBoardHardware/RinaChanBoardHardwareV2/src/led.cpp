@@ -3,7 +3,6 @@
 #include "led.h"
 #include "emoji_set.hpp"
 
-
 #define FACE_HEX_DATA_LENGTH 36
 
 emojiSet rina;
@@ -176,6 +175,11 @@ void faceUpdate_litePackage(uint8_t const LEyeCode,
                             CRGB leds[],
                             CRGB color)
 {
+    if (LEyeCode >= rina.MAX_LEYE_COUNT ||
+        REyeCode >= rina.MAX_REYE_COUNT ||
+        MouthCode >= rina.MAX_MOUTH_COUNT ||
+        CheekCode >= rina.MAX_CHEEK_COUNT)
+        return;
     memset(leds, 0, NUM_LEDS * sizeof(CRGB));
     updateLedMatrixByEmoji(rina.LEye[LEyeCode].content,
                            rina.L_EYE_START_ROW,

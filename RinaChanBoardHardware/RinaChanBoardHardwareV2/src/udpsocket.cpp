@@ -145,11 +145,13 @@ void LedUDPHandler::handleRequest(AsyncUDPPacket packet, char incomingPacket[])
                          static_cast<uint8_t>(PackTypeLen::BRIGHT));
             break;
         }
-        case static_cast<uint8_t>(RequestType::VERSION): {
-            // TODO:发送版本号到上位机
+        case static_cast<uint16_t>(RequestType::VERSION): {
+            sendCallBack(packet,
+                         version);
             break;
         }
-        case static_cast<uint8_t>(RequestType::BATTRY): {
+        case static_cast<uint16_t>(RequestType::BATTRY): {
+            // TODO:发送ADC数据到上位机
             break;
         }
         default: {
@@ -193,4 +195,10 @@ void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const char *buffer)
 void LedUDPHandler::sendCallBack(AsyncUDPPacket &packet, const String str)
 {
     sendCallBack(packet, str.c_str());
+#ifdef ENABLE_SERIAL_DEBUG
+    debugSerial.printf("<<[SEND]RemoteIP: %s:%d\n",
+                       packet.remoteIP().toString().c_str(),
+                       packet.remotePort());
+    debugSerial.println(str);
+#endif // ENABLE_SERIAL_DEBUG
 }
