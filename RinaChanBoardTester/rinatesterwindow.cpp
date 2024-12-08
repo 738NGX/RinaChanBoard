@@ -10,6 +10,9 @@
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <QNetworkInterface>
+#include <windows.h>
+
+#define TEXT_CENTER_ALIGN_OFFSET_ROWS 4
 
 RinaTesterWindow::RinaTesterWindow(QWidget *parent) : QWidget(parent), ui(new Ui::RinaTesterWindow)
 {
@@ -35,7 +38,7 @@ void RinaTesterWindow::on_power_btn_clicked()
     if (power_status)
     {
         power_status = false;
-        face_update_by_string(EMPTY_FACE, leds, DEFAULT_COLOR);
+        faceUpdate_StringFullPack(EMPTY_FACE, leds, LED(DEFAULT_COLOR));
 
         if (udpSocket)
         {
@@ -44,27 +47,27 @@ void RinaTesterWindow::on_power_btn_clicked()
             udpSocket = nullptr;
             ui->udpaddr_val->setText("UDP服务未启动");
         }
-    } else
+    }
+    else
     {
         power_status = true;
-        init_led(leds, DEFAULT_COLOR);
+        initLED(leds, LED(DEFAULT_COLOR));
 
         udpSocket = new QUdpSocket(this);
-        if (!connect(udpSocket, &QUdpSocket::readyRead, this, &RinaTesterWindow::processPendingDatagrams))
+        if (!connect(udpSocket, &QUdpSocket::readyRead, this, &RinaTesterWindow::handlePacket))
         {
             qDebug() << "UDP绑定失败";
             return;
         }
 
         const QHostAddress address = getLocalIPAddress();
-        constexpr quint16 port = 1234;
-        if (!udpSocket->bind(address, port))
+        if (!udpSocket->bind(address, localUDPPort))
         {
             qDebug() << "UDP绑定失败";
             return;
         }
         ui->udpaddr_val->setText(address.toString());
-        if (enable_output) { qDebug() << "ip:" << address << ",port:" << port << ",等待接收..."; }
+        if (enable_output) { qDebug() << "ip:" << address << ",port:" << localUDPPort << ",等待接收..."; }
     }
 }
 
@@ -80,9 +83,14 @@ void RinaTesterWindow::on_checkBox_output_clicked()
     }
 }
 
-void RinaTesterWindow::processPendingDatagrams()
+std::string getColorString(const quint8 &R, const quint8 &G, const quint8 &B)
 {
-    constexpr size_t BufMaxSize = 5000;
+    return (QString::number(R, 16) + QString::number(G, 16) + QString::number(B, 16)).toStdString();
+}
+
+void RinaTesterWindow::handlePacket()
+{
+    constexpr size_t BufMaxSize = UDP_INCOME_PACKET_MAXLEN;
     char buf[BufMaxSize] = {};
 
     while (udpSocket->hasPendingDatagrams())
@@ -95,53 +103,146 @@ void RinaTesterWindow::processPendingDatagrams()
         qint64 datagramSize = udpSocket->readDatagram(buf, BufMaxSize, &sender, &senderPort);
         if (datagramSize != -1)
         {
-            if (enable_output) { qDebug() << "接收到数据：" << buf; }
-            if (const auto incomingPacket = std::string(buf); incomingPacket.length() == 72)
+            if (enable_output) { qDebug() << "接收到数据：" << QByteArray(buf, datagramSize).toHex(); }
+            switch (const auto incomingPacket = QByteArray(buf, datagramSize); incomingPacket.length()) // 通过长度判断包类型
             {
-                // 从上位机接受表情状态字符串
-                face_update_by_string(incomingPacket, leds, color);
-            }
-            else if(incomingPacket.length()==4)
-            {
-                // 从上位机接受亮度更新
-                bright=(incomingPacket[1]-'0')*100+(incomingPacket[2]-'0')*10+(incomingPacket[3]-'0');
-                ui->bright_val->setText(QString::fromStdString(std::to_string(bright)));
-            }
-            else if (incomingPacket.length() == 7)
-            {
-                // 从上位机接受颜色更新
-                updateColor(incomingPacket.substr(1), leds);
-                color = incomingPacket.substr(1);
-                ui->color_val->setText(QString::fromStdString("#"+color));
-            }
-            else if(incomingPacket=="requestFace")
-            {
-                // 发送状态字符串到上位机
-                sendCallBack(get_face(leds),sender,senderPort);
-            }
-            else if(incomingPacket=="requestColor")
-            {
-                // 发送颜色字符串到上位机
-                sendCallBack("#"+color,sender,senderPort);
-            }
-            else if(incomingPacket=="requestBright")
-            {
-                // 发送亮度字符串到上位机
-                sendCallBack(encodeBright(bright),sender,senderPort);
+                case static_cast<quint8>(PackTypeLen::FACE_FULL): {
+                    // 从上位机接受全脸状态更新
+                    decodeFaceHex(incomingPacket, 0,
+                                  faceBuf, static_cast<quint8>(PackTypeLen::FACE_FULL));
+                    faceUpdate_FullPack(faceBuf, this->leds,
+                                        LED(getColorString(R, G, B)));
+                    break;
+                }
+                case static_cast<uint8_t>(PackTypeLen::FACE_TEXT_LITE): {
+                    // 从上位机接受7行文字的小包更新
+                    decodeFaceHex(incomingPacket,
+                                  TEXT_CENTER_ALIGN_OFFSET_ROWS,
+                                  faceBuf,
+                                  static_cast<uint8_t>(PackTypeLen::FACE_TEXT_LITE));
+
+                    faceUpdate_FullPack(faceBuf,
+                                        this->leds,
+                                        LED(getColorString(R, G, B)));
+                    break;
+                }
+                case static_cast<quint8>(PackTypeLen::FACE_LITE): {
+                    // 从上位机接受表情部件状态更新
+                    const quint8 lEyeCode  = incomingPacket[0];
+                    const quint8 rEyeCode  = incomingPacket[1];
+                    const quint8 mouthCode = incomingPacket[2];
+                    const quint8 cheekCode = incomingPacket[3];
+
+                    faceUpdate_litePackage(lEyeCode,
+                                           rEyeCode,
+                                           mouthCode,
+                                           cheekCode,
+                                           this->leds,
+                                           LED(getColorString(R, G, B)));
+                    break;
+                }
+                case static_cast<quint8>(PackTypeLen::COLOR): {
+                    // 从上位机接受颜色更新
+                    R = static_cast<quint8>(incomingPacket[0]);
+                    G = static_cast<quint8>(incomingPacket[1]);
+                    B = static_cast<quint8>(incomingPacket[2]);
+                    updateColor(this->leds, R, G, B);
+                    ui->color_val->setText(QString::fromStdString("#"+getColorString(R, G, B)));
+                    break;
+                }
+                case static_cast<quint8>(PackTypeLen::REQUEST): {
+                    // 从上位机接受请求包
+                    handleRequest(sender, incomingPacket);
+                    break;
+                }
+                break;
+                case static_cast<quint8>(PackTypeLen::BRIGHT): {
+                    // 从上位机接受亮度更新
+                    bright = incomingPacket[0];
+                    ui->bright_val->setText(QString::fromStdString(std::to_string(bright)));
+                    break;
+                }
+                default:
+                    sendCallBack(sender, "Command Error!");
+                break;
             }
             memset(buf, 0, sizeof(buf));
         } else { qDebug() << "接收失败或发生错误！"; }
     }
 }
 
-void RinaTesterWindow::sendCallBack(const std::string& response, const QHostAddress& sender, const quint16 senderPort) const
+void RinaTesterWindow::handleRequest(const QHostAddress& sender, const QByteArray &incomingPacket)
 {
-    const QByteArray responseData = QString::fromStdString(response).toUtf8();
-    udpSocket->writeDatagram(responseData, sender, senderPort);
+    switch (incomingPacket[0] << 8 | incomingPacket[1])
+    {
+        case static_cast<quint16>(RequestType::FACE): {
+            // 发送状态hex字节流到上位机
+            getFaceHex(this->leds, faceHexBuffer);
+            sendCallBack(sender, QByteArray(faceHexBuffer));
+            break;
+        }
+        case static_cast<quint16>(RequestType::COLOR): {
+            // 发送颜色hex字节流到上位机
+            sendCallBack(sender,
+                         B << 16 | G << 8 | R,
+                         static_cast<quint8>(PackTypeLen::COLOR));
+            break;
+        }
+        case static_cast<quint16>(RequestType::BRIGHT): {
+            // 发送亮度字节流到上位机
+            sendCallBack(sender,
+                         bright,
+                         static_cast<quint8>(PackTypeLen::BRIGHT));
+            break;
+        }
+        case static_cast<uint16_t>(RequestType::VERSION): {
+            sendCallBack(sender, "1.0.0-tester");
+            break;
+        }
+        case static_cast<uint16_t>(RequestType::BATTERY): {
+            // TODO:发送ADC数据到上位机
+            break;
+        }
+        default: {
+            sendCallBack(sender, "Command Error!");
+            break;
+        }
+    }
+}
+
+void RinaTesterWindow::sendCallBack(const QHostAddress& sender, const QByteArray& responseData) const
+{
+    udpSocket->writeDatagram(responseData, sender, remoteUDPPort);
     if (enable_output)
     {
-        qDebug() << "发送回调消息到" << sender.toString() << ":" << senderPort << " - " << responseData;
+        qDebug() << "发送回调消息到" << sender.toString() << ":" << remoteUDPPort << " - " << responseData.toHex();
     };
+}
+
+void RinaTesterWindow::sendCallBack(const QHostAddress& sender, const char *buffer) const
+{
+    const auto responseData = QByteArray(buffer, strlen(buffer)); // NOLINT(*-narrowing-conversions)
+    sendCallBack(sender, responseData);
+}
+
+void RinaTesterWindow::sendCallBack(const QHostAddress& sender, const std::string& str) const
+{
+    const auto responseData = QByteArray(str.c_str());
+    sendCallBack(sender, responseData);
+}
+
+void RinaTesterWindow::sendCallBack(const QHostAddress& sender, const int value, const quint8 length) const
+{
+    // ReSharper disable once CppCStyleCast
+    const auto responseData = QByteArray(reinterpret_cast<const char*>(&value), length);
+    sendCallBack(sender, responseData);
+}
+
+void RinaTesterWindow::sendCallBack(const QHostAddress& sender, const quint8 *hexBuffer, quint8 length) const
+{
+    // ReSharper disable once CppCStyleCast
+    const auto responseData = QByteArray(reinterpret_cast<const char*>(hexBuffer), length);
+    sendCallBack(sender, responseData);
 }
 
 void RinaTesterWindow::connectLEDs()

@@ -1,7 +1,23 @@
-#include "led.h"
-
 #include <windows.h>
 #include <vector>
+
+#include "led.h"
+#include "emoji_set.h"
+
+#define LED_MAX_ROW          16
+#define LED_MAX_COL          18
+#define FACE_HEX_DATA_LENGTH 36
+
+emojiSet rina;
+
+void LED::setColor(const std::string &color)
+{
+    this->color = color;
+    const std::string style=std::format("background-color:#{};", color);
+    this->label->setStyleSheet(QString::fromStdString(style));
+    this->label->repaint();
+    //qDebug()<<this->label->styleSheet();
+}
 
 const int led_map[][18] =
 {
@@ -23,107 +39,192 @@ const int led_map[][18] =
     {-1, -1, -1, 54, 55, 86, 87, 118, 119, 150, 151, 182, 183, 214, 215, -1, -1, -1},
 };
 
-void LED::setColor(const std::string &color)
+void initLED(std::vector<LED> &leds, const LED &color)
 {
-    this->color = color;
-    const std::string style=std::format("background-color:#{};", color);
-    this->label->setStyleSheet(QString::fromStdString(style));
-    this->label->repaint();
-    //qDebug()<<this->label->styleSheet();
+    faceUpdate_StringFullPack("0000000007def810a205ef810a205ef800000000117a26505155884d25117a2000000000",
+                              leds,
+                              color);
+    Sleep(1000);
+    faceUpdate_StringFullPack("000000000753b91488753b854887723800000000110ec4422910ec44229dcea000000000",
+                              leds,
+                              color);
+    Sleep(1000);
+    faceUpdate_StringFullPack("0000000001e3e044201e0804820113e00000000004420191405488133e04488000000000",
+                              leds,
+                              color);
+    Sleep(1000);
+    faceUpdate_StringFullPack("00000000000000c00c30030c00c30030000000000000003f000840012000300000000000",
+                              leds,
+                              color);
 }
 
-void init_led(std::vector<LED> &leds, const std::string &color)
+void updateColor(std::vector<LED>& leds, const quint8 &R, const quint8 &G, const quint8 &B)
 {
-    face_update_by_string("0000000007def810a205ef810a205ef800000000117a26505155884d25117a2000000000", leds, color);
-    Sleep(1000);
-    face_update_by_string("000000000753b91488753b854887723800000000110ec4422910ec44229dcea000000000", leds, color);
-    Sleep(1000);
-    face_update_by_string("0000000001e3e044201e0804820113e00000000004420191405488133e04488000000000", leds, color);
-    Sleep(1000);
-    face_update_by_string("00000000000000c00c30030c00c30030000000000000003f000840012000300000000000", leds, color);
+    std::string colorString=(QString::number(R, 16) + QString::number(G, 16) + QString::number(B, 16)).toStdString();
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+        leds[i].setColor(leds[i].isOn() ? LED_OFF : colorString);
+    }
 }
 
-void decodeHexString(const std::string &hexString, int cells[16][18])
+void decodeFaceHex(const char hexBytes[],
+                   const quint8 offsetRows,
+                   std::vector<std::vector<quint8>> &cells,
+                   const size_t length)
+{
+    size_t bitIndex = 0; // 用于定位当前写入到 cells 的 bit 位置
+    for (size_t i = 0; i < length; i++)
+    {
+        const quint8 byte = hexBytes[i]; // 获取当前字节
+        for (int bit = 7; bit >= 0; bit--)
+        {
+            const int row = offsetRows + (bitIndex / LED_MAX_COL);  // 确定行
+            const int col = bitIndex % LED_MAX_COL;                 // 确定列
+            if (row >= LED_MAX_ROW)                                 // 防止越界
+                return;
+
+            cells[row][col] = (byte & (1 << bit)) ? 1 : 0; // 提取二进制位并存入 cells
+            bitIndex++;
+        }
+    }
+}
+
+/**
+ * @brief 内部函数，用于解码HexString到表情矩阵，请不要直接调用
+ *
+ * @param hexString
+ * @param cells
+ */
+static void decodeHexString(const std::string& hexString,
+                            std::vector<std::vector<quint8>> &cells)
 {
     std::string binaryString;
     binaryString.reserve(hexString.length() * 4);
 
-    for (const char hexDigit: hexString)
+    for (const char hexDigit : hexString)
     {
-        const int value = (std::isdigit(hexDigit)) ? hexDigit - '0' : std::toupper(hexDigit) - 'A' + 10;
+        const int value = std::isdigit(hexDigit) ? hexDigit - '0' : std::toupper(hexDigit) - 'A' + 10;
 
-        for (int bit = 3; bit >= 0; bit--) { binaryString += (value & (1 << bit)) ? '1' : '0'; }
+        for (int bit = 3; bit >= 0; bit--)
+        {
+            binaryString += value & 1 << bit ? '1' : '0';
+        }
     }
 
     for (size_t i = 0; i < binaryString.length(); i++)
     {
-        const size_t row = i / 18;
-        const size_t col = i % 18;
+        const size_t row = i / LED_MAX_COL;
+        const size_t col = i % LED_MAX_COL;
         cells[row][col] = binaryString[i] == '1' ? 1 : 0;
     }
 }
 
-std::string encodeBright(const int bright)
+void faceUpdate_StringFullPack(const std::string &hexString, std::vector<LED> &leds, const LED &color)
 {
-    const std::string hex[16]={"0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"};
-    std::string s=hex[bright/100]+hex[bright%100/10]+hex[bright%10];
-    return s;
+    auto face = std::vector(16, std::vector<quint8>(18, 0));
+    decodeHexString(hexString, face);
+    faceUpdate_FullPack(face, leds, color);
 }
 
-void updateColor(const std::string &color_code, std::vector<LED> leds)
+void faceUpdate_FullPack(const std::vector<std::vector<quint8>> &face, std::vector<LED> &leds, const LED& color)
 {
-    for (int i = 0; i < NUM_LEDS; i++) { if (leds[i].isOn()) { leds[i].setColor(color_code); } }
-}
-
-void face_update(int face[16][18],std::vector<LED> &leds, const std::string &color)
-{
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < LED_MAX_ROW; i++)
     {
-        for (int j = 0; j < 18; j++)
+        for (int j = 0; j < LED_MAX_COL; j++)
         {
             if (led_map[i][j] < 0) continue;
-            leds[led_map[i][j]].setColor(face[i][j] ? color : LED_OFF);
+            leds[led_map[i][j]].setColor(face[i][j] ? color.color : LED_OFF);
         }
     }
 }
 
-void face_update_by_string(const std::string &hexString, std::vector<LED> &leds, const std::string &color)
+static void updateLedMatrixByEmoji(const std::array<std::array<quint8, 8>, 8> &emoji,
+                                   const quint8 startRow,
+                                   const quint8 startCol,
+                                   const quint8 height,
+                                   const quint8 width,
+                                   std::vector<LED> &leds,
+                                   const LED& color)
 {
-    int face[16][18];
-    decodeHexString(hexString, face);
-    face_update(face, leds, color);
-}
 
-std::string int2Hex(const int val)
-{
-    std::stringstream ss;
-    ss << std::hex << val;
-    return ss.str();
-}
-
-std::string get_face(const std::vector<LED> &leds)
-{
-    int face[16][18] = {0};
-
-    for (int i = 0; i < 16; i++)
+    for (quint8 i = 0; i < height; i++)
     {
-        for (int j = 0; j < 18; j++)
+        for (quint8 j = 0; j < width; j++)
         {
-            if (led_map[i][j] == -1) continue;
-            face[i][j] = !leds[led_map[i][j]].isOn() ? 0 : 1;
+            if (led_map[i + startRow][j + startCol] < 0) continue;
+            leds[led_map[i + startRow][j + startCol]].setColor(emoji[i][j] ? color.color : LED_OFF);
         }
     }
-
-    std::string binaryString;
-    for (auto &i: face) { for (const int j: i) { binaryString += j ? '1' : '0'; } }
-
-    std::string hexString;
-    for (size_t i = 0; i < binaryString.length(); i += 4)
-    {
-        int value = 0;
-        for (int j = 0; j < 4; j++) { value = value << 1 | binaryString[i + j] - '0'; }
-        hexString += int2Hex(value);
-    }
-
-    return hexString;
 }
+static void updateLedMatrixByEmoji_XFlip(const std::array<std::array<quint8, 8>, 8> &emoji,
+                                         std::vector<LED> leds,
+                                         const LED& color)
+{
+
+    for (quint8 i = 0; i < emojiSet::CHEEK_HEIGHT_AND_WIDTH; i++)
+    {
+        for (quint8 j = 0; j < emojiSet::CHEEK_HEIGHT_AND_WIDTH; j++)
+        {
+            if (led_map[i + emojiSet::L_CHEEK_START_ROW][j + emojiSet::L_CHEEK_START_COL] < 0) continue;
+
+            leds[led_map[i + emojiSet::L_CHEEK_START_ROW][j + emojiSet::L_CHEEK_START_COL]].setColor(emoji[i][emojiSet::CHEEK_HEIGHT_AND_WIDTH - j - 1] ? color.color : LED_OFF);
+        }
+    }
+}
+
+void faceUpdate_litePackage(quint8 const lEyeCode,
+                            quint8 const rEyeCode,
+                            quint8 const mouthCode,
+                            quint8 const cheekCode,
+                            std::vector<LED> &leds,
+                            const LED &color)
+{
+    updateLedMatrixByEmoji(rina.LEye[lEyeCode].content,
+                           emojiSet::L_EYE_START_ROW,
+                           emojiSet::L_EYE_START_COL,
+                           emojiSet::EYE_HEIGHT_AND_WIDTH,
+                           emojiSet::EYE_HEIGHT_AND_WIDTH,
+                           leds,
+                           color);
+    updateLedMatrixByEmoji(rina.REye[rEyeCode].content,
+                           emojiSet::R_EYE_START_ROW,
+                           emojiSet::R_EYE_START_COL,
+                           emojiSet::EYE_HEIGHT_AND_WIDTH,
+                           emojiSet::EYE_HEIGHT_AND_WIDTH,
+                           leds,
+                           color);
+    updateLedMatrixByEmoji(rina.Mouth[mouthCode].content,
+                           emojiSet::MOUTH_START_ROW,
+                           emojiSet::MOUTH_START_COL,
+                           emojiSet::MOUTH_HEIGHT_AND_WIDTH,
+                           emojiSet::MOUTH_HEIGHT_AND_WIDTH,
+                           leds,
+                           color);
+    updateLedMatrixByEmoji(rina.Cheek[cheekCode].content,
+                           emojiSet::R_CHEEK_START_ROW,
+                           emojiSet::R_CHEEK_START_COL,
+                           emojiSet::CHEEK_HEIGHT_AND_WIDTH,
+                           emojiSet::CHEEK_HEIGHT_AND_WIDTH,
+                           leds,
+                           color);
+    updateLedMatrixByEmoji_XFlip(rina.Cheek[cheekCode].content,
+                                 leds,
+                                 color);
+}
+
+void getFaceHex(const std::vector<LED> &leds, std::vector<quint8> &hexData)
+{
+    quint16 bitIndex = 0;
+    hexData = std::vector<quint8>(36, 0);
+
+    for (const auto & i : led_map)
+    {
+        for (const int j : i)
+        {
+            if (leds[j].color != LED_OFF)
+                hexData[bitIndex / 8] |= 1 << 7 - bitIndex % 8; // NOLINT(*-narrowing-conversions)
+            bitIndex++;
+        }
+    }
+}
+

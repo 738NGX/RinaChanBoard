@@ -8,7 +8,9 @@ set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_PREFIX_PATH "D:/Qt/6.8.0/mingw_64/lib/cmake")
 set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/assets/ico.rc")
-set(QRC_SOURCE_FILE resources.qrc)
+set(QRC_SOURCE_FILE resources.qrc
+        emoji_set.cpp
+        emoji_set.h)
 
 find_package(Qt6
         COMPONENTS
