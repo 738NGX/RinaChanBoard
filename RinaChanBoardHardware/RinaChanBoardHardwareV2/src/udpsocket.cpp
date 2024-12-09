@@ -134,7 +134,7 @@ void LedUDPHandler::handleRequest(AsyncUDPPacket packet, char incomingPacket[])
         case static_cast<uint16_t>(RequestType::COLOR): {
             // 发送颜色hex字节流到上位机
             sendCallBack(packet,
-                         R << 16 | G << 8 | B,
+                         B << 16 | G << 8 | R,
                          static_cast<uint8_t>(PackTypeLen::COLOR));
             break;
         }
