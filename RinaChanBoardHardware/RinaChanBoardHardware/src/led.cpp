@@ -64,6 +64,10 @@ void decodeFaceHex(const char hexBytes[],
                    uint8_t (&cells)[LED_MAX_ROW][LED_MAX_COL],
                    size_t length)
 {
+    if (offsetRows != 0)
+    {
+        memset(cells, 0, sizeof(cells));
+    }
     size_t bitIndex = 0; // 用于定位当前写入到 cells 的 bit 位置
     for (size_t i = 0; i < length; i++)
     {
@@ -230,8 +234,15 @@ void getFaceHex(CRGB leds[], uint8_t *hexData)
     {
         for (int j = 0; j < LED_MAX_COL; j++)
         {
+            if (led_map[i][j] == -1)
+            {
+                bitIndex++;
+                continue;
+            }
             if ((leds[led_map[i][j]] != CRGB::Black))
+            {
                 hexData[bitIndex / 8] |= (1 << (7 - bitIndex % 8));
+            }
             bitIndex++;
         }
     }

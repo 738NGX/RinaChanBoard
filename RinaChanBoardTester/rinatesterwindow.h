@@ -62,6 +62,7 @@ private:
     quint8 G      = 113;
     quint8 B      = 212;
     quint8 bright = 16;
+    PackTypeLen lastFacePackType = PackTypeLen::FACE_FULL;
     const quint16 localUDPPort  = LOCAL_UDP_PORT;
     const quint16 remoteUDPPort = REMOTE_UDP_PORT;
     std::vector<std::vector<quint8>> faceBuf = std::vector(16, std::vector<quint8>(18, 0));

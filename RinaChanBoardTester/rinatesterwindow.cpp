@@ -108,6 +108,10 @@ void RinaTesterWindow::handlePacket()
             {
                 case static_cast<quint8>(PackTypeLen::FACE_FULL): {
                     // 从上位机接受全脸状态更新
+                    if (lastFacePackType != PackTypeLen::FACE_FULL)
+                    {
+                        lastFacePackType = PackTypeLen::FACE_FULL;
+                    }
                     decodeFaceHex(incomingPacket, 0,
                                   faceBuf, static_cast<quint8>(PackTypeLen::FACE_FULL));
                     faceUpdate_FullPack(faceBuf, this->leds,
@@ -116,11 +120,15 @@ void RinaTesterWindow::handlePacket()
                 }
                 case static_cast<uint8_t>(PackTypeLen::FACE_TEXT_LITE): {
                     // 从上位机接受7行文字的小包更新
+                    if (lastFacePackType != PackTypeLen::FACE_TEXT_LITE)
+                    {
+                        lastFacePackType = PackTypeLen::FACE_TEXT_LITE;
+                        faceBuf = std::vector(16, std::vector<quint8>(18, 0));
+                    }
                     decodeFaceHex(incomingPacket,
                                   TEXT_CENTER_ALIGN_OFFSET_ROWS,
                                   faceBuf,
                                   static_cast<uint8_t>(PackTypeLen::FACE_TEXT_LITE));
-
                     faceUpdate_FullPack(faceBuf,
                                         this->leds,
                                         LED(getColorString(R, G, B)));
@@ -128,6 +136,11 @@ void RinaTesterWindow::handlePacket()
                 }
                 case static_cast<quint8>(PackTypeLen::FACE_LITE): {
                     // 从上位机接受表情部件状态更新
+                    if (lastFacePackType != PackTypeLen::FACE_LITE)
+                    {
+                        lastFacePackType = PackTypeLen::FACE_LITE;
+                        faceUpdate_StringFullPack(EMPTY_FACE, leds, LED(getColorString(R, G, B)));
+                    }
                     const quint8 lEyeCode  = incomingPacket[0];
                     const quint8 rEyeCode  = incomingPacket[1];
                     const quint8 mouthCode = incomingPacket[2];

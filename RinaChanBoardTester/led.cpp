@@ -60,7 +60,7 @@ void initLED(std::vector<LED> &leds, const LED &color)
 
 void updateColor(std::vector<LED>& leds, const quint8 &R, const quint8 &G, const quint8 &B)
 {
-    std::string colorString=(QString::number(R, 16) + QString::number(G, 16) + QString::number(B, 16)).toStdString();
+    const std::string colorString=(QString::number(R, 16) + QString::number(G, 16) + QString::number(B, 16)).toStdString();
     for (int i = 0; i < NUM_LEDS; i++)
     {
         leds[i].setColor(leds[i].isOn() ? LED_OFF : colorString);
@@ -146,7 +146,6 @@ static void updateLedMatrixByEmoji(const std::array<std::array<quint8, 8>, 8> &e
                                    std::vector<LED> &leds,
                                    const LED& color)
 {
-
     for (quint8 i = 0; i < height; i++)
     {
         for (quint8 j = 0; j < width; j++)
@@ -160,7 +159,6 @@ static void updateLedMatrixByEmoji_XFlip(const std::array<std::array<quint8, 8>,
                                          std::vector<LED> leds,
                                          const LED& color)
 {
-
     for (quint8 i = 0; i < emojiSet::CHEEK_HEIGHT_AND_WIDTH; i++)
     {
         for (quint8 j = 0; j < emojiSet::CHEEK_HEIGHT_AND_WIDTH; j++)
