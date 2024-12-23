@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "title": "Call&Response前半",
+        "cover": "C&R01"
+    },
+    {
+        "id": 2,
+        "title": "Call&Response后半",
+        "cover": "C&R02"
+    },
+    {
+        "id": 3,
+        "title": "Call&Response前半(纯享)",
+        "cover": "C&R11"
+    },
+    {
+        "id": 4,
+        "title": "Call&Response后半(纯享)",
+        "cover": "C&R12"
+    },
+    {
+        "id": 5,
+        "title": "TV一期第六话Part1",
+        "cover": "TVS101"
+    },
+    {
+        "id": 6,
+        "title": "TV一期第六话Part2",
+        "cover": "TVS102"
+    },
+    {
+        "id": 7,
+        "title": "TV一期第六话Part3",
+        "cover": "TVS103"
+    }
+]

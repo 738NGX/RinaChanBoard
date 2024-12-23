@@ -1,0 +1,83 @@
+[
+  {
+    "frame": 0,
+    "face": {
+      "leye": 110,
+      "reye": 210,
+      "mouth": 311,
+      "cheek": 402
+    }
+  },
+  {
+    "frame": 3,
+    "face": {
+      "leye": 110,
+      "reye": 210,
+      "mouth": 302,
+      "cheek": 402
+    }
+  },
+  {
+    "frame": 8,
+    "face": {
+      "leye": 110,
+      "reye": 210,
+      "mouth": 311,
+      "cheek": 402
+    }
+  },
+  {
+    "frame": 13,
+    "face": {
+      "leye": 110,
+      "reye": 210,
+      "mouth": 302,
+      "cheek": 402
+    }
+  },
+  {
+    "frame": 19,
+    "face": {
+      "leye": 102,
+      "reye": 202,
+      "mouth": 302,
+      "cheek": 402
+    }
+  },
+  {
+    "frame": 21,
+    "face": {
+      "leye": 102,
+      "reye": 202,
+      "mouth": 311,
+      "cheek": 402
+    }
+  },
+  {
+    "frame": 24,
+    "face": {
+      "leye": 102,
+      "reye": 202,
+      "mouth": 302,
+      "cheek": 402
+    }
+  },
+  {
+    "frame": 25,
+    "face": {
+      "leye": 110,
+      "reye": 210,
+      "mouth": 302,
+      "cheek": 402
+    }
+  },
+  {
+    "frame": 26,
+    "face": {
+      "leye": 110,
+      "reye": 210,
+      "mouth": 311,
+      "cheek": 402
+    }
+  }
+]

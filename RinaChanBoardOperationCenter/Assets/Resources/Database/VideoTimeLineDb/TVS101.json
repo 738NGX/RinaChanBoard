@@ -1,0 +1,38 @@
+[
+    {
+        "frame": 0,
+        "face": {
+            "leye": 0,
+            "reye": 0,
+            "mouth": 0,
+            "cheek": 400
+        }
+    },
+    {
+        "frame": 116,
+        "face": {
+            "leye": 101,
+            "reye": 201,
+            "mouth": 301,
+            "cheek": 400
+        }
+    },
+    {
+        "frame": 204,
+        "face": {
+            "leye": 103,
+            "reye": 203,
+            "mouth": 302,
+            "cheek": 403
+        }
+    },
+    {
+        "frame": 233,
+        "face": {
+            "leye": 103,
+            "reye": 203,
+            "mouth": 310,
+            "cheek": 404
+        }
+    }
+]
